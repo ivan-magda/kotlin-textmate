@@ -1,6 +1,8 @@
 package dev.textmate.grammar.raw
 
 import com.google.gson.Gson
+import com.google.gson.JsonIOException
+import com.google.gson.JsonSyntaxException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.Reader
@@ -15,16 +17,37 @@ object GrammarReader {
 
     private val gson: Gson = Gson()
 
+    /**
+     * Parses a TextMate grammar from a JSON string.
+     *
+     * @throws JsonSyntaxException if the JSON is malformed or does not match the expected structure
+     */
     fun readGrammar(json: String): RawGrammar {
         val grammar = gson.fromJson(json, RawGrammar::class.java)
         assignIds(grammar)
         return grammar
     }
 
+    /**
+     * Parses a TextMate grammar from an [InputStream].
+     *
+     * The caller is responsible for closing the [inputStream] after this method returns.
+     *
+     * @throws JsonSyntaxException if the JSON is malformed or does not match the expected structure
+     * @throws JsonIOException if reading from the stream fails
+     */
     fun readGrammar(inputStream: InputStream): RawGrammar {
         return readGrammar(InputStreamReader(inputStream, Charsets.UTF_8))
     }
 
+    /**
+     * Parses a TextMate grammar from a [Reader].
+     *
+     * The caller is responsible for closing the [reader] after this method returns.
+     *
+     * @throws JsonSyntaxException if the JSON is malformed or does not match the expected structure
+     * @throws JsonIOException if reading from the reader fails
+     */
     fun readGrammar(reader: Reader): RawGrammar {
         val grammar = gson.fromJson(reader, RawGrammar::class.java)
         assignIds(grammar)

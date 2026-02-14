@@ -22,6 +22,8 @@ data class RawGrammar(
  * or just a patterns container.
  *
  * [id] is assigned post-parse by [GrammarReader] — it does not come from JSON.
+ * Because [id] is mutable, instances should not be placed in hash-based
+ * collections (e.g. [HashSet], [HashMap] keys) before ID assignment is complete.
  */
 data class RawRule(
     var id: Int? = null,

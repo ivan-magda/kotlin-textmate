@@ -6,14 +6,14 @@ import org.junit.Test
 class GrammarReaderTest {
 
     private fun loadGrammar(resourcePath: String): RawGrammar {
-        val stream = javaClass.classLoader.getResourceAsStream(resourcePath)
+        return javaClass.classLoader.getResourceAsStream(resourcePath)
+            ?.use { stream -> GrammarReader.readGrammar(stream) }
             ?: throw IllegalArgumentException("Resource not found: $resourcePath")
-        return GrammarReader.readGrammar(stream)
     }
 
     private fun loadGrammarAsString(resourcePath: String): RawGrammar {
         val json = javaClass.classLoader.getResourceAsStream(resourcePath)!!
-            .bufferedReader(Charsets.UTF_8).readText()
+            .use { it.bufferedReader(Charsets.UTF_8).readText() }
         return GrammarReader.readGrammar(json)
     }
 
