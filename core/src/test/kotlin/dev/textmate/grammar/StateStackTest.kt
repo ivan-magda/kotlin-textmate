@@ -205,12 +205,65 @@ class StateStackTest {
         assertSame(stack, stack.clone())
     }
 
+    // --- withContentNameScopesList on parentless node ---
+
+    @Test
+    fun `withContentNameScopesList on NULL creates new root`() {
+        val scopes = AttributedScopeStack.createRoot("source.test", 0)
+        val result = StateStackImpl.NULL.withContentNameScopesList(scopes)
+        assertNotSame(StateStackImpl.NULL, result)
+        assertSame(scopes, result.contentNameScopesList)
+        assertEquals(1, result.depth)
+        assertNull(result.parent)
+    }
+
+    // --- hasSameRuleAs with differing enterPos ---
+
+    @Test
+    fun `hasSameRuleAs stops walking when enterPos differs`() {
+        val a = StateStackImpl.NULL.push(RuleId(5), 10, 0, false, null, null, null)
+        val b = StateStackImpl.NULL.push(RuleId(5), 20, 0, false, null, null, null)
+        assertFalse(a.hasSameRuleAs(b))
+    }
+
+    // --- hashCode ---
+
+    @Test
+    fun `equal objects have equal hashCodes`() {
+        val a = makeStack(ruleId = RuleId(5), endRule = "end")
+        val b = makeStack(ruleId = RuleId(5), endRule = "end")
+        assertEquals(a, b)
+        assertEquals(a.hashCode(), b.hashCode())
+    }
+
+    @Test
+    fun `different ruleId produces different hashCodes`() {
+        val a = makeStack(ruleId = RuleId(5))
+        val b = makeStack(ruleId = RuleId(6))
+        assertNotEquals(a.hashCode(), b.hashCode())
+    }
+
+    @Test
+    fun `different contentNameScopesList produces different hashCodes`() {
+        val scopesA = AttributedScopeStack.createRoot("source.a", 0)
+        val scopesB = AttributedScopeStack.createRoot("source.b", 0)
+        val a = StateStackImpl.NULL.push(RuleId(5), -1, -1, false, null, rootScopes, scopesA)
+        val b = StateStackImpl.NULL.push(RuleId(5), -1, -1, false, null, rootScopes, scopesB)
+        assertNotEquals(a.hashCode(), b.hashCode())
+    }
+
     // --- toString ---
 
     @Test
     fun `toString formats stack elements`() {
-        val str = StateStackImpl.NULL.toString()
+        val scopes = AttributedScopeStack.createRoot("source.test", 0)
+        val stack = StateStackImpl.NULL.push(RuleId(7), -1, -1, false, null, scopes, scopes)
+        val str = stack.toString()
         assertTrue(str.startsWith("["))
         assertTrue(str.endsWith("]"))
+        // Verify format includes ruleId and scope info
+        assertTrue(str.contains("(0,"))  // NULL element: ruleId=0
+        assertTrue(str.contains("(7,"))  // Pushed element: ruleId=7
+        assertTrue(str.contains("source.test"))
     }
 }

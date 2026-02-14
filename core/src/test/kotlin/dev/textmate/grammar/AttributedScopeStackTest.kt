@@ -142,4 +142,59 @@ class AttributedScopeStackTest {
         assertEquals(listOf("meta.class"), ext[0].scopeNames)
         assertEquals(listOf("entity.name"), ext[1].scopeNames)
     }
+
+    @Test
+    fun `getExtensionIfDefined returns null when base is not ancestor`() {
+        val a = AttributedScopeStack.createRoot("source.kotlin", 0)
+            .pushAttributed("meta.class", null)
+        val b = AttributedScopeStack.createRoot("source.json", 0)
+        assertNull(a.getExtensionIfDefined(b))
+    }
+
+    @Test
+    fun `getExtensionIfDefined with self returns empty list`() {
+        val stack = AttributedScopeStack.createRoot("source.kotlin", 0)
+        val ext = stack.getExtensionIfDefined(stack)
+        assertNotNull(ext)
+        assertEquals(emptyList<AttributedScopeStackFrame>(), ext)
+    }
+
+    // --- hashCode ---
+
+    @Test
+    fun `equal objects have equal hashCodes`() {
+        val a = AttributedScopeStack.createRoot("source.kotlin", 0)
+            .pushAttributed("meta.class", null)
+        val b = AttributedScopeStack.createRoot("source.kotlin", 0)
+            .pushAttributed("meta.class", null)
+        assertEquals(a, b)
+        assertEquals(a.hashCode(), b.hashCode())
+    }
+
+    @Test
+    fun `different scope names produce different hashCodes`() {
+        val a = AttributedScopeStack.createRoot("source.kotlin", 0)
+        val b = AttributedScopeStack.createRoot("source.json", 0)
+        assertNotEquals(a.hashCode(), b.hashCode())
+    }
+
+    @Test
+    fun `different tokenAttributes produce different hashCodes`() {
+        val a = AttributedScopeStack.createRoot("source.kotlin", 1)
+        val b = AttributedScopeStack.createRoot("source.kotlin", 2)
+        assertNotEquals(a.hashCode(), b.hashCode())
+    }
+
+    @Test
+    fun `fromExtension preserves non-zero tokenAttributes`() {
+        val root = AttributedScopeStack.createRoot("source.kotlin", 0)
+        val frames = listOf(
+            AttributedScopeStackFrame(42, listOf("meta.class")),
+            AttributedScopeStackFrame(99, listOf("entity.name"))
+        )
+        val result = AttributedScopeStack.fromExtension(root, frames)
+        assertNotNull(result)
+        assertEquals(99, result!!.tokenAttributes)
+        assertEquals(42, result.parent!!.tokenAttributes)
+    }
 }

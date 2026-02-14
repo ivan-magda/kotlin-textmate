@@ -38,8 +38,10 @@ class AttributedScopeStack private constructor(
             var current = namesScopeList
             var scopeNames = namesScopeList?.scopePath
             for (frame in contentNameScopesList) {
-                scopeNames = ScopeStack.push(scopeNames, frame.scopeNames)
-                current = AttributedScopeStack(current, scopeNames!!, frame.encodedTokenAttributes)
+                val pushed = ScopeStack.push(scopeNames, frame.scopeNames)
+                requireNotNull(pushed) { "fromExtension: frame scopeNames must not be empty" }
+                scopeNames = pushed
+                current = AttributedScopeStack(current, pushed, frame.encodedTokenAttributes)
             }
             return current
         }
