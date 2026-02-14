@@ -222,4 +222,39 @@ class JoniOnigScannerTest {
     fun `invalid regex pattern throws SyntaxException`() {
         lib.createOnigScanner(listOf("[invalid"))
     }
+
+    // Test 15: Empty patterns list
+    @Test
+    fun `empty patterns list returns no match`() {
+        val scanner = lib.createOnigScanner(emptyList())
+        val str = lib.createOnigString("fun main()")
+        assertNull(scanner.findNextMatchSync(str, 0))
+    }
+
+    // Test 16: Negative start position treated as zero
+    @Test
+    fun `negative start position is treated as zero`() {
+        val scanner = lib.createOnigScanner(listOf("\\bfun\\b"))
+        val str = lib.createOnigString("fun main()")
+        val result = scanner.findNextMatchSync(str, -5)
+        assertNotNull(result)
+        assertEquals(0, result!!.captureIndices[0].start)
+    }
+
+    // Test 17: Start position beyond string length
+    @Test
+    fun `start position beyond string length returns null`() {
+        val scanner = lib.createOnigScanner(listOf("\\bfun\\b"))
+        val str = lib.createOnigString("fun main()")
+        assertNull(scanner.findNextMatchSync(str, 100))
+    }
+
+    // Test 18: Start position at exact string length
+    @Test
+    fun `start position at string length returns null`() {
+        val text = "fun main()"
+        val scanner = lib.createOnigScanner(listOf("\\bfun\\b"))
+        val str = lib.createOnigString(text)
+        assertNull(scanner.findNextMatchSync(str, text.length))
+    }
 }

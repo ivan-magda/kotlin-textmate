@@ -31,8 +31,12 @@ class OnigString(val content: String) {
         while (charIdx < content.length) {
             val codePoint = Character.codePointAt(content, charIdx)
             val charCount = Character.charCount(codePoint)
-            val codePointByteLen = String(Character.toChars(codePoint))
-                .toByteArray(Charsets.UTF_8).size
+            val codePointByteLen = when {
+                codePoint <= 0x7F -> 1
+                codePoint <= 0x7FF -> 2
+                codePoint <= 0xFFFF -> 3
+                else -> 4
+            }
 
             for (b in 0 until codePointByteLen) {
                 if (byteIdx + b < map.size) {
