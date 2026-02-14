@@ -1,7 +1,8 @@
 package dev.textmate.grammar.raw
 
 import com.google.gson.Gson
-import dev.textmate.grammar.raw.GrammarReader.readGrammar
+import com.google.gson.JsonIOException
+import com.google.gson.JsonSyntaxException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.Reader

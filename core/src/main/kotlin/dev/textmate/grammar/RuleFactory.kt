@@ -147,7 +147,10 @@ internal object RuleFactory {
                             val externalGrammar = helper.getExternalGrammar(reference.scopeName, repository)
                             if (externalGrammar != null) {
                                 val extRepo = initGrammarRepository(externalGrammar)
-                                ruleId = getCompiledRuleId(extRepo["\$self"]!!, helper, extRepo)
+                                val selfRule = extRepo["\$self"]
+                                if (selfRule != null) {
+                                    ruleId = getCompiledRuleId(selfRule, helper, extRepo)
+                                }
                             }
                         }
 
