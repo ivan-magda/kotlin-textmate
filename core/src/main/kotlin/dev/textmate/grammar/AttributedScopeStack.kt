@@ -31,7 +31,7 @@ class AttributedScopeStack private constructor(
             }
         }
 
-        fun fromExtension(
+        internal fun fromExtension(
             namesScopeList: AttributedScopeStack?,
             contentNameScopesList: List<AttributedScopeStackFrame>
         ): AttributedScopeStack? {
@@ -77,7 +77,7 @@ class AttributedScopeStack private constructor(
         return scopePath.getSegments()
     }
 
-    fun getExtensionIfDefined(base: AttributedScopeStack?): List<AttributedScopeStackFrame>? {
+    internal fun getExtensionIfDefined(base: AttributedScopeStack?): List<AttributedScopeStackFrame>? {
         val result = mutableListOf<AttributedScopeStackFrame>()
         var self: AttributedScopeStack? = this
 
@@ -112,7 +112,7 @@ class AttributedScopeStack private constructor(
     }
 }
 
-data class AttributedScopeStackFrame(
+internal data class AttributedScopeStackFrame(
     val encodedTokenAttributes: Int,
     val scopeNames: List<String>
 )

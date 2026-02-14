@@ -63,6 +63,17 @@ class StateStackTest {
         assertSame(StateStackImpl.NULL, child.safePop())
     }
 
+    // --- beginRuleCapturedEOL ---
+
+    @Test
+    fun `beginRuleCapturedEOL is stored and retrievable`() {
+        val stack = StateStackImpl.NULL.push(RuleId(1), -1, -1, true, null, null, null)
+        assertTrue(stack.beginRuleCapturedEOL)
+
+        val stack2 = StateStackImpl.NULL.push(RuleId(1), -1, -1, false, null, null, null)
+        assertFalse(stack2.beginRuleCapturedEOL)
+    }
+
     // --- Equality ---
 
     @Test
