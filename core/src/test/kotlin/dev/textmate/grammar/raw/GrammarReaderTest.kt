@@ -105,16 +105,6 @@ class GrammarReaderTest {
     // ── Structural tests ────────────────────────────────────────────
 
     @Test
-    fun `all rules have unique positive IDs`() {
-        val grammar = loadGrammar("grammars/JSON.tmLanguage.json")
-        val ids = mutableListOf<Int>()
-        collectIds(grammar, ids)
-        assertTrue("should have some IDs", ids.isNotEmpty())
-        assertTrue("all IDs should be positive", ids.all { it > 0 })
-        assertEquals("all IDs should be unique", ids.size, ids.toSet().size)
-    }
-
-    @Test
     fun `captures are deserialized with string keys`() {
         val grammar = loadGrammar("grammars/JSON.tmLanguage.json")
         val array = grammar.repository!!["array"]!!
@@ -169,27 +159,4 @@ class GrammarReaderTest {
         assertEquals(fromStream.repository!!.keys, fromString.repository!!.keys)
     }
 
-    // ── Helpers ─────────────────────────────────────────────────────
-
-    private fun collectIds(grammar: RawGrammar, ids: MutableList<Int>) {
-        grammar.patterns?.forEach { collectRuleIds(it, ids) }
-        grammar.repository?.values?.forEach { collectRuleIds(it, ids) }
-        grammar.injections?.values?.forEach { collectRuleIds(it, ids) }
-    }
-
-    private fun collectRuleIds(rule: RawRule, ids: MutableList<Int>) {
-        rule.id?.let { ids.add(it) }
-        rule.patterns?.forEach { collectRuleIds(it, ids) }
-        rule.repository?.values?.forEach { collectRuleIds(it, ids) }
-        collectCaptureIds(rule.captures, ids)
-        collectCaptureIds(rule.beginCaptures, ids)
-        collectCaptureIds(rule.endCaptures, ids)
-        collectCaptureIds(rule.whileCaptures, ids)
-    }
-
-    private fun collectCaptureIds(captures: Map<String, RawCapture>?, ids: MutableList<Int>) {
-        captures?.values?.forEach { capture ->
-            capture.patterns?.forEach { collectRuleIds(it, ids) }
-        }
-    }
 }

@@ -21,9 +21,9 @@ data class RawGrammar(
  * a match rule, a begin/end rule, a begin/while rule, an include-only rule,
  * or just a patterns container.
  *
- * [id] is assigned post-parse by [GrammarReader] — it does not come from JSON.
- * Because [id] is mutable, instances should not be placed in hash-based
- * collections (e.g. [HashSet], [HashMap] keys) before ID assignment is complete.
+ * [id] is assigned during rule compilation by [dev.textmate.grammar.RuleFactory],
+ * not during parsing. Because [id] is mutable, instances should not be placed
+ * in hash-based collections (e.g. [HashSet], [HashMap] keys).
  */
 data class RawRule(
     var id: Int? = null,
@@ -31,24 +31,16 @@ data class RawRule(
     val name: String? = null,
     val contentName: String? = null,
     val match: String? = null,
-    val captures: Map<String, RawCapture>? = null,
+    val captures: Map<String, RawRule>? = null,
     val begin: String? = null,
-    val beginCaptures: Map<String, RawCapture>? = null,
+    val beginCaptures: Map<String, RawRule>? = null,
     val end: String? = null,
-    val endCaptures: Map<String, RawCapture>? = null,
+    val endCaptures: Map<String, RawRule>? = null,
     @SerializedName("while")
     val whilePattern: String? = null,
-    val whileCaptures: Map<String, RawCapture>? = null,
+    val whileCaptures: Map<String, RawRule>? = null,
     val patterns: List<RawRule>? = null,
     val repository: Map<String, RawRule>? = null,
     val applyEndPatternLast: Int? = null,
     val comment: String? = null
-)
-
-/**
- * A capture group definition, keyed by capture index string ("0", "1", …).
- */
-data class RawCapture(
-    val name: String? = null,
-    val patterns: List<RawRule>? = null
 )
