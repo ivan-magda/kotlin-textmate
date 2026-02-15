@@ -60,6 +60,7 @@ private val JSON_SNIPPET = """
 }
 """.trimIndent()
 
+// Uses only patterns safe from Joni's lookbehind limitation (no bold, italic, headings, links)
 private val MARKDOWN_SNIPPET = """
 ---
 

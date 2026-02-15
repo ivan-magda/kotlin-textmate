@@ -8,6 +8,7 @@ import dev.textmate.grammar.Grammar
 import dev.textmate.grammar.Token
 import dev.textmate.grammar.tokenize.StateStack
 import dev.textmate.theme.FontStyle
+import dev.textmate.theme.ResolvedStyle
 import dev.textmate.theme.Theme
 import androidx.compose.ui.text.font.FontStyle as ComposeFontStyle
 
@@ -41,16 +42,21 @@ class CodeHighlighter(private val grammar: Grammar, private val theme: Theme) {
         return builder.toAnnotatedString()
     }
 
-    private fun toSpanStyle(style: dev.textmate.theme.ResolvedStyle): SpanStyle {
-        val decorations = mutableListOf<TextDecoration>()
-        if (FontStyle.UNDERLINE in style.fontStyle) decorations.add(TextDecoration.Underline)
-        if (FontStyle.STRIKETHROUGH in style.fontStyle) decorations.add(TextDecoration.LineThrough)
+    private fun toSpanStyle(style: ResolvedStyle): SpanStyle {
+        val hasUnderline = FontStyle.UNDERLINE in style.fontStyle
+        val hasStrikethrough = FontStyle.STRIKETHROUGH in style.fontStyle
+        val textDecoration = when {
+            hasUnderline && hasStrikethrough -> TextDecoration.Underline + TextDecoration.LineThrough
+            hasUnderline -> TextDecoration.Underline
+            hasStrikethrough -> TextDecoration.LineThrough
+            else -> null
+        }
 
         return SpanStyle(
             color = style.foreground.toComposeColor(),
             fontWeight = if (FontStyle.BOLD in style.fontStyle) FontWeight.Bold else null,
             fontStyle = if (FontStyle.ITALIC in style.fontStyle) ComposeFontStyle.Italic else null,
-            textDecoration = TextDecoration.combine(decorations)
+            textDecoration = textDecoration
         )
     }
 }

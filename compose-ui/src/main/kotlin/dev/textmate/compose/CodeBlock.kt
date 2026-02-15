@@ -20,7 +20,7 @@ import dev.textmate.theme.Theme
 /**
  * Converts an ARGB [Long] (as produced by [dev.textmate.theme.ResolvedStyle]) to a Compose [Color].
  */
-fun Long.toComposeColor(): Color = Color(this.toInt())
+internal fun Long.toComposeColor(): Color = Color(this.toInt())
 
 @Composable
 fun CodeBlock(
