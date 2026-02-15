@@ -257,7 +257,7 @@ internal fun handleCaptures(
 
         // Pop captures whose endPos <= captureIndex.start
         while (localStack.isNotEmpty() && localStack.last().endPos <= captureIndex.start) {
-            val top = localStack.removeLast()
+            val top = localStack.removeAt(localStack.lastIndex)
             lineTokens.produceFromScopes(top.scopes, top.endPos)
         }
 
@@ -310,7 +310,7 @@ internal fun handleCaptures(
 
     // Pop remaining local stack elements
     while (localStack.isNotEmpty()) {
-        val top = localStack.removeLast()
+        val top = localStack.removeAt(localStack.lastIndex)
         lineTokens.produceFromScopes(top.scopes, top.endPos)
     }
 }
@@ -358,7 +358,7 @@ private fun checkWhileConditions(
 
     // Process in reverse (outermost BeginWhileRule first)
     while (whileRules.isNotEmpty()) {
-        val entry = whileRules.removeLast()
+        val entry = whileRules.removeAt(whileRules.lastIndex)
         val ruleScanner = entry.rule.compileWhileAG(
             grammar, entry.stack.endRule,
             allowA = currentIsFirstLine,
