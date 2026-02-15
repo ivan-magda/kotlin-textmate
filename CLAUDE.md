@@ -43,9 +43,9 @@ Compose UI (AnnotatedString) → Theme Engine → Tokenizer → Grammar → Rege
 
 ### Implementation stages (from plan-poc.md)
 
-Completed: Stage 0 (project setup), Stage 1 (Joni regex wrapper), Stage 2 (grammar parsing), Stage 3 (rule compilation), Stage 4 (tokenizer: StateStack, core loop, capture retokenization, BeginWhile checking, integration testing), Stage 5 (theme engine: parsing, scope matching, style resolution)
+Completed: Stage 0 (project setup), Stage 1 (Joni regex wrapper), Stage 2 (grammar parsing), Stage 3 (rule compilation), Stage 4 (tokenizer: StateStack, core loop, capture retokenization, BeginWhile checking, integration testing), Stage 5 (theme engine: parsing, scope matching, style resolution), Stage 6 (Compose UI: CodeHighlighter, CodeBlock composable, sample app with 3 grammars + theme switching)
 Skipped: Injection grammars (out of scope for PoC — content inside injected grammars tokenized as plain text)
-Pending: Stage 6 (Compose UI), Stage 7 (validation)
+Pending: Stage 7 (validation)
 
 ## Key Technical Details
 
