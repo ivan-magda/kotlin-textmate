@@ -35,13 +35,13 @@ Compose UI (AnnotatedString) → Theme Engine → Tokenizer → Grammar → Rege
 
 - **regex/** — Joni-based Oniguruma wrapper. `IOnigLib`/`OnigScanner` interfaces abstract the regex engine. `OnigString` handles UTF-8 byte↔char offset conversion (critical because Joni operates on byte offsets while the API uses char offsets).
 - **grammar/raw/** — Data classes (`RawGrammar`, `RawRule`) and `GrammarReader` for parsing `.tmLanguage.json` files. Captures are `Map<String, RawRule>` (no separate `RawCapture` type). Rule IDs are assigned during compilation by `RuleFactory`, not during parsing.
-- **grammar/** — Rule compilation layer: `sealed class Rule` hierarchy (`CaptureRule`, `MatchRule`, `IncludeOnlyRule`, `BeginEndRule`, `BeginWhileRule`), `RuleFactory` (compiles `RawRule` → `Rule`), `RegExpSource`/`RegExpSourceList` (regex pattern management with anchor caching), `CompiledRule` (OnigScanner wrapper). Implementation details are `internal`; Rule constructors are `internal` (only `RuleFactory` creates them). `IRuleRegistry.getRule()` returns nullable `Rule?` to handle circular references during compilation.
+- **grammar/** — Rule compilation layer: `sealed class Rule` hierarchy (`CaptureRule`, `MatchRule`, `IncludeOnlyRule`, `BeginEndRule`, `BeginWhileRule`), `RuleFactory` (compiles `RawRule` → `Rule`), `RegExpSource`/`RegExpSourceList` (regex pattern management with anchor caching), `CompiledRule` (OnigScanner wrapper). `Grammar` class compiles raw grammars and exposes `tokenizeLine()`. `Tokenizer.kt` has the core `tokenizeString` loop. `LineTokens` accumulates tokens. `StateStack`/`StateStackImpl` track parser state across lines. Implementation details are `internal`; Rule constructors are `internal` (only `RuleFactory` creates them). `IRuleRegistry.getRule()` returns nullable `Rule?` to handle circular references during compilation.
 - **theme/**, **registry/** — Placeholder directories for upcoming stages
 
 ### Implementation stages (from plan-poc.md)
 
-Completed: Stage 0 (project setup), Stage 1 (Joni regex wrapper), Stage 2 (grammar parsing), Stage 3 (rule compilation)
-Pending: Stage 4 (tokenizer), Stage 5 (theme engine), Stage 6 (Compose UI), Stage 7 (validation)
+Completed: Stage 0 (project setup), Stage 1 (Joni regex wrapper), Stage 2 (grammar parsing), Stage 3 (rule compilation), Stage 4a (StateStack), Stage 4b (tokenizer core loop + Grammar class)
+Pending: Stage 4c (BeginWhile condition checking, injection grammars), Stage 5 (theme engine), Stage 6 (Compose UI), Stage 7 (validation)
 
 ## Key Technical Details
 
