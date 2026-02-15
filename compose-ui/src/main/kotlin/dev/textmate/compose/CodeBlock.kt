@@ -11,9 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.AnnotatedString
 import dev.textmate.grammar.Grammar
 import dev.textmate.theme.Theme
 
@@ -23,15 +21,23 @@ import dev.textmate.theme.Theme
 internal fun Long.toComposeColor(): Color = Color(this.toInt())
 
 @Composable
+fun rememberHighlightedCode(
+    code: String,
+    grammar: Grammar,
+    theme: Theme,
+): AnnotatedString = remember(code, grammar, theme) {
+    CodeHighlighter(grammar, theme).highlight(code)
+}
+
+@Composable
 fun CodeBlock(
     code: String,
     grammar: Grammar,
     theme: Theme,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    style: CodeBlockStyle = CodeBlockDefaults.style(),
 ) {
-    val annotatedString = remember(code, grammar, theme) {
-        CodeHighlighter(grammar, theme).highlight(code)
-    }
+    val annotatedString = rememberHighlightedCode(code, grammar, theme)
     val backgroundColor = remember(theme) {
         theme.defaultStyle.background.toComposeColor()
     }
@@ -39,15 +45,16 @@ fun CodeBlock(
     SelectionContainer {
         Text(
             text = annotatedString,
-            fontFamily = FontFamily.Monospace,
-            fontSize = 14.sp,
-            lineHeight = 20.sp,
-            softWrap = false,
+            style = style.textStyle,
+            softWrap = style.softWrap,
             modifier = modifier
                 .fillMaxWidth()
                 .background(backgroundColor)
-                .horizontalScroll(rememberScrollState())
-                .padding(16.dp)
+                .then(
+                    if (!style.softWrap) Modifier.horizontalScroll(rememberScrollState())
+                    else Modifier
+                )
+                .padding(style.contentPadding)
         )
     }
 }

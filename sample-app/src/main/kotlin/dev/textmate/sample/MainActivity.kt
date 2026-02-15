@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.textmate.compose.CodeBlock
+import dev.textmate.compose.CodeBlockDefaults
 import dev.textmate.grammar.Grammar
 import dev.textmate.grammar.raw.GrammarReader
 import dev.textmate.regex.JoniOnigLib
@@ -39,15 +40,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 private val KOTLIN_SNIPPET = """
-data class User(val name: String, val age: Int)
+data class User(
+    val name: String, 
+    val age: Int
+)
 
 fun greet(user: User): String {
-    return "Hello, ${'$'}{user.name}! You are ${'$'}{user.age} years old."
+    return "Hello, ${'$'}{'$'}{user.name}!" +
+            "You are ${'$'}{'$'}{user.age} years old."
 }
 
 fun main() {
-    val users = listOf(User("Alice", 30), User("Bob", 25))
-    users.filter { it.age > 28 }.forEach { println(greet(it)) }
+    val users = listOf(
+        User("Alice", 30),
+        User("Bob", 25)
+    )
+    users
+        .filter { it.age > 28 }
+        .forEach { println(greet(it)) }
 }
 """.trimIndent()
 
@@ -169,6 +179,7 @@ private fun ErrorScreen(message: String) {
 @Composable
 private fun MainScreen(resources: LoadedResources) {
     var isDark by remember { mutableStateOf(true) }
+    var isSoftWrap by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableIntStateOf(0) }
     val language = Language.entries[selectedTab]
     val theme = if (isDark) resources.darkTheme else resources.lightTheme
@@ -178,6 +189,8 @@ private fun MainScreen(resources: LoadedResources) {
             TopAppBar(
                 title = { Text("KotlinTextMate") },
                 actions = {
+                    Text(if (isSoftWrap) "Wrap" else "Scroll")
+                    Switch(checked = isSoftWrap, onCheckedChange = { isSoftWrap = it })
                     Text(if (isDark) "Dark+" else "Light+")
                     Switch(checked = isDark, onCheckedChange = { isDark = it })
                 }
@@ -203,7 +216,8 @@ private fun MainScreen(resources: LoadedResources) {
                 CodeBlock(
                     code = language.snippet,
                     grammar = resources.grammars.getValue(language),
-                    theme = theme
+                    theme = theme,
+                    style = CodeBlockDefaults.style(softWrap = isSoftWrap),
                 )
             }
         }
