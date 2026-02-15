@@ -13,6 +13,12 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+sourceSets {
+    test {
+        resources.srcDir(rootProject.file("shared-assets"))
+    }
+}
+
 dependencies {
     implementation(libs.joni)
     implementation(libs.gson)

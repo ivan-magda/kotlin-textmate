@@ -40,6 +40,12 @@ android {
     buildFeatures {
         compose = true
     }
+
+    sourceSets {
+        getByName("main") {
+            assets.srcDir(rootProject.file("shared-assets"))
+        }
+    }
 }
 
 dependencies {
@@ -55,6 +61,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.foundation)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 

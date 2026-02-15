@@ -20,7 +20,7 @@ KotlinTextMate is a Kotlin port of [vscode-textmate](https://github.com/microsof
 ## Module Structure
 
 - **core/** — JVM library: regex layer (Joni wrapper), grammar parsing, tokenizer, theme engine
-- **compose-ui/** — Android library: Compose UI bridge (depends on core)
+- **compose-ui/** — Android library: Compose UI bridge (depends on core). Public API: `CodeBlock` composable, `CodeBlockStyle`/`CodeBlockDefaults` (Material3 Defaults pattern), `rememberHighlightedCode` (escape hatch for custom rendering), `CodeHighlighter`
 - **sample-app/** — Android app: demo application (depends on core + compose-ui)
 
 ## Architecture
@@ -43,9 +43,9 @@ Compose UI (AnnotatedString) → Theme Engine → Tokenizer → Grammar → Rege
 
 ### Implementation stages (from plan-poc.md)
 
-Completed: Stage 0 (project setup), Stage 1 (Joni regex wrapper), Stage 2 (grammar parsing), Stage 3 (rule compilation), Stage 4 (tokenizer: StateStack, core loop, capture retokenization, BeginWhile checking, integration testing), Stage 5 (theme engine: parsing, scope matching, style resolution)
+Completed: Stage 0 (project setup), Stage 1 (Joni regex wrapper), Stage 2 (grammar parsing), Stage 3 (rule compilation), Stage 4 (tokenizer: StateStack, core loop, capture retokenization, BeginWhile checking, integration testing), Stage 5 (theme engine: parsing, scope matching, style resolution), Stage 6 (Compose UI: CodeHighlighter, CodeBlock composable, sample app with 3 grammars + theme switching)
 Skipped: Injection grammars (out of scope for PoC — content inside injected grammars tokenized as plain text)
-Pending: Stage 6 (Compose UI), Stage 7 (validation)
+Pending: Stage 7 (validation)
 
 ## Key Technical Details
 
@@ -53,5 +53,5 @@ Pending: Stage 6 (Compose UI), Stage 7 (validation)
 - **Joni** (Java Oniguruma) for regex — works with byte offsets, requiring conversion to/from char offsets
 - **Gson** for JSON deserialization of grammar files
 - The `while` keyword in `RawRule` is mapped via `@SerializedName("while")` to `whilePattern`
-- Test resources include real VS Code grammars (JSON, Kotlin, Markdown) and themes (Dark+, Light+) in `core/src/test/resources/`
+- Grammar and theme files live in `shared-assets/` at the project root (single source of truth). Both `core` (test resources via `srcDir`) and `sample-app` (Android assets via `assets.srcDir`) point there. No duplication.
 - Reference source for porting: `https://github.com/microsoft/vscode-textmate` `src/` directory
