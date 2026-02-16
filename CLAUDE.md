@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-KotlinTextMate is a Kotlin port of [vscode-textmate](https://github.com/microsoft/vscode-textmate) (TypeScript). It provides a TextMate grammar tokenizer for syntax highlighting, targeting JVM/Android with a Compose UI layer. The implementation plan is in `plan-poc.md` (written in Russian).
+KotlinTextMate is a Kotlin port of [vscode-textmate](https://github.com/microsoft/vscode-textmate) (TypeScript). It provides a TextMate grammar tokenizer for syntax highlighting, targeting JVM/Android with a Compose UI layer. The implementation plan is in `docs/plans/plan-poc.md` (written in Russian).
 
 ## Build Commands
 
@@ -41,7 +41,7 @@ Compose UI (AnnotatedString) → Theme Engine → Tokenizer → Grammar → Rege
 - **theme/** — Theme engine: `Theme` (scope-to-style resolution via `match()`), `ThemeReader` (JSON parsing, theme merging), `FontStyle`/`ResolvedStyle` (public API). Supports legacy (`settings`) and modern (`tokenColors`) VS Code theme formats. Theme files are production VS Code themes (stripped of JSONC trailing commas). Unlike vscode-textmate (which resolves styles incrementally per scope push), our `match()` receives the full scope stack and iterates all scopes outermost-to-innermost — this is why middle scopes like `markup.heading` get colored.
 - **registry/** — Placeholder directory for upcoming stages
 
-### Implementation stages (from plan-poc.md)
+### Implementation stages (from docs/plans/plan-poc.md)
 
 Completed: Stage 0 (project setup), Stage 1 (Joni regex wrapper), Stage 2 (grammar parsing), Stage 3 (rule compilation), Stage 4 (tokenizer: StateStack, core loop, capture retokenization, BeginWhile checking, integration testing), Stage 5 (theme engine: parsing, scope matching, style resolution), Stage 6 (Compose UI: CodeHighlighter, CodeBlock composable, sample app with 3 grammars + theme switching)
 Skipped: Injection grammars (out of scope for PoC — content inside injected grammars tokenized as plain text)
