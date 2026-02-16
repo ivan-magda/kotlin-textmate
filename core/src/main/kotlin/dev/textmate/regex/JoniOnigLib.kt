@@ -11,8 +11,13 @@ import org.joni.exception.JOniException
 
 class JoniOnigLib : IOnigLib {
 
+    private val _sentinelPatterns = mutableSetOf<String>()
+
+    /** Number of unique regex patterns that fell back to the never-matching sentinel. */
+    val sentinelPatternCount: Int get() = _sentinelPatterns.size
+
     override fun createOnigScanner(patterns: List<String>): OnigScanner {
-        return JoniOnigScanner(patterns)
+        return JoniOnigScanner(patterns) { pattern -> _sentinelPatterns.add(pattern) }
     }
 
     override fun createOnigString(str: String): OnigString {
@@ -20,7 +25,10 @@ class JoniOnigLib : IOnigLib {
     }
 }
 
-internal class JoniOnigScanner(patterns: List<String>) : OnigScanner {
+internal class JoniOnigScanner(
+    patterns: List<String>,
+    private val onSentinel: ((String) -> Unit)? = null
+) : OnigScanner {
 
     private val regexes: List<Regex> = patterns.map { compilePattern(it) }
 
@@ -73,27 +81,28 @@ internal class JoniOnigScanner(patterns: List<String>) : OnigScanner {
         return MatchResult(index = patternIndex, captureIndices = captureIndices)
     }
 
+    private fun compilePattern(pattern: String): Regex {
+        val patternBytes = pattern.toByteArray(Charsets.UTF_8)
+        return try {
+            Regex(
+                patternBytes,
+                0,
+                patternBytes.size,
+                Option.CAPTURE_GROUP,
+                UTF8Encoding.INSTANCE,
+                Syntax.DEFAULT,
+                WarnCallback.NONE
+            )
+        } catch (_: JOniException) {
+            onSentinel?.invoke(pattern)
+            NEVER_MATCH_REGEX
+        }
+    }
+
     companion object {
         private val NEVER_MATCH_REGEX: Regex by lazy {
             val bytes = "(?!x)x".toByteArray(Charsets.UTF_8)
             Regex(bytes, 0, bytes.size, Option.CAPTURE_GROUP, UTF8Encoding.INSTANCE, Syntax.DEFAULT, WarnCallback.NONE)
-        }
-
-        private fun compilePattern(pattern: String): Regex {
-            val patternBytes = pattern.toByteArray(Charsets.UTF_8)
-            return try {
-                Regex(
-                    patternBytes,
-                    0,
-                    patternBytes.size,
-                    Option.CAPTURE_GROUP,
-                    UTF8Encoding.INSTANCE,
-                    Syntax.DEFAULT,
-                    WarnCallback.NONE
-                )
-            } catch (_: JOniException) {
-                NEVER_MATCH_REGEX
-            }
         }
     }
 }
