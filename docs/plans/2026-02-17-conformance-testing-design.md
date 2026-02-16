@@ -1,0 +1,214 @@
+# Stage 7a: Conformance Testing — Design
+
+## Goal
+
+Validate that KotlinTextMate's tokenizer produces the same output as the reference vscode-textmate TypeScript implementation using exact token matching.
+
+## Scope
+
+### Build
+
+| Deliverable | Description |
+|---|---|
+| **FirstMateConformanceTest** | 33 self-contained first-mate fixture tests with exact `{value, scopes}` comparison |
+| **GoldenSnapshotTest** | Golden snapshot tests for 3 production grammars (JSON, Kotlin, Markdown) generated from canonical vscode-textmate |
+| **Sentinel inventory test** | Assert exact count of Joni-degraded patterns per grammar |
+| **ConformanceTestSupport** | Shared models, grammar loading, assertion helpers |
+| **generate-golden tooling** | Node.js script to generate reference snapshots from vscode-textmate |
+
+### Skip
+
+| Item | Reason |
+|---|---|
+| Mini-Registry for 29 multi-grammar tests | Exercises cross-grammar embedding we explicitly don't support |
+| Suite1 tests | 2 usable JSON tests are redundant with first-mate |
+| whileTests (9 PList tests) | Requires PList parser; defer as separate PR with hand-converted JSON |
+| Theme conformance | Already validated via demo app + unit tests |
+| Binary token format (`tokenizeLine2`) | Not implemented |
+| Purpose-built edge-case grammars | Production grammars in golden snapshots cover these naturally |
+
+## Assertion Strategy
+
+### What to assert
+
+- **`value` + `scopes`** per token (not `startIndex`/`endIndex`). Matches the TypeScript test runner exactly. Wrong boundaries produce wrong values — boundary bugs are caught for free.
+- **Tiling invariant** per line: no gaps, no overlaps, first token starts at 0, last token ends at or past line length.
+- **Empty token filtering**: filter from both expected and actual when line is non-empty (matches vscode-textmate's own workaround).
+
+### Granularity
+
+Per-line assertions within per-test-case parameterization. State flows between lines within a test case. When line N fails, report it and stop (later lines are meaningless after state diverges). Other test cases continue running independently.
+
+### Failure output
+
+Custom diff showing the first divergent token with missing/extra scopes:
+
+```
+[TEST #24] Line 1: "{ some }excentricSyntax }"
+  token[0] OK: "{" [source.apply-end-pattern-last, ...]
+  token[2] MISMATCH:
+    expected: "}excentricSyntax" [scope, excentric]
+    actual:   "}"               [scope]
+    missing scopes: [excentric]
+```
+
+### Known divergences
+
+Dual-direction enforcement:
+1. Test NOT in `KNOWN_DIVERGENCES` fails → build breaks (regression)
+2. Test IN `KNOWN_DIVERGENCES` passes → build also breaks ("remove from list — divergence fixed")
+
+For the PoC, the set starts empty:
+- First-mate fixtures: zero divergences (none trigger Joni limitation)
+- Golden snapshots: corpus curated to avoid `~~strikethrough~~`
+
+## Data Classes
+
+```kotlin
+data class ExpectedToken(val value: String, val scopes: List<String>)
+data class ExpectedLine(val line: String, val tokens: List<ExpectedToken>)
+
+data class FirstMateTestCase(
+    val desc: String,
+    val grammarPath: String? = null,
+    val grammarScopeName: String? = null,
+    val grammars: List<String>,
+    val lines: List<ExpectedLine>
+)
+
+data class GoldenSnapshot(
+    val grammar: String,
+    val files: List<GoldenFile>
+)
+data class GoldenFile(val source: String, val lines: List<ExpectedLine>)
+```
+
+Deserialized with Gson (already a dependency) + `TypeToken` for generic lists + `?: throw` guard.
+
+## Test Framework
+
+JUnit 4 `@Parameterized`. No JUnit 5 migration.
+
+- `FirstMateConformanceTest`: parameterized per test case (`{0}` = test description)
+- `GoldenSnapshotTest`: parameterized per grammar
+
+## File Layout
+
+```
+core/src/test/
+├── kotlin/dev/textmate/
+│   ├── grammar/                          # existing tests (unchanged)
+│   └── conformance/                      # NEW
+│       ├── ConformanceTestSupport.kt     # Models, deserialization, grammar loading, assertions
+│       ├── FirstMateConformanceTest.kt   # 33 parameterized first-mate tests
+│       └── GoldenSnapshotTest.kt         # 3 parameterized golden snapshot tests
+│
+└── resources/conformance/                # NEW
+    ├── first-mate/
+    │   ├── tests.json                    # Copied from vscode-textmate (unmodified)
+    │   └── fixtures/                     # ~16 self-contained fixture grammars only
+    │       ├── hello.json
+    │       ├── coffee-script.json
+    │       ├── text.json
+    │       ├── content-name.json
+    │       ├── apply-end-pattern-last.json
+    │       ├── imaginary.json
+    │       ├── multiline.json
+    │       ├── c.json
+    │       ├── infinite-loop.json
+    │       ├── scss.json
+    │       ├── nested-captures.json
+    │       ├── hyperlink.json
+    │       ├── forever.json
+    │       ├── json.json
+    │       ├── thrift.json
+    │       └── loops.json
+    └── golden/
+        ├── json.snapshot.json            # Generated by Node.js script
+        ├── kotlin.snapshot.json
+        └── markdown.snapshot.json
+
+tools/generate-golden/                    # NEW (project root)
+├── package.json                          # vscode-textmate + vscode-oniguruma
+├── generate.mjs                          # Node.js ESM script
+└── corpus/                               # Source files to tokenize
+    ├── json/
+    │   └── mixed-values.json
+    ├── kotlin/
+    │   ├── functions.kt
+    │   └── string-interpolation.kt
+    └── markdown/
+        ├── headings-and-inline.md
+        └── block-elements.md
+```
+
+### Decisions
+
+- **Copy fixtures** into `core/src/test/resources/` — no symlinks, no dependency on `vscode-textmate/` checkout path
+- **Utility object, not abstract base class** — `ConformanceTestSupport` has shared functions; test classes compose what they need
+- **`tools/` at project root** — Node.js tooling outside the Kotlin build, run manually
+- **Manual golden regeneration** — `node tools/generate-golden/generate.mjs`, review `git diff`, commit
+
+## First-Mate Test Filtering
+
+Filter by runnability at discovery time, not by hardcoded test numbers:
+
+1. Skip `TEST #47`, `TEST #49` (require injection support)
+2. For remaining tests: check if all referenced fixture grammars are available in `conformance/first-mate/fixtures/`
+3. Only the ~16 self-contained grammars are copied, so multi-grammar tests are automatically excluded
+
+**Extensibility:** When Registry arrives, copy remaining fixtures and relax the filter. Zero structural changes.
+
+## Golden Snapshot Format
+
+```json
+{
+  "grammar": "grammars/JSON.tmLanguage.json",
+  "generatedWith": "vscode-textmate@9.2.0",
+  "files": [
+    {
+      "source": "json/mixed-values.json",
+      "lines": [
+        {
+          "line": "{\"key\": 42}",
+          "tokens": [
+            {"value": "{", "scopes": ["source.json", "meta.structure.dictionary.json", "punctuation.definition.dictionary.begin.json"]}
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+Metadata fields (`generatedWith`) are informational, not used by test runner.
+
+## Sentinel Pattern Inventory
+
+Add a counter to `JoniOnigLib` for patterns that fell back to the never-matching sentinel:
+
+```kotlin
+@Test fun `JSON grammar has 0 sentinel patterns`()
+@Test fun `Kotlin grammar has 0 sentinel patterns`()
+@Test fun `Markdown grammar has exactly 1 sentinel pattern`()
+```
+
+Catches silent degradation from Joni or grammar updates.
+
+## Corpus Curation (Golden Snapshots)
+
+3-5 short source files per grammar (10-30 lines each), targeting features we care about:
+
+- **JSON:** nested objects, arrays, strings with escapes, numbers, booleans, null, comments
+- **Kotlin:** fun declarations, val/var, string interpolation (`$name`, `${expr}`), multiline strings, generics, lambdas, when expressions, annotations
+- **Markdown:** headings, bold/italic, fenced code blocks, indented code (BeginWhile), blockquotes, lists, links, inline code
+
+Explicitly avoid `~~strikethrough~~` in Markdown corpus (Joni backreference-in-lookbehind limitation).
+
+## Definition of Done
+
+1. `FirstMateConformanceTest` runs 33 tests with exact token matching — all pass
+2. `GoldenSnapshotTest` runs 3 grammar snapshots — all pass
+3. Sentinel inventory tests pass for all 3 grammars
+4. No `@Ignore` annotations — zero known divergences in the test suite
+5. Golden file generation tooling documented and functional
