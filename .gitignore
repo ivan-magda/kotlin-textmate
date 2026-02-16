@@ -33,3 +33,6 @@ Thumbs.db
 
 # Reference source
 vscode-textmate/
+
+# Worktrees
+.worktrees/
