@@ -1,0 +1,12 @@
+{
+  "name": "test",
+  "version": 42,
+  "active": true,
+  "tags": ["alpha", "beta"],
+  "metadata": null,
+  "nested": {
+    "key": "value with \"escapes\" and \\backslash",
+    "numbers": [1, -2.5, 3e10],
+    "empty": {}
+  }
+}
