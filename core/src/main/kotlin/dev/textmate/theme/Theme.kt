@@ -27,25 +27,33 @@ class Theme internal constructor(
 ) {
     /**
      * Resolves the style for a scope stack (outermost to innermost).
+     *
+     * Checks each scope in the stack against theme rules, not just the leaf.
+     * Iterates outermost to innermost so inner scope matches override outer
+     * ones via last-writer-wins — equivalent to vscode-textmate's incremental
+     * per-scope-push resolution.
+     *
      * Returns [defaultStyle] if no rules match or [scopes] is empty.
      */
     fun match(scopes: List<String>): ResolvedStyle {
         if (scopes.isEmpty()) return defaultStyle
 
-        val leafScope = scopes.last()
-        val parentStack = scopes.subList(0, scopes.size - 1)
-
         var foreground: Long? = null
         var background: Long? = null
         var fontStyle: Set<FontStyle>? = null
 
-        for (rule in rules) {
-            if (!matchesScope(leafScope, rule.scope)) continue
-            if (rule.parentScopes != null && !matchesParentScopes(parentStack, rule.parentScopes)) continue
+        for (i in scopes.indices) {
+            val scope = scopes[i]
+            val parents = scopes.subList(0, i)
 
-            if (rule.foreground != null) foreground = rule.foreground
-            if (rule.background != null) background = rule.background
-            if (rule.fontStyle != null) fontStyle = rule.fontStyle
+            for (rule in rules) {
+                if (!matchesScope(scope, rule.scope)) continue
+                if (rule.parentScopes != null && !matchesParentScopes(parents, rule.parentScopes)) continue
+
+                if (rule.foreground != null) foreground = rule.foreground
+                if (rule.background != null) background = rule.background
+                if (rule.fontStyle != null) fontStyle = rule.fontStyle
+            }
         }
 
         return ResolvedStyle(

@@ -3,7 +3,6 @@ package dev.textmate.grammar
 import dev.textmate.grammar.raw.GrammarReader
 import dev.textmate.grammar.tokenize.StateStack
 import dev.textmate.regex.JoniOnigLib
-import org.joni.exception.SyntaxException
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -273,16 +272,60 @@ class GrammarIntegrationTest {
     }
 
     @Test
-    fun `Markdown Joni lookbehind crash on inline patterns`() {
-        // Joni crashes on complex lookbehinds used in Markdown inline patterns:
-        //   (?<=\S), (?<!\w), etc. in bold, italic, strikethrough, links, inline code.
-        // Headings include #inline in captures, so "# Title" triggers the crash.
-        // If this test fails (no exception thrown), Joni has fixed lookbehind support.
+    fun `Markdown inline patterns with graceful degradation`() {
+        // Joni doesn't support backreferences inside lookbehinds (strikethrough pattern).
+        // Graceful degradation in JoniOnigLib replaces unsupported patterns with a
+        // never-matching sentinel, so tokenization succeeds without crash.
         val grammar = loadGrammar("grammars/markdown.tmLanguage.json")
 
-        assertThrows(SyntaxException::class.java) {
-            val r1 = grammar.tokenizeLine("# Title")
-            grammar.tokenizeLine("Some **bold** and `inline code`", r1.ruleStack)
+        val r1 = grammar.tokenizeLine("# Title")
+        val r2 = grammar.tokenizeLine("Some **bold** and `inline code`", r1.ruleStack)
+
+        printTokens("# Title", r1.tokens)
+        printTokens("Some **bold** and `inline code`", r2.tokens)
+
+        // Heading should get markup.heading scope
+        assertTrue("Heading should have markup.heading scope",
+            r1.tokens.any { it.scopes.any { s -> s.startsWith("markup.heading") } })
+
+        // Bold should get markup.bold scope
+        assertTrue("Bold should have markup.bold scope",
+            r2.tokens.any { it.scopes.any { s -> s.startsWith("markup.bold") } })
+
+        // Inline code should get markup.inline.raw scope
+        assertTrue("Inline code should have markup.inline.raw scope",
+            r2.tokens.any { it.scopes.any { s -> s.startsWith("markup.inline.raw") } })
+    }
+
+    @Test
+    fun `Markdown headings and inline formatting`() {
+        val grammar = loadGrammar("grammars/markdown.tmLanguage.json")
+        val results = tokenizeLines(
+            grammar,
+            "# Hello World",
+            "",
+            "Some **bold** and *italic* text.",
+            "",
+            "> Blockquote text",
+            "",
+            "- List item"
+        )
+
+        for ((line, result) in results) {
+            printTokens(line, result.tokens)
+            assertTokensCoverLine(line, result.tokens)
         }
+
+        // Heading
+        assertTrue("Should have heading scope",
+            results[0].second.tokens.any { it.scopes.any { s -> s.startsWith("markup.heading") } })
+
+        // Bold
+        assertTrue("Should have bold scope",
+            results[2].second.tokens.any { it.scopes.any { s -> s.startsWith("markup.bold") } })
+
+        // Italic
+        assertTrue("Should have italic scope",
+            results[2].second.tokens.any { it.scopes.any { s -> s.startsWith("markup.italic") } })
     }
 }

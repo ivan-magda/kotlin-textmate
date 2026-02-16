@@ -7,7 +7,8 @@ internal data class RawTheme(
     val name: String? = null,
     val include: String? = null,
     val tokenColors: List<RawThemeSetting>? = null,
-    val settings: List<RawThemeSetting>? = null
+    val settings: List<RawThemeSetting>? = null,
+    val colors: Map<String, String>? = null
 )
 
 /**

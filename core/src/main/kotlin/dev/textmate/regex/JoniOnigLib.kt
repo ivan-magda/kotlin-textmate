@@ -7,6 +7,7 @@ import org.joni.Regex
 import org.joni.Region
 import org.joni.Syntax
 import org.joni.WarnCallback
+import org.joni.exception.SyntaxException
 
 class JoniOnigLib : IOnigLib {
 
@@ -73,17 +74,26 @@ internal class JoniOnigScanner(patterns: List<String>) : OnigScanner {
     }
 
     companion object {
+        private val NEVER_MATCH_REGEX: Regex by lazy {
+            val bytes = "(?!x)x".toByteArray(Charsets.UTF_8)
+            Regex(bytes, 0, bytes.size, Option.CAPTURE_GROUP, UTF8Encoding.INSTANCE, Syntax.DEFAULT, WarnCallback.NONE)
+        }
+
         private fun compilePattern(pattern: String): Regex {
             val patternBytes = pattern.toByteArray(Charsets.UTF_8)
-            return Regex(
-                patternBytes,
-                0,
-                patternBytes.size,
-                Option.CAPTURE_GROUP,
-                UTF8Encoding.INSTANCE,
-                Syntax.DEFAULT,
-                WarnCallback.NONE
-            )
+            return try {
+                Regex(
+                    patternBytes,
+                    0,
+                    patternBytes.size,
+                    Option.CAPTURE_GROUP,
+                    UTF8Encoding.INSTANCE,
+                    Syntax.DEFAULT,
+                    WarnCallback.NONE
+                )
+            } catch (_: SyntaxException) {
+                NEVER_MATCH_REGEX
+            }
         }
     }
 }

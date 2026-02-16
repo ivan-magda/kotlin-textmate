@@ -163,7 +163,7 @@ class ThemeTest {
     @Test
     fun `comment matches dark_vs rule`() {
         val style = darkPlus.match(listOf("source.kotlin", "comment.line.double-slash.kotlin"))
-        assertEquals(0xFF608B4E, style.foreground)
+        assertEquals(0xFF6A9955, style.foreground)
     }
 
     @Test
@@ -185,10 +185,11 @@ class ThemeTest {
     }
 
     @Test
-    fun `parent scope rule matches entity name function in object literal`() {
-        // "meta.object-literal.key entity.name.function" → #9CDCFE
+    fun `entity name function in object literal uses function color`() {
+        // Production dark_plus: meta.object-literal.key → #9CDCFE, entity.name.function → #DCDCAA
+        // Leaf scope (entity.name.function) wins
         val style = darkPlus.match(listOf("source.js", "meta.object-literal.key", "entity.name.function"))
-        assertEquals(0xFF9CDCFE, style.foreground)
+        assertEquals(0xFFDCDCAA, style.foreground)
     }
 
     @Test
@@ -196,6 +197,15 @@ class ThemeTest {
         // "entity.name.function" without parent → #DCDCAA
         val style = darkPlus.match(listOf("source.js", "entity.name.function"))
         assertEquals(0xFFDCDCAA, style.foreground)
+    }
+
+    @Test
+    fun `markup heading matches middle scope in stack`() {
+        val style = darkPlus.match(
+            listOf("text.html.markdown", "markup.heading.1.markdown", "entity.name.section.markdown")
+        )
+        assertEquals(0xFF569CD6, style.foreground)
+        assertTrue(style.fontStyle.contains(FontStyle.BOLD))
     }
 
     @Test

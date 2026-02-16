@@ -38,7 +38,7 @@ Compose UI (AnnotatedString) → Theme Engine → Tokenizer → Grammar → Rege
 - **grammar/raw/** — Data classes (`RawGrammar`, `RawRule`) and `GrammarReader` for parsing `.tmLanguage.json` files. Captures are `Map<String, RawRule>` (no separate `RawCapture` type). Rule IDs are assigned during compilation by `RuleFactory`, not during parsing.
 - **grammar/rule/** — Rule hierarchy and compilation: `sealed class Rule` (`CaptureRule`, `MatchRule`, `IncludeOnlyRule`, `BeginEndRule`, `BeginWhileRule`), `RuleFactory` (compiles `RawRule` → `Rule`), `RegExpSource`/`RegExpSourceList` (regex pattern management with anchor caching), `CompiledRule` (OnigScanner wrapper), `IRuleRegistry`/`IRuleFactoryHelper` interfaces. Implementation details are `internal`; Rule constructors are `internal` (only `RuleFactory` creates them). `IRuleRegistry.getRule()` returns nullable `Rule?` to handle circular references during compilation.
 - **grammar/tokenize/** — Tokenization engine and state: `Tokenizer.kt` (core `tokenizeString` loop), `LineTokens` (token accumulator), `StateStack`/`StateStackImpl` (parser state across lines), `ScopeStack`/`AttributedScopeStack` (scope name tracking).
-- **theme/** — Theme engine: `Theme` (scope-to-style resolution via `match()`), `ThemeReader` (JSON parsing, theme merging), `FontStyle`/`ResolvedStyle` (public API). Supports legacy (`settings`) and modern (`tokenColors`) VS Code theme formats. Theme files are clean JSON from vscode-textmate test-cases (not JSONC).
+- **theme/** — Theme engine: `Theme` (scope-to-style resolution via `match()`), `ThemeReader` (JSON parsing, theme merging), `FontStyle`/`ResolvedStyle` (public API). Supports legacy (`settings`) and modern (`tokenColors`) VS Code theme formats. Theme files are production VS Code themes (stripped of JSONC trailing commas). Unlike vscode-textmate (which resolves styles incrementally per scope push), our `match()` receives the full scope stack and iterates all scopes outermost-to-innermost — this is why middle scopes like `markup.heading` get colored.
 - **registry/** — Placeholder directory for upcoming stages
 
 ### Implementation stages (from plan-poc.md)
@@ -50,7 +50,7 @@ Pending: Stage 7 (validation)
 ## Key Technical Details
 
 - **Kotlin 2.0.21**, JVM target 17, Android minSdk 24
-- **Joni** (Java Oniguruma) for regex — works with byte offsets, requiring conversion to/from char offsets
+- **Joni** (Java Oniguruma) for regex — works with byte offsets, requiring conversion to/from char offsets. Graceful degradation: unsupported patterns (backreferences inside lookbehinds) compile to a never-matching sentinel instead of crashing
 - **Gson** for JSON deserialization of grammar files
 - The `while` keyword in `RawRule` is mapped via `@SerializedName("while")` to `whilePattern`
 - Grammar and theme files live in `shared-assets/` at the project root (single source of truth). Both `core` (test resources via `srcDir`) and `sample-app` (Android assets via `assets.srcDir`) point there. No duplication.

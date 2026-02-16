@@ -70,9 +70,17 @@ private val JSON_SNIPPET = """
 }
 """.trimIndent()
 
-// Uses only patterns safe from Joni's lookbehind limitation (no bold, italic, headings, links)
 private val MARKDOWN_SNIPPET = """
+# Hello World
+
+Some **bold** text and *italic* text with `inline code`.
+
 ---
+
+> Blockquote with **bold** inside
+
+- List item one
+- List item two
 
     indented code block
     val x = 42

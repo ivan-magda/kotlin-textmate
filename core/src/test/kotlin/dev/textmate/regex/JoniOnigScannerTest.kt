@@ -217,10 +217,12 @@ class JoniOnigScannerTest {
         assertEquals(4, r2!!.captureIndices[0].start)
     }
 
-    // Test 14: Invalid regex throws SyntaxException
-    @Test(expected = org.joni.exception.SyntaxException::class)
-    fun `invalid regex pattern throws SyntaxException`() {
-        lib.createOnigScanner(listOf("[invalid"))
+    // Test 14: Invalid regex degrades gracefully (never matches)
+    @Test
+    fun `invalid regex pattern degrades to never-matching`() {
+        val scanner = lib.createOnigScanner(listOf("[invalid"))
+        val str = lib.createOnigString("test input")
+        assertNull(scanner.findNextMatchSync(str, 0))
     }
 
     // Test 15: Empty patterns list

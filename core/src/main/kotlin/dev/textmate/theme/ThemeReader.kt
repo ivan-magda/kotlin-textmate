@@ -36,10 +36,16 @@ object ThemeReader {
         var globalIndex = 0
         val allRules = mutableListOf<ParsedThemeRule>()
         var themeName = ""
+        var editorForeground: Long? = null
+        var editorBackground: Long? = null
 
         for (stream in inputStreams) {
             val raw = parseRawTheme(stream)
             if (raw.name != null) themeName = raw.name
+
+            // Modern themes store editor defaults in `colors` section
+            raw.colors?.get("editor.foreground")?.let { parseHexColor(it) }?.let { editorForeground = it }
+            raw.colors?.get("editor.background")?.let { parseHexColor(it) }?.let { editorBackground = it }
 
             val settings = raw.tokenColors ?: raw.settings ?: continue
 
@@ -69,9 +75,9 @@ object ThemeReader {
             }
         }
 
-        // Extract default style from rules with empty scope
-        var defaultFg = 0xFF000000L
-        var defaultBg = 0xFFFFFFFFL
+        // Extract default style: prefer empty-scope tokenColors entry, then colors.editor.*
+        var defaultFg = editorForeground ?: 0xFF000000L
+        var defaultBg = editorBackground ?: 0xFFFFFFFFL
         var defaultFontStyle: Set<FontStyle> = emptySet()
 
         val contentRules = mutableListOf<ParsedThemeRule>()
