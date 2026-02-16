@@ -163,7 +163,7 @@ class ThemeTest {
     @Test
     fun `comment matches dark_vs rule`() {
         val style = darkPlus.match(listOf("source.kotlin", "comment.line.double-slash.kotlin"))
-        assertEquals(0xFF608B4E, style.foreground)
+        assertEquals(0xFF6A9955, style.foreground)
     }
 
     @Test
@@ -185,10 +185,11 @@ class ThemeTest {
     }
 
     @Test
-    fun `parent scope rule matches entity name function in object literal`() {
-        // "meta.object-literal.key entity.name.function" → #9CDCFE
+    fun `entity name function in object literal uses function color`() {
+        // Production dark_plus: meta.object-literal.key → #9CDCFE, entity.name.function → #DCDCAA
+        // Leaf scope (entity.name.function) wins
         val style = darkPlus.match(listOf("source.js", "meta.object-literal.key", "entity.name.function"))
-        assertEquals(0xFF9CDCFE, style.foreground)
+        assertEquals(0xFFDCDCAA, style.foreground)
     }
 
     @Test
@@ -196,6 +197,15 @@ class ThemeTest {
         // "entity.name.function" without parent → #DCDCAA
         val style = darkPlus.match(listOf("source.js", "entity.name.function"))
         assertEquals(0xFFDCDCAA, style.foreground)
+    }
+
+    @Test
+    fun `markup heading matches middle scope in stack`() {
+        val style = darkPlus.match(
+            listOf("text.html.markdown", "markup.heading.1.markdown", "entity.name.section.markdown")
+        )
+        assertEquals(0xFF569CD6, style.foreground)
+        assertTrue(style.fontStyle.contains(FontStyle.BOLD))
     }
 
     @Test
@@ -229,5 +239,66 @@ class ThemeTest {
         val style = darkPlus.match(listOf("text.html.markdown", "markup.bold"))
         assertTrue(style.fontStyle.contains(FontStyle.BOLD))
         assertEquals(0xFF569CD6, style.foreground)
+    }
+
+    @Test
+    fun `parent scope rule matches keyword operator new in source cpp`() {
+        // dark_plus has "source.cpp keyword.operator.new" → #C586C0
+        // plain "keyword.operator" in dark_vs → #D4D4D4
+        // With source.cpp parent, the parent scope rule should win
+        val style = darkPlus.match(listOf("source.cpp", "meta.block", "keyword.operator.new"))
+        assertEquals(0xFFC586C0, style.foreground)
+    }
+
+    @Test
+    fun `parent scope rule does not match without required parent`() {
+        // dark_vs has standalone "keyword.operator.new" → #569CD6
+        // dark_plus has "source.cpp keyword.operator.new" → #C586C0 (requires parent)
+        // Without source.cpp parent, the standalone dark_vs rule wins
+        val style = darkPlus.match(listOf("source.other", "keyword.operator.new"))
+        assertEquals(0xFF569CD6, style.foreground)
+    }
+
+    // --- Synthetic Theme.match tests ---
+
+    private val defaultStyle = ResolvedStyle(0xFF000000, 0xFFFFFFFF, emptySet())
+
+    private fun syntheticTheme(vararg rules: ParsedThemeRule): Theme {
+        return Theme("test", defaultStyle, rules.toList().sortedWith(::compareRules))
+    }
+
+    @Test
+    fun `independent attributes compose from different stack depths`() {
+        val theme = syntheticTheme(
+            ParsedThemeRule("outer", null, 0, setOf(FontStyle.BOLD), null, null),
+            ParsedThemeRule("inner", null, 1, null, 0xFF00FF00, null)
+        )
+        val style = theme.match(listOf("outer", "inner"))
+        assertEquals(0xFF00FF00, style.foreground)
+        assertTrue(style.fontStyle.contains(FontStyle.BOLD))
+        assertEquals(defaultStyle.background, style.background)
+    }
+
+    @Test
+    fun `single scope list works correctly`() {
+        val theme = syntheticTheme(
+            ParsedThemeRule("keyword", null, 0, null, 0xFFFF0000, null)
+        )
+        val style = theme.match(listOf("keyword"))
+        assertEquals(0xFFFF0000, style.foreground)
+    }
+
+    @Test
+    fun `more specific rule overrides less specific at same depth`() {
+        val theme = syntheticTheme(
+            ParsedThemeRule("keyword", null, 0, null, 0xFFFF0000, null),
+            ParsedThemeRule("keyword", listOf("source"), 1, null, 0xFF00FF00, null)
+        )
+        // With matching parent: parent-scoped rule overrides
+        val withParent = theme.match(listOf("source", "keyword"))
+        assertEquals(0xFF00FF00, withParent.foreground)
+        // Without matching parent: base rule applies
+        val noParent = theme.match(listOf("other", "keyword"))
+        assertEquals(0xFFFF0000, noParent.foreground)
     }
 }

@@ -16,7 +16,7 @@ class ThemeReaderTest {
     @Test
     fun `load Dark VS legacy settings format`() {
         val theme = loadTheme("themes/dark_vs.json")
-        assertEquals("Dark Visual Studio", theme.name)
+        assertEquals("Dark (Visual Studio)", theme.name)
         // Verify rules loaded by matching a known scope
         assertNotEquals(theme.defaultStyle, theme.match(listOf("source", "comment")))
     }
@@ -30,7 +30,7 @@ class ThemeReaderTest {
     @Test
     fun `load Light VS`() {
         val theme = loadTheme("themes/light_vs.json")
-        assertEquals("Light Visual Studio", theme.name)
+        assertEquals("Light (Visual Studio)", theme.name)
     }
 
     @Test
@@ -48,7 +48,7 @@ class ThemeReaderTest {
     }
 
     @Test
-    fun `Light VS falls back to black on white`() {
+    fun `Light VS default foreground and background`() {
         val theme = loadTheme("themes/light_vs.json")
         assertEquals(0xFF000000, theme.defaultStyle.foreground)
         assertEquals(0xFFFFFFFFL, theme.defaultStyle.background)
