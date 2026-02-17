@@ -39,13 +39,13 @@ Compose UI (AnnotatedString) → Theme Engine → Tokenizer → Grammar → Rege
 - **grammar/rule/** — Rule hierarchy and compilation: `sealed class Rule` (`CaptureRule`, `MatchRule`, `IncludeOnlyRule`, `BeginEndRule`, `BeginWhileRule`), `RuleFactory` (compiles `RawRule` → `Rule`), `RegExpSource`/`RegExpSourceList` (regex pattern management with anchor caching), `CompiledRule` (OnigScanner wrapper), `IRuleRegistry`/`IRuleFactoryHelper` interfaces. Implementation details are `internal`; Rule constructors are `internal` (only `RuleFactory` creates them). `IRuleRegistry.getRule()` returns nullable `Rule?` to handle circular references during compilation.
 - **grammar/tokenize/** — Tokenization engine and state: `Tokenizer.kt` (core `tokenizeString` loop), `LineTokens` (token accumulator), `StateStack`/`StateStackImpl` (parser state across lines), `ScopeStack`/`AttributedScopeStack` (scope name tracking).
 - **theme/** — Theme engine: `Theme` (scope-to-style resolution via `match()`), `ThemeReader` (JSON parsing, theme merging), `FontStyle`/`ResolvedStyle` (public API). Supports legacy (`settings`) and modern (`tokenColors`) VS Code theme formats. Theme files are production VS Code themes (stripped of JSONC trailing commas). Unlike vscode-textmate (which resolves styles incrementally per scope push), our `match()` receives the full scope stack and iterates all scopes outermost-to-innermost — this is why middle scopes like `markup.heading` get colored.
-- **registry/** — Placeholder directory for upcoming stages
+- **registry/** — Placeholder for grammar registry (#16): multi-grammar loading, cross-grammar `include` resolution, grammar caching
 
 ### Implementation stages (from docs/plans/plan-poc.md)
 
 Completed: Stage 0 (project setup), Stage 1 (Joni regex wrapper), Stage 2 (grammar parsing), Stage 3 (rule compilation), Stage 4 (tokenizer: StateStack, core loop, capture retokenization, BeginWhile checking, integration testing), Stage 5 (theme engine: parsing, scope matching, style resolution), Stage 6 (Compose UI: CodeHighlighter, CodeBlock composable, sample app with 3 grammars + theme switching)
 Skipped: Injection grammars (out of scope for PoC — content inside injected grammars tokenized as plain text)
-Pending: Stage 7 (validation)
+Stage 7 (validation): conformance tests done (100% pass rate on 33 first-mate + 3 golden snapshots). Pending: performance benchmark (#19), README (#20), ARCHITECTURE.md (#21)
 
 ## Key Technical Details
 
