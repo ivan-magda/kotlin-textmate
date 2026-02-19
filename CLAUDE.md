@@ -21,6 +21,7 @@ KotlinTextMate is a Kotlin port of [vscode-textmate](https://github.com/microsof
 
 - **core/** — JVM library: regex layer (Joni wrapper), grammar parsing, tokenizer, theme engine
 - **compose-ui/** — Android library: Compose UI bridge (depends on core). Public API: `CodeBlock` composable, `CodeBlockStyle`/`CodeBlockDefaults` (Material3 Defaults pattern), `rememberHighlightedCode` (escape hatch for custom rendering), `CodeHighlighter`
+- **benchmark/** — JMH benchmarks via kotlinx-benchmark (depends on core). `./gradlew :benchmark:smokeBenchmark` (~1 min), `./gradlew :benchmark:benchmark` (full, ~8-10 min)
 - **sample-app/** — Android app: demo application (depends on core + compose-ui)
 
 ## Architecture
@@ -45,7 +46,7 @@ Compose UI (AnnotatedString) → Theme Engine → Tokenizer → Grammar → Rege
 
 Completed: Stage 0 (project setup), Stage 1 (Joni regex wrapper), Stage 2 (grammar parsing), Stage 3 (rule compilation), Stage 4 (tokenizer: StateStack, core loop, capture retokenization, BeginWhile checking, integration testing), Stage 5 (theme engine: parsing, scope matching, style resolution), Stage 6 (Compose UI: CodeHighlighter, CodeBlock composable, sample app with 3 grammars + theme switching)
 Skipped: Injection grammars (out of scope for PoC — content inside injected grammars tokenized as plain text)
-Stage 7 (validation): conformance tests done (100% pass rate on 33 first-mate + 4 golden snapshots). Benchmark corpus files added. Pending: performance benchmark (#19), README (#20), ARCHITECTURE.md (#21)
+Stage 7 (validation): conformance tests done (100% pass rate on 33 first-mate + 4 golden snapshots). Performance benchmark done (#19): Kotlin 79k, JSON 458k, Markdown 96k, JavaScript 10k lines/sec. Pending: README (#20), ARCHITECTURE.md (#21)
 
 ## Key Technical Details
 

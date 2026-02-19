@@ -25,3 +25,4 @@ rootProject.name = "KotlinTextMate"
 include(":core")
 include(":compose-ui")
 include(":sample-app")
+include(":benchmark")

@@ -13,6 +13,9 @@ joni = "2.2.1"
 jcodings = "1.0.58"
 gson = "2.11.0"
 
+# Benchmark
+kotlinxBenchmark = "0.4.16"
+
 # AndroidX & Compose
 composeBom = "2024.12.01"
 activityCompose = "1.9.3"
@@ -29,6 +32,9 @@ espresso = "3.6.1"
 joni = { group = "org.jruby.joni", name = "joni", version.ref = "joni" }
 jcodings = { group = "org.jruby.jcodings", name = "jcodings", version.ref = "jcodings" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+# Benchmark
+kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinxBenchmark" }
 
 # AndroidX
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,4 +60,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinxBenchmark" }
