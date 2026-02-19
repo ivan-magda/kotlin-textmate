@@ -101,7 +101,7 @@ internal class JoniOnigScanner(
 
     companion object {
         private val NEVER_MATCH_REGEX: Regex by lazy {
-            val bytes = "(?!x)x".toByteArray(Charsets.UTF_8)
+            val bytes = "(?!)".toByteArray(Charsets.UTF_8)
             Regex(bytes, 0, bytes.size, Option.CAPTURE_GROUP, UTF8Encoding.INSTANCE, Syntax.DEFAULT, WarnCallback.NONE)
         }
     }
