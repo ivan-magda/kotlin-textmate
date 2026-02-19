@@ -9,11 +9,15 @@ A Kotlin/JVM port of [vscode-textmate](https://github.com/microsoft/vscode-textm
 
 ## Why
 
-There was no standalone TextMate grammar engine for Kotlin or Android.
-The closest JVM option, [tm4e](https://github.com/eclipse-tm4e/tm4e), targets Eclipse and requires Java 21.
-The only active KMP syntax highlighter, [Highlights](https://github.com/SnipMeDev/Highlights), uses hand-written regex and supports 17 languages.
+Existing TextMate engines for the JVM are either abandoned or tied to specific ecosystems.
+[codroid-textmate](https://github.com/haodong404/codroid-textmate) has been dormant since 2022.
+[tm4e](https://github.com/eclipse-tm4e/tm4e) targets Eclipse and requires Java 21.
+Neither provides a Compose UI layer.
 
-TextMate grammars — the same format VS Code uses — cover 600+ languages and are actively maintained. KotlinTextMate brings them to the JVM.
+The alternative is [Highlights](https://github.com/SnipMeDev/Highlights), which uses hand-written regex and supports 17 languages.
+
+TextMate grammars — the same format VS Code uses — cover 600+ languages and are actively maintained.
+KotlinTextMate ports vscode-textmate to Kotlin with Compose integration and published conformance tests and benchmarks.
 
 ## Features
 
