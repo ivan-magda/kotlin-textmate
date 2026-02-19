@@ -20,6 +20,7 @@ dependencies {
 benchmark {
     configurations {
         named("main") {
+            include("TokenizerBenchmark")
             warmups = 5
             iterations = 5
             iterationTime = 2
@@ -29,6 +30,7 @@ benchmark {
             param("grammar", "kotlin", "json", "markdown", "javascript")
         }
         register("smoke") {
+            include("TokenizerBenchmark")
             warmups = 2
             iterations = 3
             iterationTime = 1
@@ -36,6 +38,26 @@ benchmark {
             mode = "avgt"
             outputTimeUnit = "ms"
             param("grammar", "kotlin", "json", "markdown", "javascript")
+        }
+        register("singleLine") {
+            include("SingleLineBenchmark")
+            warmups = 5
+            iterations = 5
+            iterationTime = 2
+            iterationTimeUnit = "s"
+            mode = "avgt"
+            outputTimeUnit = "ms"
+            param("grammar", "json", "json-textmate")
+        }
+        register("singleLineSmoke") {
+            include("SingleLineBenchmark")
+            warmups = 2
+            iterations = 3
+            iterationTime = 1
+            iterationTimeUnit = "s"
+            mode = "avgt"
+            outputTimeUnit = "ms"
+            param("grammar", "json", "json-textmate")
         }
     }
     targets {
