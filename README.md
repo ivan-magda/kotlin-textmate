@@ -1,4 +1,5 @@
 ![Hero](docs/images/kotlin-textmate-hero.png)
+
 <!-- TODO: CI, license, Maven Central badges once published -->
 
 A Kotlin/JVM port of [vscode-textmate](https://github.com/microsoft/vscode-textmate) — TextMate grammar tokenizer for syntax highlighting on Android and JVM.
@@ -86,6 +87,18 @@ for (line in code.lines()) {
 | JavaScript | 10,300    | 97.1            |
 
 Competitive with [vscode-textmate](https://github.com/microsoft/vscode-textmate) (~5.6–18.3k lines/sec on jQuery) and [syntect](https://github.com/trishume/syntect) (~13k). Details and methodology in [BENCHMARK.md](docs/BENCHMARK.md).
+
+## Known limitations
+
+This is a proof-of-concept port. The following are not yet supported:
+
+- **No grammar registry or cross-grammar embedding.** Each `Grammar` is standalone. Grammars that `include` other grammars (e.g., Markdown fenced code blocks referencing `source.kotlin`) silently fall through to the parent scope. Tracked in [#16](https://github.com/ivan-magda/kotlin-textmate/issues/16).
+- **No injection grammars.** `RawGrammar.injections` is parsed but never evaluated. Grammars that use injections for scope-specific overrides or embedded languages will miss those rules. The scope matcher (`matcher.ts`) is not ported.
+- **Joni regex limitation.** Backreferences inside lookbehind assertions (e.g., `(?<=_\1)`) cannot compile in Joni. Such patterns fall back to a never-matching sentinel `(?!)`. Tracked in [#9](https://github.com/ivan-magda/kotlin-textmate/issues/9).
+- **JVM/Android only.** The regex layer uses Joni (Java Oniguruma). iOS/Desktop would require a `expect`/`actual` abstraction with a native Oniguruma binding.
+- **No incremental tokenization.** There is no built-in line-level state cache for partial re-tokenization. The bundled `CodeHighlighter` retokenizes the entire file on every call. Consumers can implement their own caching on top of `Grammar.tokenizeLine()`'s `prevState` parameter.
+- **Not thread-safe.** `Grammar` holds mutable compilation state. Do not call `tokenizeLine()` concurrently on the same instance. `Theme` is safe to share. See [ARCHITECTURE.md](ARCHITECTURE.md#thread-safety) for details.
+- **Per-token background color not rendered.** `CodeHighlighter` applies foreground color and font style from theme rules but drops per-token `background`. Only the theme's default background is used as the container color.
 
 ## Acknowledgments
 
