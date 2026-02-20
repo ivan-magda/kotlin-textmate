@@ -88,7 +88,7 @@ KotlinTextMate/
 
 ### Graceful regex degradation
 
-Joni (Java Oniguruma) cannot compile patterns with backreferences inside lookbehind assertions (e.g., `(?<=_\1)`). Instead of crashing, `JoniOnigLib.compilePattern()` catches `JOniException` and returns a never-matching sentinel regex `(?!)`. Pattern indices stay stable (critical for rule ID mapping). Unsupported patterns silently never match; text falls through to the parent scope.
+Joni (Java Oniguruma) cannot compile patterns with backreferences inside lookbehind assertions (e.g., `(?<=_\1)`). Instead of crashing, `JoniOnigScanner.compilePattern()` catches `JOniException` and returns a never-matching sentinel regex `(?!)`. Pattern indices stay stable (critical for rule ID mapping). Unsupported patterns silently never match; text falls through to the parent scope.
 
 **Why:** A single unsupported pattern in a 3000-rule grammar should not crash the entire tokenizer. In practice, only 1 pattern out of the 4 shipped grammars is affected (Markdown strikethrough). The sentinel count is tracked internally for regression testing.
 
