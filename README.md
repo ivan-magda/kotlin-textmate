@@ -1,10 +1,7 @@
-# KotlinTextMate
-
-A Kotlin/JVM port of [vscode-textmate](https://github.com/microsoft/vscode-textmate) — TextMate grammar tokenizer for syntax highlighting on Android and JVM.
-
+![Hero](docs/images/kotlin-textmate-hero.png)
 <!-- TODO: CI, license, Maven Central badges once published -->
 
-![Hero](docs/images/kotlin-textmate-hero.png)
+A Kotlin/JVM port of [vscode-textmate](https://github.com/microsoft/vscode-textmate) — TextMate grammar tokenizer for syntax highlighting on Android and JVM.
 
 ## Why
 
