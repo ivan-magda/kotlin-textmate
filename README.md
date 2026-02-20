@@ -4,8 +4,7 @@ A Kotlin/JVM port of [vscode-textmate](https://github.com/microsoft/vscode-textm
 
 <!-- TODO: CI, license, Maven Central badges once published -->
 
-<!--![Sample app screenshot](docs/images/sample-app.png) -->
-<!-- TODO: capture from emulator -->
+![Hero](docs/images/kotlin-textmate-hero.png)
 
 ## Why
 
