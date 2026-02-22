@@ -4,19 +4,19 @@ import dev.textmate.regex.CaptureIndex
 
 private val CAPTURING_REGEX_SOURCE = Regex("""\$(\d+)|\$\{(\d+):/(downcase|upcase)\}""")
 
-internal fun hasCaptures(regexSource: String?): Boolean {
+internal fun hasCaptures(regexSource: String?): Boolean =
     if (regexSource == null) {
-        return false
+        false
+    } else {
+        CAPTURING_REGEX_SOURCE.containsMatchIn(regexSource)
     }
-    return CAPTURING_REGEX_SOURCE.containsMatchIn(regexSource)
-}
 
 internal fun replaceCaptures(
     regexSource: String,
     captureSource: String,
     captureIndices: List<CaptureIndex>
-): String {
-    return CAPTURING_REGEX_SOURCE.replace(regexSource) { matchResult ->
+): String =
+    CAPTURING_REGEX_SOURCE.replace(regexSource) { matchResult ->
         val index = (matchResult.groupValues[1].ifEmpty { matchResult.groupValues[2] }).toInt()
         val capture = captureIndices.getOrNull(index)
         if (capture != null) {
@@ -34,9 +34,8 @@ internal fun replaceCaptures(
             matchResult.value
         }
     }
-}
 
-private val ESCAPE_REGEX = Regex("""[-\\{}\*+?|^$.,\[\]()#\s]""")
+private val ESCAPE_REGEX = Regex("""[-\\{}*+?|^$.,\[\]()#\s]""")
 
 internal fun escapeRegExpCharacters(value: String): String {
     return value.replace(ESCAPE_REGEX) { "\\${it.value}" }
