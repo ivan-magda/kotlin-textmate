@@ -15,10 +15,9 @@ internal fun parseInclude(include: String): IncludeReference {
         return IncludeReference.SelfReference
     }
 
-    val indexOfSharp = include.indexOf('#')
-    return when {
-        indexOfSharp == -1 -> IncludeReference.TopLevelReference(include)
-        indexOfSharp == 0 -> IncludeReference.RelativeReference(include.substring(1))
+    return when (val indexOfSharp = include.indexOf('#')) {
+        -1 -> IncludeReference.TopLevelReference(include)
+        0 -> IncludeReference.RelativeReference(include.substring(1))
         else -> IncludeReference.TopLevelRepositoryReference(
             include.substring(0, indexOfSharp),
             include.substring(indexOfSharp + 1)
