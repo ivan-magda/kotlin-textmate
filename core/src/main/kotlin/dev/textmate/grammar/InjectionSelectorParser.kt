@@ -17,12 +17,12 @@ internal class MatcherWithPriority(
  * Parses TextMate injection selectors into [MatcherWithPriority] instances.
  *
  * Selector syntax examples:
- *   "comment"                  — matches any scope starting with "comment"
- *   "text, string, comment"    — OR: any of the three
- *   "source.js comment"        — AND: both must appear in order
- *   "source.js -comment"       — AND NOT
- *   "L:comment"                — high priority
- *   "R:comment"                — low priority
+ *   "comment" — matches any scope starting with "comment"
+ *   "text, string, comment" — OR: any of the three
+ *   "source.js comment" — AND: both must appear in order
+ *   "source.js -comment" — AND NOT
+ *   "L:comment" — high priority
+ *   "R:comment" — low priority
  */
 internal object InjectionSelectorParser {
 
@@ -73,12 +73,14 @@ internal object InjectionSelectorParser {
                     val inner = parseOperand() ?: return null
                     { scopes -> !inner(scopes) }
                 }
+
                 t == "(" -> {
                     advance()
                     val inner = parseInnerExpression()
                     if (token == ")") advance()
                     inner
                 }
+
                 isIdentifier(t) -> {
                     val identifiers = mutableListOf<String>()
                     var current = token
@@ -89,6 +91,7 @@ internal object InjectionSelectorParser {
                     }
                     { scopes -> nameMatcher(identifiers, scopes) }
                 }
+
                 else -> null
             }
         }
@@ -110,7 +113,9 @@ internal object InjectionSelectorParser {
             while (m != null) {
                 matchers.add(m)
                 if (token == "|" || token == ",") {
-                    do { advance() } while (token == "|" || token == ",")
+                    do {
+                        advance()
+                    } while (token == "|" || token == ",")
                 } else break
                 m = parseConjunction()
             }
@@ -119,8 +124,8 @@ internal object InjectionSelectorParser {
         }
 
         companion object {
-            private val TOKEN_RE = Regex("""([LR]:|[\w\.:][\w\.:\-]*|[,|\-())])""")
-            private val IDENTIFIER_RE = Regex("""[\w\.:][\w\.:\-]*""")
+            private val TOKEN_RE = Regex("""([LR]:|[\w.:][\w.:\-]*|[,|\-()])""")
+            private val IDENTIFIER_RE = Regex("""[\w.:][\w.:\-]*""")
 
             private fun isIdentifier(token: String): Boolean =
                 IDENTIFIER_RE.matches(token)
@@ -145,8 +150,8 @@ internal object InjectionSelectorParser {
             private fun scopesAreMatching(scope: String, identifier: String): Boolean {
                 if (scope == identifier) return true
                 return scope.length > identifier.length
-                    && scope.startsWith(identifier)
-                    && scope[identifier.length] == '.'
+                        && scope.startsWith(identifier)
+                        && scope[identifier.length] == '.'
             }
         }
     }
