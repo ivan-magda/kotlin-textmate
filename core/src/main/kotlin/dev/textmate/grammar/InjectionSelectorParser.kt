@@ -99,10 +99,12 @@ internal object InjectionSelectorParser {
         private fun parseConjunction(): ScopeMatcher? {
             val matchers = mutableListOf<ScopeMatcher>()
             var m = parseOperand()
+
             while (m != null) {
                 matchers.add(m)
                 m = parseOperand()
             }
+
             return if (matchers.isEmpty()) {
                 null
             } else {
@@ -113,6 +115,7 @@ internal object InjectionSelectorParser {
         private fun parseInnerExpression(): ScopeMatcher? {
             val matchers = mutableListOf<ScopeMatcher>()
             var m = parseConjunction()
+
             while (m != null) {
                 matchers.add(m)
                 if (token == "|" || token == ",") {
@@ -124,6 +127,7 @@ internal object InjectionSelectorParser {
                 }
                 m = parseConjunction()
             }
+
             return if (matchers.isEmpty()) {
                 null
             } else {
@@ -141,6 +145,7 @@ internal object InjectionSelectorParser {
             private fun nameMatcher(identifiers: List<String>, scopes: List<String>): Boolean {
                 if (scopes.size < identifiers.size) return false
                 var lastIndex = 0
+
                 for (identifier in identifiers) {
                     var found = false
                     for (i in lastIndex until scopes.size) {
@@ -152,18 +157,18 @@ internal object InjectionSelectorParser {
                     }
                     if (!found) return false
                 }
+
                 return true
             }
 
-            private fun scopesAreMatching(scope: String, identifier: String): Boolean {
-                return if (scope == identifier) {
+            private fun scopesAreMatching(scope: String, identifier: String): Boolean =
+                if (scope == identifier) {
                     true
                 } else {
                     scope.length > identifier.length &&
                         scope.startsWith(identifier) &&
                         scope[identifier.length] == '.'
                 }
-            }
         }
     }
 }
