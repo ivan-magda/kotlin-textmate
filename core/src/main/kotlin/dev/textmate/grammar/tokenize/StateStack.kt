@@ -32,7 +32,8 @@ class StateStackImpl(
     val contentNameScopesList: AttributedScopeStack?
 ) : StateStack {
 
-    override val depth: Int = if (parent != null) parent.depth + 1 else 1
+    override val depth: Int =
+        if (parent != null) parent.depth + 1 else 1
 
     // Transient: reset to -1 between lines, not part of equality
     private var _enterPos: Int = enterPos
@@ -78,8 +79,8 @@ class StateStackImpl(
         endRule: String?,
         nameScopesList: AttributedScopeStack?,
         contentNameScopesList: AttributedScopeStack?
-    ): StateStackImpl {
-        return StateStackImpl(
+    ): StateStackImpl =
+        StateStackImpl(
             parent = this,
             ruleId = ruleId,
             enterPos = enterPos,
@@ -89,7 +90,6 @@ class StateStackImpl(
             nameScopesList = nameScopesList,
             contentNameScopesList = contentNameScopesList
         )
-    }
 
     fun pop(): StateStackImpl? = parent
 
