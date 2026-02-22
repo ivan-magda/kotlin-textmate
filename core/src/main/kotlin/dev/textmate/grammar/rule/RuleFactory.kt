@@ -145,21 +145,17 @@ internal object RuleFactory {
 
                         is IncludeReference.TopLevelReference -> {
                             val extRepo = helper.getExternalGrammarRepository(reference.scopeName, repository)
-                            if (extRepo != null) {
-                                val selfRule = extRepo["\$self"]
-                                if (selfRule != null) {
-                                    ruleId = getCompiledRuleId(selfRule, helper, extRepo)
-                                }
+                            val selfRule = extRepo?.get("\$self")
+                            if (selfRule != null) {
+                                ruleId = resolveRuleIdIfNotInProgress(selfRule, helper, extRepo)
                             }
                         }
 
                         is IncludeReference.TopLevelRepositoryReference -> {
                             val extRepo = helper.getExternalGrammarRepository(reference.scopeName, repository)
-                            if (extRepo != null) {
-                                val externalIncludedRule = extRepo[reference.ruleName]
-                                if (externalIncludedRule != null) {
-                                    ruleId = getCompiledRuleId(externalIncludedRule, helper, extRepo)
-                                }
+                            val externalIncludedRule = extRepo?.get(reference.ruleName)
+                            if (externalIncludedRule != null) {
+                                ruleId = resolveRuleIdIfNotInProgress(externalIncludedRule, helper, extRepo)
                             }
                         }
                     }
@@ -206,5 +202,16 @@ internal object RuleFactory {
         repository["\$base"] = base ?: selfRule
 
         return repository
+    }
+
+    private fun resolveRuleIdIfNotInProgress(
+        desc: RawRule,
+        helper: IRuleFactoryHelper,
+        repository: MutableMap<String, RawRule>
+    ): RuleId? {
+        val existingId = desc.id?.let(::RuleId)
+        val inProgress = existingId != null && helper.getRule(existingId) == null
+        if (inProgress) return null
+        return getCompiledRuleId(desc, helper, repository)
     }
 }

@@ -157,6 +157,35 @@ class RegistryTest {
     }
 
     @Test
+    fun `tokenizing cyclic external includes does not overflow`() {
+        val grammarA = RawGrammar(
+            scopeName = "source.cycle.a",
+            patterns = listOf(RawRule(include = "source.cycle.b"))
+        )
+        val grammarB = RawGrammar(
+            scopeName = "source.cycle.b",
+            patterns = listOf(RawRule(include = "source.cycle.a"))
+        )
+        val registry = Registry(
+            grammarSource = { scope ->
+                when (scope) {
+                    "source.cycle.a" -> grammarA
+                    "source.cycle.b" -> grammarB
+                    else -> null
+                }
+            },
+            onigLib = JoniOnigLib()
+        )
+
+        val grammar = requireNotNull(registry.loadGrammar("source.cycle.a"))
+        try {
+            grammar.tokenizeLine("test")
+        } catch (e: StackOverflowError) {
+            fail("Cyclic external includes should not cause StackOverflowError during tokenization")
+        }
+    }
+
+    @Test
     fun `Grammar without lookup still works`() {
         // Verify backward compatibility: Grammar without grammarLookup
         val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
