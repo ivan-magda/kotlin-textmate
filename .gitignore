@@ -36,3 +36,7 @@ vscode-textmate/
 
 # Worktrees
 .worktrees/
+
+# Plans
+docs/plans/
+!docs/plans/plan-poc.md
