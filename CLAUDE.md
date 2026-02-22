@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## General Rules
+
+Do NOT expand scope beyond what is explicitly requested. If the user asks to download one file, download that one file. Ask before adding extra corpus files, grammars, or other 'nice to have' additions.
+
 ## Project Overview
 
 KotlinTextMate is a Kotlin port of [vscode-textmate](https://github.com/microsoft/vscode-textmate) (TypeScript). It provides a TextMate grammar tokenizer for syntax highlighting, targeting JVM/Android with a Compose UI layer. The implementation plan is in `docs/plans/plan-poc.md` (written in Russian).
