@@ -33,11 +33,13 @@ class ScopeStack(
     fun getSegments(): List<String> {
         val result = mutableListOf<String>()
         var item: ScopeStack? = this
+
         while (item != null) {
             result.add(item.scopeName)
             item = item.parent
         }
         result.reverse()
+
         return result
     }
 
@@ -50,10 +52,12 @@ class ScopeStack(
     fun getExtensionIfDefined(base: ScopeStack?): List<String>? {
         val result = mutableListOf<String>()
         var item: ScopeStack? = this
+
         while (item != null && item !== base) {
             result.add(item.scopeName)
             item = item.parent
         }
+
         return if (item === base) {
             result.reversed()
         } else {
