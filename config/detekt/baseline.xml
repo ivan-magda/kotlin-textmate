@@ -2,66 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>ArgumentListWrapping:ConformanceTestSupport.kt$ConformanceTestSupport$( "Tiling: first token should start at 0 in '$testDesc', line $lineIndex", 0, tokens.first().startIndex )</ID>
-    <ID>ArgumentListWrapping:ConformanceTestSupport.kt$ConformanceTestSupport$( "Tiling: gap/overlap between token[${i - 1}] and token[$i] in '$testDesc', line $lineIndex", tokens[i - 1].endIndex, tokens[i].startIndex )</ID>
-    <ID>ArgumentListWrapping:FirstMateConformanceTest.kt$FirstMateConformanceTest$( grammar, testCase.lines, desc )</ID>
-    <ID>ArgumentListWrapping:GoldenSnapshotTest.kt$GoldenSnapshotTest$( grammar, file.lines, "$label/${file.source}" )</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Bold should have markup.bold scope", r2.tokens.any { it.scopes.any { s -&gt; s.startsWith("markup.bold") } })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Final brace should have dictionary end scope", line5Tokens.any { it.scopes.contains("punctuation.definition.dictionary.end.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Heading should have markup.heading scope", r1.tokens.any { it.scopes.any { s -&gt; s.startsWith("markup.heading") } })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Inline code should have markup.inline.raw scope", r2.tokens.any { it.scopes.any { s -&gt; s.startsWith("markup.inline.raw") } })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L1 should have fenced_code scope", results[0].second.tokens.any { it.scopes.contains("markup.fenced_code.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L1 should have fun keyword", l1.any { it.scopes.contains("keyword.hard.fun.kotlin") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L1 should have function name", l1.any { it.scopes.contains("entity.name.function.declaration.kotlin") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L1 should have separator scope", results[0].second.tokens.any { it.scopes.contains("meta.separator.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L2 should have fenced_code scope", l2.any { it.scopes.contains("markup.fenced_code.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L2 should have fenced_code scope", results[1].second.tokens.any { it.scopes.contains("markup.fenced_code.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L2 should have punctuation scope", l2.any { it.scopes.contains("punctuation.definition.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L2 should have string scope", l2.any { it.scopes.contains("string.quoted.double.kotlin") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L2 should have template expression", l2.any { it.scopes.contains("meta.template.expression.kotlin") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L2 should have val keyword", l2.any { it.scopes.contains("keyword.hard.kotlin") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L3 should have fenced_code scope", results[2].second.tokens.any { it.scopes.contains("markup.fenced_code.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L3 should have function call scope", l3.any { it.scopes.contains("entity.name.function.call.kotlin") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L3 should still have fenced_code scope", results[2].second.tokens.any { it.scopes.contains("markup.fenced_code.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L4 all tokens should have source.kotlin", l4.all { it.scopes.contains("source.kotlin") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L4 should NOT have fenced_code scope", l4.any { it.scopes.contains("markup.fenced_code.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L4 should have fenced_code scope", results[3].second.tokens.any { it.scopes.contains("markup.fenced_code.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L4 should have separator scope", l4.any { it.scopes.contains("meta.separator.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L5 should NOT have fenced_code scope", l5.any { it.scopes.contains("markup.fenced_code.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L5 should NOT have fenced_code scope", results[4].second.tokens.any { it.scopes.contains("markup.fenced_code.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L5 should have raw block scope", l5.any { it.scopes.contains("markup.raw.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L6 should NOT have fenced_code scope", l6.any { it.scopes.contains("markup.fenced_code.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L6 should have raw block scope", l6.any { it.scopes.contains("markup.raw.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L6 should have raw block scope", results[5].second.tokens.any { it.scopes.contains("markup.raw.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("L7 should have raw block scope", results[6].second.tokens.any { it.scopes.contains("markup.raw.block.markdown") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Nested key should have property-name scope", line3Tokens.any { it.scopes.contains("support.type.property-name.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Nested value should have numeric scope", line3Tokens.any { it.scopes.contains("constant.numeric.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have bold scope", results[2].second.tokens.any { it.scopes.any { s -&gt; s.startsWith("markup.bold") } })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have boolean scope", tokens.any { it.scopes.contains("constant.language.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have dictionary begin", tokens.any { it.scopes.contains("punctuation.definition.dictionary.begin.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have dictionary end", tokens.any { it.scopes.contains("punctuation.definition.dictionary.end.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have heading scope", results[0].second.tokens.any { it.scopes.any { s -&gt; s.startsWith("markup.heading") } })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have italic scope", results[2].second.tokens.any { it.scopes.any { s -&gt; s.startsWith("markup.italic") } })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have key-value separator", tokens.any { it.scopes.contains("punctuation.separator.dictionary.key-value.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have list scope", results[6].second.tokens.any { it.scopes.any { s -&gt; s.startsWith("markup.list") } })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have numeric scope", tokens.any { it.scopes.contains("constant.numeric.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have pair separator", tokens.any { it.scopes.contains("punctuation.separator.dictionary.pair.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have property-name scope", tokens.any { it.scopes.contains("support.type.property-name.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have quote scope", results[4].second.tokens.any { it.scopes.any { s -&gt; s.startsWith("markup.quote") } })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have string scope", tokens.any { it.scopes.contains("string.quoted.double.json") })</ID>
-    <ID>ArgumentListWrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$("Should have variable string-escape scope for \$name", result.tokens.any { it.scopes.contains("variable.string-escape.kotlin") })</ID>
-    <ID>ArgumentListWrapping:JoniLookbehindTest.kt$JoniLookbehindTest$( bytes, 0, bytes.size, Option.CAPTURE_GROUP, UTF8Encoding.INSTANCE, Syntax.DEFAULT, WarnCallback.NONE )</ID>
-    <ID>ArgumentListWrapping:RegistryTest.kt$RegistryTest$( rawJson.scopeName, rawJson, JoniOnigLib() )</ID>
-    <ID>ArgumentListWrapping:RegistryTest.kt$RegistryTest$("GrammarSource should not be called for pre-loaded grammar", sourceCalledFor.contains("source.json"))</ID>
-    <ID>ArgumentListWrapping:SentinelPatternTest.kt$SentinelPatternTest$( "Markdown should have exactly 1 sentinel (strikethrough)", 1, onigLib.sentinelPatternCount )</ID>
-    <ID>ArgumentListWrapping:SentinelPatternTest.kt$SentinelPatternTest$( rawGrammar.scopeName, rawGrammar, onigLib )</ID>
-    <ID>ArgumentListWrapping:Tokenizer.kt$( grammar, entry.stack.endRule, allowA = currentIsFirstLine, allowG = currentLinePos == anchorPosition )</ID>
-    <ID>ArgumentListWrapping:Tokenizer.kt$( grammar, lineText, currentIsFirstLine, entry.stack, lineTokens, entry.rule.whileCaptures, r.captureIndices )</ID>
-    <ID>ArgumentListWrapping:Tokenizer.kt$(grammar, lineText, currentIsFirstLine, currentLinePos, currentStack, anchorPosition)</ID>
-    <ID>ArgumentListWrapping:Tokenizer.kt$(grammar, lineText, currentIsFirstLine, currentStack, lineTokens, poppedRule.endCaptures, captureIndices)</ID>
-    <ID>ArgumentListWrapping:Tokenizer.kt$(grammar, lineText, currentIsFirstLine, currentStack, lineTokens, rule.beginCaptures, captureIndices)</ID>
-    <ID>ArgumentListWrapping:Tokenizer.kt$(grammar, lineText, currentIsFirstLine, currentStack, lineTokens, rule.captures, captureIndices)</ID>
-    <ID>ChainWrapping:InjectionSelectorParser.kt$InjectionSelectorParser.Parser.Companion$&amp;&amp;</ID>
     <ID>ComplexCondition:Rule.kt$Rule$!_nameIsCapturing || _name == null || lineText == null || captureIndices == null</ID>
     <ID>ConstructorParameterNaming:RegExpSource.kt$RegExpSource.AnchorCache$val A0_G0: String</ID>
     <ID>ConstructorParameterNaming:RegExpSource.kt$RegExpSource.AnchorCache$val A0_G1: String</ID>
@@ -75,8 +15,7 @@
     <ID>CyclomaticComplexMethod:Tokenizer.kt$internal fun handleCaptures( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, stack: StateStackImpl, lineTokens: LineTokens, captures: List&lt;CaptureRule?&gt;, captureIndices: List&lt;CaptureIndex&gt; )</ID>
     <ID>CyclomaticComplexMethod:Tokenizer.kt$internal fun tokenizeString( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens, checkWhile: Boolean = false ): StateStackImpl</ID>
     <ID>CyclomaticComplexMethod:Tokenizer.kt$private fun matchInjections( injections: List&lt;InjectionRule&gt;, grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, anchorPosition: Int ): MatchInjectionsResult?</ID>
-    <ID>FunctionNaming:CodeBlock.kt$@Composable fun CodeBlock( code: String, grammar: Grammar, theme: Theme, modifier: Modifier = Modifier, style: CodeBlockStyle = CodeBlockDefaults.style(), )</ID>
-    <ID>Indentation:InjectionGrammarTest.kt$InjectionGrammarTest$ </ID>
+    <ID>Indentation:InjectionSelectorParser.kt$InjectionSelectorParser.Parser.Companion$ </ID>
     <ID>LongMethod:Tokenizer.kt$internal fun handleCaptures( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, stack: StateStackImpl, lineTokens: LineTokens, captures: List&lt;CaptureRule?&gt;, captureIndices: List&lt;CaptureIndex&gt; )</ID>
     <ID>LongMethod:Tokenizer.kt$internal fun tokenizeString( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens, checkWhile: Boolean = false ): StateStackImpl</ID>
     <ID>LongParameterList:Rule.kt$BeginEndRule$( id: RuleId, name: String?, contentName: String?, begin: String, val beginCaptures: List&lt;CaptureRule?&gt;, end: String?, val endCaptures: List&lt;CaptureRule?&gt;, val applyEndPatternLast: Boolean, patterns: CompilePatternsResult )</ID>
@@ -107,25 +46,10 @@
     <ID>MagicNumber:ThemeReader.kt$ThemeReader$0xFF000000L</ID>
     <ID>MagicNumber:ThemeReader.kt$ThemeReader$0xFFFFFFFFL</ID>
     <ID>MatchingDeclarationName:Tokenizer.kt$MatchRuleResult</ID>
-    <ID>MaxLineLength:Tokenizer.kt$handleCaptures(grammar, lineText, currentIsFirstLine, currentStack, lineTokens, poppedRule.endCaptures, captureIndices)</ID>
-    <ID>MaxLineLength:Tokenizer.kt$handleCaptures(grammar, lineText, currentIsFirstLine, currentStack, lineTokens, rule.beginCaptures, captureIndices)</ID>
-    <ID>MaxLineLength:Tokenizer.kt$handleCaptures(grammar, lineText, currentIsFirstLine, currentStack, lineTokens, rule.captures, captureIndices)</ID>
-    <ID>MaxLineLength:Tokenizer.kt$val r = matchRuleOrInjections(grammar, lineText, currentIsFirstLine, currentLinePos, currentStack, anchorPosition)</ID>
-    <ID>MultiLineIfElse:CodeBlock.kt$Modifier</ID>
-    <ID>MultiLineIfElse:CodeBlock.kt$Modifier.horizontalScroll(rememberScrollState())</ID>
-    <ID>MultiLineIfElse:FirstMateConformanceTest.kt$FirstMateConformanceTest.Companion$null</ID>
-    <ID>MultiLineIfElse:InjectionSelectorParser.kt$InjectionSelectorParser.Parser$break</ID>
-    <ID>MultiLineIfElse:InjectionSelectorParser.kt$InjectionSelectorParser.Parser$null</ID>
-    <ID>MultiLineIfElse:InjectionSelectorParser.kt$InjectionSelectorParser.Parser${ scopes -&gt; matchers.all { it(scopes) } }</ID>
-    <ID>MultiLineIfElse:InjectionSelectorParser.kt$InjectionSelectorParser.Parser${ scopes -&gt; matchers.any { it(scopes) } }</ID>
     <ID>NestedBlockDepth:RuleFactory.kt$RuleFactory$fun compilePatterns( patterns: List&lt;RawRule&gt;?, helper: IRuleFactoryHelper, repository: MutableMap&lt;String, RawRule&gt; ): CompilePatternsResult</ID>
     <ID>NestedBlockDepth:ThemeReader.kt$ThemeReader$private fun readTheme(inputStreams: List&lt;InputStream&gt;): Theme</ID>
     <ID>NestedBlockDepth:Tokenizer.kt$internal fun tokenizeString( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens, checkWhile: Boolean = false ): StateStackImpl</ID>
     <ID>NestedBlockDepth:Tokenizer.kt$private fun checkWhileConditions( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens ): WhileCheckResult</ID>
-    <ID>NoBlankLineBeforeRbrace:GrammarReaderTest.kt$GrammarReaderTest$ </ID>
-    <ID>NoMultipleSpaces:StateStackTest.kt$StateStackTest$ </ID>
-    <ID>NoUnusedImports:CodeHighlighter.kt$dev.textmate.compose.CodeHighlighter.kt</ID>
-    <ID>NoUnusedImports:JoniLookbehindTest.kt$dev.textmate.regex.JoniLookbehindTest.kt</ID>
     <ID>NoWildcardImports:AttributedScopeStackTest.kt$import org.junit.Assert.*</ID>
     <ID>NoWildcardImports:CaptureUtilsTest.kt$import org.junit.Assert.*</ID>
     <ID>NoWildcardImports:ConformanceTestSupportTest.kt$import org.junit.Assert.*</ID>
@@ -142,7 +66,6 @@
     <ID>NoWildcardImports:StateStackTest.kt$import org.junit.Assert.*</ID>
     <ID>NoWildcardImports:ThemeReaderTest.kt$import org.junit.Assert.*</ID>
     <ID>NoWildcardImports:ThemeTest.kt$import org.junit.Assert.*</ID>
-    <ID>PropertyWrapping:Tokenizer.kt$val r = matchRuleOrInjections(grammar, lineText, currentIsFirstLine, currentLinePos, currentStack, anchorPosition)</ID>
     <ID>ReturnCount:AttributedScopeStack.kt$AttributedScopeStack$fun pushAttributed(scopePath: String?, grammar: Any?): AttributedScopeStack</ID>
     <ID>ReturnCount:FirstMateConformanceTest.kt$FirstMateConformanceTest.Companion$private fun canRun(test: FirstMateTestCase): Boolean</ID>
     <ID>ReturnCount:Grammar.kt$Grammar$override fun getExternalGrammar( scopeName: String, repository: MutableMap&lt;String, RawRule&gt; ): RawGrammar?</ID>
@@ -167,8 +90,6 @@
     <ID>ReturnCount:Tokenizer.kt$internal fun matchRuleOrInjections( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, anchorPosition: Int ): MatchRuleResult?</ID>
     <ID>ReturnCount:Tokenizer.kt$private fun matchInjections( injections: List&lt;InjectionRule&gt;, grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, anchorPosition: Int ): MatchInjectionsResult?</ID>
     <ID>SpacingAroundCurly:InjectionSelectorParser.kt$InjectionSelectorParser.Parser${</ID>
-    <ID>SpacingBetweenDeclarationsWithComments:InjectionRule.kt$InjectionPriority.DEFAULT$/** No prefix — normal priority. */</ID>
-    <ID>SpacingBetweenDeclarationsWithComments:InjectionRule.kt$InjectionPriority.LOW$/** `R:` prefix — loses ties against normal rules at the same position. */</ID>
     <ID>SwallowedException:RegistryTest.kt$RegistryTest$e: StackOverflowError</ID>
     <ID>SwallowedException:RuleFactoryTest.kt$RuleFactoryTest$error: StackOverflowError</ID>
     <ID>TooManyFunctions:StateStack.kt$StateStackImpl : StateStack</ID>
@@ -197,10 +118,6 @@
     <ID>WildcardImport:StateStackTest.kt$import org.junit.Assert.*</ID>
     <ID>WildcardImport:ThemeReaderTest.kt$import org.junit.Assert.*</ID>
     <ID>WildcardImport:ThemeTest.kt$import org.junit.Assert.*</ID>
-    <ID>Wrapping:GrammarIntegrationTest.kt$GrammarIntegrationTest$(</ID>
-    <ID>Wrapping:JoniOnigScannerTest.kt$JoniOnigScannerTest$(</ID>
-    <ID>Wrapping:LineTokens.kt$LineTokens$(</ID>
-    <ID>Wrapping:RegistryTest.kt$RegistryTest$(</ID>
     <ID>WrongEqualsTypeParameter:StateStack.kt$StateStackImpl$override fun equals(other: StateStack): Boolean</ID>
   </CurrentIssues>
 </SmellBaseline>
