@@ -34,7 +34,7 @@ internal class LineTokens {
     }
 
     fun getResult(stack: StateStackImpl, lineLength: Int): List<Token> {
-        // Pop produced token for newline
+        // Pop produced a token for a newline
         if (_tokens.isNotEmpty() && _tokens.last().startIndex == lineLength - 1) {
             _tokens.removeAt(_tokens.lastIndex)
         }
