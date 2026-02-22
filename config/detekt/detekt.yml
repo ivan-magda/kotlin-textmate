@@ -19,11 +19,11 @@ style:
     comments:
       - reason: "TODO without assignee — add a name or issue link"
         value: "TODO(?!\\()"
-  UnsafeCallOnNullableType:
-    active: true
 
 potential-bugs:
   DoubleMutabilityForCollection:
+    active: true
+  UnsafeCallOnNullableType:
     active: true
 
 performance:
