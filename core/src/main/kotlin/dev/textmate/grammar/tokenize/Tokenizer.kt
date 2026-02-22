@@ -1,6 +1,7 @@
 package dev.textmate.grammar.tokenize
 
 import dev.textmate.grammar.Grammar
+import dev.textmate.grammar.InjectionRule
 import dev.textmate.grammar.rule.BeginEndRule
 import dev.textmate.grammar.rule.BeginWhileRule
 import dev.textmate.grammar.rule.CaptureRule
@@ -20,7 +21,7 @@ internal data class MatchRuleResult(
 
 /**
  * Core tokenization loop — port of `_tokenizeString` from vscode-textmate `tokenizeString.ts`.
- * Pending: injection grammars, time limits.
+ * Injection grammars supported via [matchRuleOrInjections]. Pending: time limits.
  */
 internal fun tokenizeString(
     grammar: Grammar,
@@ -48,7 +49,7 @@ internal fun tokenizeString(
     }
 
     while (!stop) {
-        val r = matchRule(grammar, lineText, currentIsFirstLine, currentLinePos, currentStack, anchorPosition)
+        val r = matchRuleOrInjections(grammar, lineText, currentIsFirstLine, currentLinePos, currentStack, anchorPosition)
 
         if (r == null) {
             // No match — produce token to end of line
@@ -225,6 +226,98 @@ internal fun matchRule(
     return MatchRuleResult(
         captureIndices = r.captureIndices,
         matchedRuleId = r.ruleId
+    )
+}
+
+/**
+ * Match the best rule (normal or injection) against the line at [linePos].
+ * Port of `matchRuleOrInjections` from vscode-textmate `tokenizeString.ts`.
+ */
+internal fun matchRuleOrInjections(
+    grammar: Grammar,
+    lineText: OnigString,
+    isFirstLine: Boolean,
+    linePos: Int,
+    stack: StateStackImpl,
+    anchorPosition: Int
+): MatchRuleResult? {
+    val matchResult = matchRule(grammar, lineText, isFirstLine, linePos, stack, anchorPosition)
+
+    val injections = grammar.getInjections()
+    if (injections.isEmpty()) return matchResult
+
+    val injectionResult = matchInjections(injections, grammar, lineText, isFirstLine, linePos, stack, anchorPosition)
+        ?: return matchResult
+
+    if (matchResult == null) return injectionResult.toMatchRuleResult()
+
+    val matchStart = matchResult.captureIndices[0].start
+    val injStart = injectionResult.captureIndices[0].start
+
+    return if (injStart < matchStart || (injectionResult.priorityMatch && injStart == matchStart)) {
+        injectionResult.toMatchRuleResult()
+    } else {
+        matchResult
+    }
+}
+
+private data class MatchInjectionsResult(
+    val priorityMatch: Boolean,
+    val captureIndices: List<CaptureIndex>,
+    val matchedRuleId: RuleId
+) {
+    fun toMatchRuleResult() = MatchRuleResult(captureIndices, matchedRuleId)
+}
+
+/**
+ * Scan all applicable injection rules and return the best match.
+ * Port of `matchInjections` from vscode-textmate `tokenizeString.ts`.
+ */
+private fun matchInjections(
+    injections: List<InjectionRule>,
+    grammar: Grammar,
+    lineText: OnigString,
+    isFirstLine: Boolean,
+    linePos: Int,
+    stack: StateStackImpl,
+    anchorPosition: Int
+): MatchInjectionsResult? {
+    var bestRating = Int.MAX_VALUE
+    var bestCaptureIndices: List<CaptureIndex>? = null
+    var bestRuleId: RuleId = RuleId.NO_RULE
+    var bestPriority = 0
+
+    val scopes = stack.contentNameScopesList?.getScopeNames() ?: return null
+
+    for (injection in injections) {
+        if (!injection.matcher(scopes)) continue
+
+        val rule = grammar.getRule(injection.ruleId) ?: continue
+        val ruleScanner = rule.compileAG(
+            grammar,
+            endRegexSource = null,
+            allowA = isFirstLine,
+            allowG = linePos == anchorPosition
+        )
+        val matchResult = ruleScanner.findNextMatchSync(lineText, linePos) ?: continue
+        if (matchResult.captureIndices.isEmpty()) continue
+
+        val rating = matchResult.captureIndices[0].start
+        if (rating >= bestRating) continue
+
+        bestRating = rating
+        bestCaptureIndices = matchResult.captureIndices
+        bestRuleId = matchResult.ruleId
+        bestPriority = injection.priority
+
+        if (bestRating == linePos) break
+    }
+
+    val captures = bestCaptureIndices ?: return null
+    return MatchInjectionsResult(
+        priorityMatch = bestPriority == -1,
+        captureIndices = captures,
+        matchedRuleId = bestRuleId
     )
 }
 
