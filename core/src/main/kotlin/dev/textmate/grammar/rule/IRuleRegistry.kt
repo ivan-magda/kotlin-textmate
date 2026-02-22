@@ -11,6 +11,11 @@ interface IRuleRegistry {
 
 internal interface IGrammarRegistry {
     fun getExternalGrammar(scopeName: String, repository: MutableMap<String, RawRule>): RawGrammar?
+
+    fun getExternalGrammarRepository(
+        scopeName: String,
+        repository: MutableMap<String, RawRule>
+    ): MutableMap<String, RawRule>?
 }
 
 internal interface IRuleFactoryHelper : IRuleRegistry, IGrammarRegistry

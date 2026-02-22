@@ -144,24 +144,18 @@ internal object RuleFactory {
                         }
 
                         is IncludeReference.TopLevelReference -> {
-                            val externalGrammar = helper.getExternalGrammar(reference.scopeName, repository)
-                            if (externalGrammar != null) {
-                                val extRepo = initGrammarRepository(externalGrammar)
-                                val selfRule = extRepo["\$self"]
-                                if (selfRule != null) {
-                                    ruleId = getCompiledRuleId(selfRule, helper, extRepo)
-                                }
+                            val extRepo = helper.getExternalGrammarRepository(reference.scopeName, repository)
+                            val selfRule = extRepo?.get("\$self")
+                            if (selfRule != null) {
+                                ruleId = resolveRuleIdIfNotInProgress(selfRule, helper, extRepo)
                             }
                         }
 
                         is IncludeReference.TopLevelRepositoryReference -> {
-                            val externalGrammar = helper.getExternalGrammar(reference.scopeName, repository)
-                            if (externalGrammar != null) {
-                                val extRepo = initGrammarRepository(externalGrammar)
-                                val externalIncludedRule = extRepo[reference.ruleName]
-                                if (externalIncludedRule != null) {
-                                    ruleId = getCompiledRuleId(externalIncludedRule, helper, extRepo)
-                                }
+                            val extRepo = helper.getExternalGrammarRepository(reference.scopeName, repository)
+                            val externalIncludedRule = extRepo?.get(reference.ruleName)
+                            if (externalIncludedRule != null) {
+                                ruleId = resolveRuleIdIfNotInProgress(externalIncludedRule, helper, extRepo)
                             }
                         }
                     }
@@ -208,5 +202,16 @@ internal object RuleFactory {
         repository["\$base"] = base ?: selfRule
 
         return repository
+    }
+
+    private fun resolveRuleIdIfNotInProgress(
+        desc: RawRule,
+        helper: IRuleFactoryHelper,
+        repository: MutableMap<String, RawRule>
+    ): RuleId? {
+        val existingId = desc.id?.let(::RuleId)
+        val inProgress = existingId != null && helper.getRule(existingId) == null
+        if (inProgress) return null
+        return getCompiledRuleId(desc, helper, repository)
     }
 }

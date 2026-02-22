@@ -48,7 +48,7 @@ KotlinTextMate/
 │       │   ├── rule/       Rule compilation
 │       │   └── tokenize/   Tokenizer + state
 │       ├── theme/          Theme engine
-│       └── registry/       Placeholder (#16, `.gitkeep` only)
+│       └── registry/       Grammar registry (Registry, GrammarSource)
 ├── compose-ui/     Android library (Compose)
 │   └── dev.textmate.compose
 ├── benchmark/      JMH benchmarks
@@ -70,7 +70,7 @@ KotlinTextMate/
 | `src/grammar/tokenizeString.ts`  | `grammar/tokenize/Tokenizer.kt`                                                                       | Core `tokenizeString` loop, `matchRule`, `handleCaptures`           |
 | `src/theme.ts`                   | `theme/Theme.kt`, `ThemeReader.kt`, `RawTheme.kt`, `grammar/tokenize/ScopeStack.kt`                   | External resolution, not incremental. `ScopeStack` originates here  |
 | `src/matcher.ts`                 | Not ported                                                                                            | Scope selector matching (needed for injection grammars)             |
-| `src/registry.ts`                | `registry/` (`.gitkeep` placeholder)                                                                  | Issue #16                                                           |
+| `src/registry.ts`                | `registry/Registry.kt`, `registry/GrammarSource.kt`                                                   | Simplified: no theme provider, grammar lookup via `GrammarSource`   |
 | `src/main.ts`                    | `grammar/TextMateGrammar.kt`                                                                          | Version constant only; public API lives on `Grammar`                |
 | `src/encodedTokenAttributes.ts`  | Not ported                                                                                            | Binary token encoding not needed                                    |
 

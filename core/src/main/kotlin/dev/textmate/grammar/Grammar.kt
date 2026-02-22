@@ -2,6 +2,7 @@ package dev.textmate.grammar
 
 import dev.textmate.grammar.raw.RawGrammar
 import dev.textmate.grammar.raw.RawRule
+import dev.textmate.grammar.raw.deepClone
 import dev.textmate.grammar.rule.IRuleFactoryHelper
 import dev.textmate.grammar.rule.IRuleRegistryOnigLib
 import dev.textmate.grammar.rule.Rule
@@ -21,15 +22,18 @@ import dev.textmate.regex.OnigString
  * Main Grammar class — compiles a [RawGrammar] into rules and tokenizes lines.
  * Port of `Grammar` from vscode-textmate `grammar.ts`.
  *
- * Simplified for Stage 4b: no injection grammars, no embedded languages,
- * no theme resolution, no time limits.
+ * Supports cross-grammar `include` resolution via [grammarLookup].
+ * No injection grammars, no theme resolution, no time limits.
  */
 class Grammar(
     private val rootScopeName: String,
     private val rawGrammar: RawGrammar,
-    private val onigLib: IOnigLib
+    private val onigLib: IOnigLib,
+    private val grammarLookup: ((String) -> RawGrammar?)? = null
 ) : IRuleFactoryHelper, IRuleRegistryOnigLib {
 
+    private val _includedGrammars = mutableMapOf<String, RawGrammar>()
+    private val _includedRepositories = mutableMapOf<String, MutableMap<String, RawRule>>()
     private var _rootId: RuleId? = null
     private var _lastRuleId = 0
     private val _ruleId2desc = mutableListOf<Rule?>(null) // index 0 unused
@@ -58,7 +62,22 @@ class Grammar(
         scopeName: String,
         repository: MutableMap<String, RawRule>
     ): RawGrammar? {
-        return null // No embedded language support in Stage 4b
+        _includedGrammars[scopeName]?.let { return it }
+        val raw = grammarLookup?.invoke(scopeName) ?: return null
+        val initialized = raw.deepClone()
+        _includedGrammars[scopeName] = initialized
+        return initialized
+    }
+
+    override fun getExternalGrammarRepository(
+        scopeName: String,
+        repository: MutableMap<String, RawRule>
+    ): MutableMap<String, RawRule>? {
+        _includedRepositories[scopeName]?.let { return it }
+        val externalGrammar = getExternalGrammar(scopeName, repository) ?: return null
+        val initialized = RuleFactory.initGrammarRepository(externalGrammar, base = repository["\$base"])
+        _includedRepositories[scopeName] = initialized
+        return initialized
     }
 
     // --- IOnigLib (delegate) ---
