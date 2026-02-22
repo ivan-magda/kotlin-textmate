@@ -39,7 +39,6 @@ internal fun tokenizeString(
     var currentLinePos = linePos
     var currentIsFirstLine = isFirstLine
     var anchorPosition = -1
-    var stop = false
 
     if (checkWhile) {
         val r = checkWhileConditions(grammar, lineText, currentIsFirstLine, currentLinePos, currentStack, lineTokens)
@@ -49,14 +48,13 @@ internal fun tokenizeString(
         anchorPosition = r.anchorPosition
     }
 
-    while (!stop) {
+    while (true) {
         val r =
             matchRuleOrInjections(grammar, lineText, currentIsFirstLine, currentLinePos, currentStack, anchorPosition)
 
         if (r == null) {
-            // No match — produce token to end of line
+            // No match — produce token to the end of the line
             lineTokens.produce(currentStack, lineLength)
-            stop = true
             break
         }
 
@@ -101,7 +99,6 @@ internal fun tokenizeString(
                 // [1] Grammar pushed & popped a rule without advancing
                 currentStack = popped
                 lineTokens.produce(currentStack, lineLength)
-                stop = true
                 break
             }
         } else {
@@ -109,7 +106,6 @@ internal fun tokenizeString(
             val rule = grammar.getRule(matchedRuleId) ?: run {
                 // Should not happen, but be safe
                 lineTokens.produce(currentStack, lineLength)
-                stop = true
                 return@tokenizeString currentStack
             }
 
@@ -148,7 +144,7 @@ internal fun tokenizeString(
                     anchorPosition = captureIndices[0].end
 
                     val contentName = rule.getContentName(lineText.content, captureIndices)
-                    val contentNameScopesList = nameScopesList?.pushAttributed(contentName, grammar)
+                    val contentNameScopesList = nameScopesList.pushAttributed(contentName, grammar)
                     currentStack = currentStack.withContentNameScopesList(contentNameScopesList)
 
                     if (rule.endHasBackReferences) {
@@ -161,7 +157,6 @@ internal fun tokenizeString(
                         // [2] Grammar pushed the same rule without advancing
                         currentStack = currentStack.pop() ?: currentStack
                         lineTokens.produce(currentStack, lineLength)
-                        stop = true
                         break
                     }
                 }
@@ -180,7 +175,7 @@ internal fun tokenizeString(
                     anchorPosition = captureIndices[0].end
 
                     val contentName = rule.getContentName(lineText.content, captureIndices)
-                    val contentNameScopesList = nameScopesList?.pushAttributed(contentName, grammar)
+                    val contentNameScopesList = nameScopesList.pushAttributed(contentName, grammar)
                     currentStack = currentStack.withContentNameScopesList(contentNameScopesList)
 
                     if (rule.whileHasBackReferences) {
@@ -193,7 +188,6 @@ internal fun tokenizeString(
                         // [3] Grammar pushed the same rule without advancing
                         currentStack = currentStack.pop() ?: currentStack
                         lineTokens.produce(currentStack, lineLength)
-                        stop = true
                         break
                     }
                 }
@@ -217,7 +211,6 @@ internal fun tokenizeString(
                         // [4] Grammar is not advancing, nor is it pushing/popping
                         currentStack = currentStack.safePop()
                         lineTokens.produce(currentStack, lineLength)
-                        stop = true
                         break
                     }
                 }
@@ -469,6 +462,7 @@ private fun checkWhileConditions(
 
     // Walk stack bottom-to-top, collect BeginWhileRule frames
     data class WhileStackEntry(val stack: StateStackImpl, val rule: BeginWhileRule)
+
     val whileRules = mutableListOf<WhileStackEntry>()
     var node: StateStackImpl? = currentStack
     while (node != null) {
