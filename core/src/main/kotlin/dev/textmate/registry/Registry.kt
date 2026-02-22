@@ -35,9 +35,17 @@ class Registry(
         grammars[scopeName]?.let { return it }
 
         val raw = resolveRawGrammar(scopeName) ?: return null
+        val canonicalScope = raw.scopeName
+
+        grammars[canonicalScope]?.let { cached ->
+            grammars[scopeName] = cached
+            return cached
+        }
+
         val grammar = Grammar(raw.scopeName, raw, onigLib) { lookupScope ->
             resolveRawGrammar(lookupScope)
         }
+        grammars[canonicalScope] = grammar
         grammars[scopeName] = grammar
 
         return grammar

@@ -211,15 +211,45 @@ class RuleFactoryTest {
         val id2 = RuleFactory.getCompiledRuleId(desc, helper, repository)
         assertEquals("same desc should return same ID", id1, id2)
     }
+
+    @Test
+    fun `mutually including external grammars compile without stack overflow`() {
+        val grammarA = RawGrammar(
+            scopeName = "source.a",
+            patterns = listOf(RawRule(include = "source.b"))
+        )
+        val grammarB = RawGrammar(
+            scopeName = "source.b",
+            patterns = listOf(RawRule(include = "source.a"))
+        )
+        val helper = TestRuleFactoryHelper(
+            externalGrammars = mapOf(
+                "source.a" to grammarA,
+                "source.b" to grammarB
+            )
+        )
+        val repository = RuleFactory.initGrammarRepository(grammarA)
+        val rootRule = repository["\$self"] ?: error("Expected \$self rule in repository")
+
+        try {
+            val rootRuleId = RuleFactory.getCompiledRuleId(rootRule, helper, repository)
+            assertNotNull(helper.getRule(rootRuleId))
+        } catch (error: StackOverflowError) {
+            fail("Mutual external includes should compile without StackOverflowError")
+        }
+    }
 }
 
 /**
  * Test helper implementing [IRuleFactoryHelper] with an internal rule registry.
  */
-class TestRuleFactoryHelper : IRuleFactoryHelper {
+class TestRuleFactoryHelper(
+    private val externalGrammars: Map<String, RawGrammar> = emptyMap()
+) : IRuleFactoryHelper {
 
     private var _lastRuleId = 0
     private val _ruleId2desc = mutableListOf<Rule?>()
+    private val _externalRepositories = mutableMapOf<String, MutableMap<String, RawRule>>()
 
     override fun getRule(ruleId: RuleId): Rule? {
         return _ruleId2desc.getOrNull(ruleId.id)
@@ -240,6 +270,17 @@ class TestRuleFactoryHelper : IRuleFactoryHelper {
         scopeName: String,
         repository: MutableMap<String, RawRule>
     ): RawGrammar? {
-        return null
+        return externalGrammars[scopeName]
+    }
+
+    override fun getExternalGrammarRepository(
+        scopeName: String,
+        repository: MutableMap<String, RawRule>
+    ): MutableMap<String, RawRule>? {
+        _externalRepositories[scopeName]?.let { return it }
+        val externalGrammar = getExternalGrammar(scopeName, repository) ?: return null
+        val initialized = RuleFactory.initGrammarRepository(externalGrammar, base = repository["\$base"])
+        _externalRepositories[scopeName] = initialized
+        return initialized
     }
 }

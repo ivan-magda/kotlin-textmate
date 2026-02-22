@@ -56,6 +56,29 @@ class RegistryTest {
     }
 
     @Test
+    fun `alias and canonical scope share one cached grammar instance`() {
+        val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
+        val registry = Registry(
+            grammarSource = { scope -> if (scope == "source.alias") rawJson else null },
+            onigLib = JoniOnigLib()
+        )
+
+        val aliasGrammar = requireNotNull(registry.loadGrammar("source.alias"))
+        val aliasResult = aliasGrammar.tokenizeLine("true")
+        assertTrue(aliasResult.tokens.any { it.scopes.contains("constant.language.json") })
+
+        val canonicalGrammar = requireNotNull(registry.loadGrammar("source.json"))
+        assertSame(
+            "Alias and canonical scope names should return the same Grammar instance",
+            aliasGrammar,
+            canonicalGrammar
+        )
+
+        val canonicalResult = canonicalGrammar.tokenizeLine("true")
+        assertTrue(canonicalResult.tokens.any { it.scopes.contains("constant.language.json") })
+    }
+
+    @Test
     fun `addGrammar pre-loads grammar`() {
         val sourceCalledFor = mutableListOf<String>()
         val registry = Registry(

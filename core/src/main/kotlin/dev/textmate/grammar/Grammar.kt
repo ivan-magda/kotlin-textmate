@@ -33,6 +33,7 @@ class Grammar(
 ) : IRuleFactoryHelper, IRuleRegistryOnigLib {
 
     private val _includedGrammars = mutableMapOf<String, RawGrammar>()
+    private val _includedRepositories = mutableMapOf<String, MutableMap<String, RawRule>>()
     private var _rootId: RuleId? = null
     private var _lastRuleId = 0
     private val _ruleId2desc = mutableListOf<Rule?>(null) // index 0 unused
@@ -65,6 +66,17 @@ class Grammar(
         val raw = grammarLookup?.invoke(scopeName) ?: return null
         val initialized = raw.deepClone()
         _includedGrammars[scopeName] = initialized
+        return initialized
+    }
+
+    override fun getExternalGrammarRepository(
+        scopeName: String,
+        repository: MutableMap<String, RawRule>
+    ): MutableMap<String, RawRule>? {
+        _includedRepositories[scopeName]?.let { return it }
+        val externalGrammar = getExternalGrammar(scopeName, repository) ?: return null
+        val initialized = RuleFactory.initGrammarRepository(externalGrammar, base = repository["\$base"])
+        _includedRepositories[scopeName] = initialized
         return initialized
     }
 
