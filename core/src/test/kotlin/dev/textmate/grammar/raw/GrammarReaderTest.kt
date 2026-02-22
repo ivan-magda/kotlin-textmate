@@ -158,5 +158,4 @@ class GrammarReaderTest {
         assertEquals(fromStream.patterns!!.size, fromString.patterns!!.size)
         assertEquals(fromStream.repository!!.keys, fromString.repository!!.keys)
     }
-
 }

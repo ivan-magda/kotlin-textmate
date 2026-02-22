@@ -133,7 +133,7 @@ class InjectionGrammarTest {
 
         val urlToken = requireNotNull(result.tokens.firstOrNull { tokenText(it, line) == "http://example.com" }) {
             "Expected a token for 'http://example.com'. " +
-            "Tokens: ${result.tokens.map { tokenText(it, line) to it.scopes }}"
+                "Tokens: ${result.tokens.map { tokenText(it, line) to it.scopes }}"
         }
 
         assertTrue(

@@ -276,8 +276,8 @@ class StateStackTest {
         assertTrue(str.startsWith("["))
         assertTrue(str.endsWith("]"))
         // Verify format includes ruleId and scope info
-        assertTrue(str.contains("(0,"))  // NULL element: ruleId=0
-        assertTrue(str.contains("(7,"))  // Pushed element: ruleId=7
+        assertTrue(str.contains("(0,")) // NULL element: ruleId=0
+        assertTrue(str.contains("(7,")) // Pushed element: ruleId=7
         assertTrue(str.contains("source.test"))
     }
 }

@@ -68,8 +68,10 @@ class RegistryTest {
         val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
         registry.addGrammar(rawJson)
         assertNotNull(registry.loadGrammar("source.json"))
-        assertFalse("GrammarSource should not be called for pre-loaded grammar",
-            sourceCalledFor.contains("source.json"))
+        assertFalse(
+            "GrammarSource should not be called for pre-loaded grammar",
+            sourceCalledFor.contains("source.json")
+        )
     }
 
     @Test
@@ -190,7 +192,9 @@ class RegistryTest {
         // Verify backward compatibility: Grammar without grammarLookup
         val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
         val grammar = dev.textmate.grammar.Grammar(
-            rawJson.scopeName, rawJson, JoniOnigLib()
+            rawJson.scopeName,
+            rawJson,
+            JoniOnigLib()
         )
         val result = grammar.tokenizeLine("true")
         assertEquals(1, result.tokens.size)

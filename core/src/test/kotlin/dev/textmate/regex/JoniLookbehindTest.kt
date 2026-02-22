@@ -1,7 +1,6 @@
 package dev.textmate.regex
 
 import org.jcodings.specific.UTF8Encoding
-import org.joni.Matcher
 import org.joni.Option
 import org.joni.Regex
 import org.joni.Syntax
@@ -21,7 +20,9 @@ class JoniLookbehindTest {
     private fun compilePattern(pattern: String): Regex {
         val bytes = pattern.toByteArray(Charsets.UTF_8)
         return Regex(
-            bytes, 0, bytes.size,
+            bytes,
+            0,
+            bytes.size,
             Option.CAPTURE_GROUP,
             UTF8Encoding.INSTANCE,
             Syntax.DEFAULT,

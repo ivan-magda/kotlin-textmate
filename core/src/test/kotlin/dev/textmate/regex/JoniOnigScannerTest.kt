@@ -49,11 +49,13 @@ class JoniOnigScannerTest {
     // Test 3: Multiple patterns — earliest match wins
     @Test
     fun `multiple patterns - earliest match returned`() {
-        val scanner = lib.createOnigScanner(listOf(
-            "\\bclass\\b",
-            "\\bfun\\b",
-            "\\bval\\b"
-        ))
+        val scanner = lib.createOnigScanner(
+            listOf(
+                "\\bclass\\b",
+                "\\bfun\\b",
+                "\\bval\\b"
+            )
+        )
         val str = lib.createOnigString("fun main() { val x = 1 }")
 
         val result = scanner.findNextMatchSync(str, 0)
