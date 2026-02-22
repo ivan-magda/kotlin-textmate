@@ -25,7 +25,7 @@ subprojects {
             parallel = true
             config.setFrom("${rootProject.projectDir}/config/detekt/detekt.yml")
             baseline = file("${rootProject.projectDir}/config/detekt/baseline.xml")
-            autoCorrect = providers.gradleProperty("detekt.auto-correct").isPresent
+            autoCorrect = true
         }
 
         dependencies {
