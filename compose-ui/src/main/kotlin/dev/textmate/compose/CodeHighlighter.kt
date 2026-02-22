@@ -5,7 +5,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import dev.textmate.grammar.Grammar
-import dev.textmate.grammar.Token
 import dev.textmate.grammar.tokenize.StateStack
 import dev.textmate.theme.FontStyle
 import dev.textmate.theme.ResolvedStyle
