@@ -97,9 +97,11 @@ internal object RuleFactory {
         for ((captureId, captureRule) in captures) {
             val numericCaptureId = captureId.toIntOrNull() ?: continue
             var retokenizeCapturedWithRuleId = RuleId.NO_RULE
+
             if (captureRule.patterns != null) {
                 retokenizeCapturedWithRuleId = getCompiledRuleId(captureRule, helper, repository)
             }
+
             result[numericCaptureId] = helper.registerRule { id ->
                 CaptureRule(
                     id = id,
@@ -125,9 +127,7 @@ internal object RuleFactory {
                 var ruleId: RuleId? = null
 
                 if (pattern.include != null) {
-                    val reference = parseInclude(pattern.include)
-
-                    when (reference) {
+                    when (val reference = parseInclude(pattern.include)) {
                         is IncludeReference.BaseReference,
                         is IncludeReference.SelfReference -> {
                             val repoRule = repository[pattern.include]
@@ -164,10 +164,8 @@ internal object RuleFactory {
                 }
 
                 if (ruleId != null) {
-                    // May be null for circular references during compilation
-                    val rule = helper.getRule(ruleId)
-
-                    val skipRule = when (rule) {
+                    // Maybe null for circular references during compilation
+                    val skipRule = when (val rule = helper.getRule(ruleId)) {
                         is IncludeOnlyRule -> rule.hasMissingPatterns && rule.patterns.isEmpty()
                         is BeginEndRule -> rule.hasMissingPatterns && rule.patterns.isEmpty()
                         is BeginWhileRule -> rule.hasMissingPatterns && rule.patterns.isEmpty()
