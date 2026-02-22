@@ -82,11 +82,15 @@ private fun Map<String, RawRule>?.deepCloneRuleValues(): Map<String, RawRule>? =
 /** Deserializes both JSON booleans (`true`/`false`) and integers (`1`/`0`) to `Int?`. */
 internal class BooleanOrIntAdapter : TypeAdapter<Int?>() {
     override fun write(out: JsonWriter, value: Int?) {
-        if (value == null) out.nullValue() else out.value(value)
+        if (value == null) {
+            out.nullValue()
+        } else {
+            out.value(value)
+        }
     }
 
-    override fun read(input: JsonReader): Int? {
-        return when (input.peek()) {
+    override fun read(input: JsonReader): Int? =
+        when (input.peek()) {
             JsonToken.NULL -> {
                 input.nextNull()
                 null
@@ -99,5 +103,4 @@ internal class BooleanOrIntAdapter : TypeAdapter<Int?>() {
                 null
             }
         }
-    }
 }
