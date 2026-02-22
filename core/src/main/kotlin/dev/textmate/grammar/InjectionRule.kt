@@ -6,8 +6,10 @@ import dev.textmate.grammar.rule.RuleId
 internal enum class InjectionPriority(val value: Int) {
     /** `L:` prefix — wins ties against normal rules at the same position. */
     HIGH(-1),
+
     /** No prefix — normal priority. */
     DEFAULT(0),
+
     /** `R:` prefix — loses ties against normal rules at the same position. */
     LOW(1)
 }
