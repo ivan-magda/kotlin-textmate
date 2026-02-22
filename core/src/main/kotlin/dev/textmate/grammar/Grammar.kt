@@ -21,15 +21,17 @@ import dev.textmate.regex.OnigString
  * Main Grammar class — compiles a [RawGrammar] into rules and tokenizes lines.
  * Port of `Grammar` from vscode-textmate `grammar.ts`.
  *
- * Simplified for Stage 4b: no injection grammars, no embedded languages,
- * no theme resolution, no time limits.
+ * Supports cross-grammar `include` resolution via [grammarLookup].
+ * No injection grammars, no theme resolution, no time limits.
  */
 class Grammar(
     private val rootScopeName: String,
     private val rawGrammar: RawGrammar,
-    private val onigLib: IOnigLib
+    private val onigLib: IOnigLib,
+    private val grammarLookup: ((String) -> RawGrammar?)? = null
 ) : IRuleFactoryHelper, IRuleRegistryOnigLib {
 
+    private val _includedGrammars = mutableMapOf<String, RawGrammar>()
     private var _rootId: RuleId? = null
     private var _lastRuleId = 0
     private val _ruleId2desc = mutableListOf<Rule?>(null) // index 0 unused
@@ -58,7 +60,20 @@ class Grammar(
         scopeName: String,
         repository: MutableMap<String, RawRule>
     ): RawGrammar? {
-        return null // No embedded language support in Stage 4b
+        _includedGrammars[scopeName]?.let { return it }
+        val raw = grammarLookup?.invoke(scopeName) ?: return null
+        val initialized = RawGrammar(
+            scopeName = raw.scopeName,
+            name = raw.name,
+            patterns = raw.patterns,
+            repository = raw.repository,
+            injections = raw.injections,
+            injectionSelector = raw.injectionSelector,
+            fileTypes = raw.fileTypes,
+            firstLineMatch = raw.firstLineMatch
+        )
+        _includedGrammars[scopeName] = initialized
+        return initialized
     }
 
     // --- IOnigLib (delegate) ---

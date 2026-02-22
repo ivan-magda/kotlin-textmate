@@ -1,5 +1,7 @@
 package dev.textmate.conformance
 
+import dev.textmate.regex.JoniOnigLib
+import dev.textmate.registry.Registry
 import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -92,9 +94,13 @@ class FirstMateConformanceTest(
             else -> error("Test '${testCase.desc}' has neither grammarPath nor grammarScopeName")
         }
 
-        val rawGrammar = rawGrammars[targetScope]
-            ?: error("Grammar for scope '$targetScope' not found in: ${rawGrammars.keys}")
+        val registry = Registry(
+            grammarSource = { scope -> rawGrammars[scope] },
+            onigLib = JoniOnigLib()
+        )
+        rawGrammars.values.forEach { registry.addGrammar(it) }
 
-        return ConformanceTestSupport.createGrammar(rawGrammar)
+        return registry.loadGrammar(targetScope)
+            ?: error("Grammar for scope '$targetScope' could not be loaded")
     }
 }
