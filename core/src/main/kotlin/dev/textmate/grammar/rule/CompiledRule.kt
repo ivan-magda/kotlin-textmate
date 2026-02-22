@@ -10,7 +10,8 @@ class CompiledRule(
     private val regExps: List<String>,
     private val rules: List<RuleId>
 ) {
-    private val scanner: OnigScanner = onigLib.createOnigScanner(regExps)
+    private val scanner: OnigScanner =
+        onigLib.createOnigScanner(regExps)
 
     fun findNextMatchSync(string: OnigString, startPosition: Int): FindNextMatchResult? {
         val result = scanner.findNextMatchSync(string, startPosition) ?: return null
@@ -20,11 +21,10 @@ class CompiledRule(
         )
     }
 
-    override fun toString(): String {
-        return rules.indices.joinToString("\n") { i ->
+    override fun toString(): String =
+        rules.indices.joinToString("\n") { i ->
             "   - ${rules[i]}: ${regExps[i]}"
         }
-    }
 }
 
 data class FindNextMatchResult(
