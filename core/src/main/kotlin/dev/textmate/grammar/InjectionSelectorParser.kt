@@ -103,8 +103,11 @@ internal object InjectionSelectorParser {
                 matchers.add(m)
                 m = parseOperand()
             }
-            return if (matchers.isEmpty()) null
-            else { scopes -> matchers.all { it(scopes) } }
+            return if (matchers.isEmpty()) {
+                null
+            } else {
+                { scopes -> matchers.all { it(scopes) } }
+            }
         }
 
         private fun parseInnerExpression(): ScopeMatcher? {
@@ -116,11 +119,16 @@ internal object InjectionSelectorParser {
                     do {
                         advance()
                     } while (token == "|" || token == ",")
-                } else break
+                } else {
+                    break
+                }
                 m = parseConjunction()
             }
-            return if (matchers.isEmpty()) null
-            else { scopes -> matchers.any { it(scopes) } }
+            return if (matchers.isEmpty()) {
+                null
+            } else {
+                { scopes -> matchers.any { it(scopes) } }
+            }
         }
 
         companion object {
