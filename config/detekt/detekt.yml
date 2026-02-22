@@ -2,6 +2,11 @@ complexity:
   LongParameterList:
     ignoreDefaultParameters: true
 
+naming:
+  FunctionNaming:
+    ignoreAnnotated:
+      - Composable
+
 style:
   ForbiddenComment:
     comments:
