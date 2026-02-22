@@ -51,8 +51,11 @@ fun CodeBlock(
                 .fillMaxWidth()
                 .background(backgroundColor)
                 .then(
-                    if (!style.softWrap) Modifier.horizontalScroll(rememberScrollState())
-                    else Modifier
+                    if (!style.softWrap) {
+                        Modifier.horizontalScroll(rememberScrollState())
+                    } else {
+                        Modifier
+                    }
                 )
                 .padding(style.contentPadding)
         )
