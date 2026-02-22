@@ -15,7 +15,6 @@
     <ID>CyclomaticComplexMethod:Tokenizer.kt$internal fun handleCaptures( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, stack: StateStackImpl, lineTokens: LineTokens, captures: List&lt;CaptureRule?&gt;, captureIndices: List&lt;CaptureIndex&gt; )</ID>
     <ID>CyclomaticComplexMethod:Tokenizer.kt$internal fun tokenizeString( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens, checkWhile: Boolean = false ): StateStackImpl</ID>
     <ID>CyclomaticComplexMethod:Tokenizer.kt$private fun matchInjections( injections: List&lt;InjectionRule&gt;, grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, anchorPosition: Int ): MatchInjectionsResult?</ID>
-    <ID>Indentation:InjectionSelectorParser.kt$InjectionSelectorParser.Parser.Companion$ </ID>
     <ID>LongMethod:Tokenizer.kt$internal fun handleCaptures( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, stack: StateStackImpl, lineTokens: LineTokens, captures: List&lt;CaptureRule?&gt;, captureIndices: List&lt;CaptureIndex&gt; )</ID>
     <ID>LongMethod:Tokenizer.kt$internal fun tokenizeString( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens, checkWhile: Boolean = false ): StateStackImpl</ID>
     <ID>LongParameterList:Rule.kt$BeginEndRule$( id: RuleId, name: String?, contentName: String?, begin: String, val beginCaptures: List&lt;CaptureRule?&gt;, end: String?, val endCaptures: List&lt;CaptureRule?&gt;, val applyEndPatternLast: Boolean, patterns: CompilePatternsResult )</ID>
@@ -89,7 +88,6 @@
     <ID>ReturnCount:Tokenizer.kt$internal fun matchRule( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, anchorPosition: Int ): MatchRuleResult?</ID>
     <ID>ReturnCount:Tokenizer.kt$internal fun matchRuleOrInjections( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, anchorPosition: Int ): MatchRuleResult?</ID>
     <ID>ReturnCount:Tokenizer.kt$private fun matchInjections( injections: List&lt;InjectionRule&gt;, grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, anchorPosition: Int ): MatchInjectionsResult?</ID>
-    <ID>SpacingAroundCurly:InjectionSelectorParser.kt$InjectionSelectorParser.Parser${</ID>
     <ID>SwallowedException:RegistryTest.kt$RegistryTest$e: StackOverflowError</ID>
     <ID>SwallowedException:RuleFactoryTest.kt$RuleFactoryTest$error: StackOverflowError</ID>
     <ID>TooManyFunctions:StateStack.kt$StateStackImpl : StateStack</ID>
