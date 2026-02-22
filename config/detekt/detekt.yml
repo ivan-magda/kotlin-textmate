@@ -1,0 +1,27 @@
+complexity:
+  LongParameterList:
+    ignoreDefaultParameters: true
+
+style:
+  ForbiddenComment:
+    comments:
+      - reason: "TODO without assignee — add a name or issue link"
+        value: "TODO(?!\\()"
+
+potential-bugs:
+  DoubleMutabilityForCollection:
+    active: true
+  UnsafeCallOnNullableType:
+    active: true
+
+performance:
+  ArrayPrimitive:
+    active: true
+  ForEachOnRange:
+    active: true
+  SpreadOperator:
+    active: true
+
+formatting:
+  MaximumLineLength:
+    active: false

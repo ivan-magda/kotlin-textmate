@@ -2,6 +2,7 @@
 # Kotlin & Android
 kotlin = "2.0.21"
 agp = "8.7.3"
+jvmTarget = "17"
 
 # Android SDK
 compileSdk = "35"
@@ -15,6 +16,9 @@ gson = "2.11.0"
 
 # Benchmark
 kotlinxBenchmark = "0.4.16"
+
+# Static analysis
+detekt = "1.23.8"
 
 # AndroidX & Compose
 composeBom = "2024.12.01"
@@ -35,6 +39,9 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 # Benchmark
 kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinxBenchmark" }
+
+# Static analysis
+detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 
 # AndroidX
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -63,3 +70,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinxBenchmark" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
