@@ -54,7 +54,7 @@ class Grammar(
         val result = mutableListOf<InjectionRule>()
         val (_, repository) = ensureCompiled()
 
-        // Inline injections from rawGrammar.injections map
+        // Inline injections from the rawGrammar.injections map
         rawGrammar.injections?.forEach { (selector, rawRule) ->
             val matchers = InjectionSelectorParser.createMatchers(selector)
             if (matchers.isEmpty()) return@forEach
@@ -66,14 +66,21 @@ class Grammar(
 
         // External injection grammars with injectionSelector
         injectionLookup?.invoke()?.forEach { injectorRaw ->
-            if (injectorRaw.scopeName == rootScopeName) return@forEach
+            if (injectorRaw.scopeName == rootScopeName) {
+                return@forEach
+            }
+
             val selector = injectorRaw.injectionSelector ?: return@forEach
             val matchers = InjectionSelectorParser.createMatchers(selector)
-            if (matchers.isEmpty()) return@forEach
+            if (matchers.isEmpty()) {
+                return@forEach
+            }
+
             val cloned = injectorRaw.deepClone()
             val injectorRepo = RuleFactory.initGrammarRepository(cloned)
             val injectorRule = RawRule(patterns = cloned.patterns)
             val ruleId = RuleFactory.getCompiledRuleId(injectorRule, this, injectorRepo)
+
             for (mwp in matchers) {
                 result.add(InjectionRule(selector, mwp.matcher, mwp.priority, ruleId))
             }
@@ -138,14 +145,18 @@ class Grammar(
     private fun ensureCompiled(): Pair<RuleId, MutableMap<String, RawRule>> {
         val rootId = _rootId
         val repo = _repository
+
         if (rootId != null && repo != null) {
             return rootId to repo
         }
+
         val newRepo = RuleFactory.initGrammarRepository(rawGrammar)
         val selfRule = newRepo["\$self"] ?: error("Grammar repository missing \$self")
         val newRootId = RuleFactory.getCompiledRuleId(selfRule, this, newRepo)
+
         _rootId = newRootId
         _repository = newRepo
+
         return newRootId to newRepo
     }
 
