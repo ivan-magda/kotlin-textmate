@@ -7,22 +7,24 @@ sealed class Rule(
     private val _name: String?,
     private val _contentName: String?
 ) {
-    private val _nameIsCapturing: Boolean = hasCaptures(_name)
-    private val _contentNameIsCapturing: Boolean = hasCaptures(_contentName)
+    private val _nameIsCapturing: Boolean =
+        hasCaptures(_name)
+    private val _contentNameIsCapturing: Boolean =
+        hasCaptures(_contentName)
 
-    fun getName(lineText: String?, captureIndices: List<CaptureIndex>?): String? {
+    fun getName(lineText: String?, captureIndices: List<CaptureIndex>?): String? =
         if (!_nameIsCapturing || _name == null || lineText == null || captureIndices == null) {
-            return _name
+            _name
+        } else {
+            replaceCaptures(_name, lineText, captureIndices)
         }
-        return replaceCaptures(_name, lineText, captureIndices)
-    }
 
-    fun getContentName(lineText: String, captureIndices: List<CaptureIndex>): String? {
+    fun getContentName(lineText: String, captureIndices: List<CaptureIndex>): String? =
         if (!_contentNameIsCapturing || _contentName == null) {
-            return _contentName
+            _contentName
+        } else {
+            replaceCaptures(_contentName, lineText, captureIndices)
         }
-        return replaceCaptures(_contentName, lineText, captureIndices)
-    }
 
     internal abstract fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList)
     abstract fun compile(grammar: IRuleRegistryOnigLib, endRegexSource: String?): CompiledRule
@@ -41,7 +43,7 @@ class CaptureRule internal constructor(
     val retokenizeCapturedWithRuleId: RuleId
 ) : Rule(id, name, contentName) {
 
-    internal override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
+    override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
         throw UnsupportedOperationException("Not supported!")
     }
 
@@ -69,7 +71,7 @@ class MatchRule internal constructor(
     private val _match = RegExpSource(match, id)
     private var _cachedCompiledPatterns: RegExpSourceList? = null
 
-    internal override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
+    override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
         out.push(_match)
     }
 
@@ -107,7 +109,7 @@ class IncludeOnlyRule internal constructor(
     val hasMissingPatterns: Boolean = patterns.hasMissingPatterns
     private var _cachedCompiledPatterns: RegExpSourceList? = null
 
-    internal override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
+    override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
         for (patternId in patterns) {
             val rule = grammar.getRule(patternId) ?: continue
             rule.collectPatterns(grammar, out)
@@ -160,7 +162,7 @@ class BeginEndRule internal constructor(
         return _end.resolveBackReferences(lineText, captureIndices)
     }
 
-    internal override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
+    override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
         out.push(_begin)
     }
 
@@ -191,10 +193,12 @@ class BeginEndRule internal constructor(
             _cachedCompiledPatterns = list
             list
         }
+
         if (_end.hasBackReferences && endRegexSource != null) {
             val index = if (applyEndPatternLast) result.length() - 1 else 0
             result.setSource(index, endRegexSource)
         }
+
         return result
     }
 }
@@ -222,7 +226,7 @@ class BeginWhileRule internal constructor(
         return _while.resolveBackReferences(lineText, captureIndices)
     }
 
-    internal override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
+    override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
         out.push(_begin)
     }
 
@@ -250,21 +254,16 @@ class BeginWhileRule internal constructor(
         return result
     }
 
-    fun compileWhile(grammar: IRuleRegistryOnigLib, endRegexSource: String?): CompiledRule {
-        return getCachedCompiledWhilePatterns(grammar, endRegexSource).compile(grammar)
-    }
-
     fun compileWhileAG(
         grammar: IRuleRegistryOnigLib,
         endRegexSource: String?,
         allowA: Boolean,
         allowG: Boolean
     ): CompiledRule {
-        return getCachedCompiledWhilePatterns(grammar, endRegexSource).compileAG(grammar, allowA, allowG)
+        return getCachedCompiledWhilePatterns(endRegexSource).compileAG(grammar, allowA, allowG)
     }
 
     private fun getCachedCompiledWhilePatterns(
-        grammar: IRuleRegistryOnigLib,
         endRegexSource: String?
     ): RegExpSourceList {
         val cached = _cachedCompiledWhilePatterns
@@ -276,9 +275,11 @@ class BeginWhileRule internal constructor(
             _cachedCompiledWhilePatterns = list
             list
         }
+
         if (_while.hasBackReferences) {
             result.setSource(0, endRegexSource ?: "\uFFFF")
         }
+
         return result
     }
 }
