@@ -160,8 +160,8 @@ internal object InjectionSelectorParser {
                     true
                 } else {
                     scope.length > identifier.length &&
-                            scope.startsWith(identifier) &&
-                            scope[identifier.length] == '.'
+                        scope.startsWith(identifier) &&
+                        scope[identifier.length] == '.'
                 }
             }
         }
