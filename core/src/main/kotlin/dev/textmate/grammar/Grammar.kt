@@ -23,13 +23,14 @@ import dev.textmate.regex.OnigString
  * Port of `Grammar` from vscode-textmate `grammar.ts`.
  *
  * Supports cross-grammar `include` resolution via [grammarLookup].
- * No injection grammars, no theme resolution, no time limits.
+ * Supports injection grammars (both inline [RawGrammar.injections] and external [injectionLookup]).
  */
 class Grammar(
     private val rootScopeName: String,
     private val rawGrammar: RawGrammar,
     private val onigLib: IOnigLib,
-    private val grammarLookup: ((String) -> RawGrammar?)? = null
+    private val grammarLookup: ((String) -> RawGrammar?)? = null,
+    private val injectionLookup: (() -> List<RawGrammar>)? = null
 ) : IRuleFactoryHelper, IRuleRegistryOnigLib {
 
     private val _includedGrammars = mutableMapOf<String, RawGrammar>()
@@ -39,6 +40,48 @@ class Grammar(
     private val _ruleId2desc = mutableListOf<Rule?>(null) // index 0 unused
 
     private var _repository: MutableMap<String, RawRule>? = null
+    private var _injections: List<InjectionRule>? = null
+
+    internal fun getInjections(): List<InjectionRule> {
+        val cached = _injections
+        if (cached != null) return cached
+        val result = collectInjections()
+        _injections = result
+        return result
+    }
+
+    private fun collectInjections(): List<InjectionRule> {
+        val result = mutableListOf<InjectionRule>()
+        val (_, repository) = ensureCompiled()
+
+        // Inline injections from rawGrammar.injections map
+        rawGrammar.injections?.forEach { (selector, rawRule) ->
+            val matchers = InjectionSelectorParser.createMatchers(selector)
+            if (matchers.isEmpty()) return@forEach
+            val ruleId = RuleFactory.getCompiledRuleId(rawRule, this, repository)
+            for (mwp in matchers) {
+                result.add(InjectionRule(selector, mwp.matcher, mwp.priority, ruleId))
+            }
+        }
+
+        // External injection grammars with injectionSelector
+        injectionLookup?.invoke()?.forEach { injectorRaw ->
+            if (injectorRaw.scopeName == rootScopeName) return@forEach
+            val selector = injectorRaw.injectionSelector ?: return@forEach
+            val matchers = InjectionSelectorParser.createMatchers(selector)
+            if (matchers.isEmpty()) return@forEach
+            val cloned = injectorRaw.deepClone()
+            val injectorRepo = RuleFactory.initGrammarRepository(cloned)
+            val injectorRule = RawRule(patterns = cloned.patterns)
+            val ruleId = RuleFactory.getCompiledRuleId(injectorRule, this, injectorRepo)
+            for (mwp in matchers) {
+                result.add(InjectionRule(selector, mwp.matcher, mwp.priority, ruleId))
+            }
+        }
+
+        result.sortBy { it.priority.value }
+        return result
+    }
 
     // --- IRuleRegistry ---
 

@@ -25,7 +25,6 @@ class FirstMateConformanceTest(
         @Parameterized.Parameters(name = "{0}")
         fun loadTestCases(): List<Array<Any>> {
             return allTests
-                .filter { it.grammarInjections.isNullOrEmpty() }
                 .filter { canRun(it) }
                 .map { arrayOf(it.desc, it) }
         }
@@ -74,30 +73,24 @@ class FirstMateConformanceTest(
     }
 
     private fun loadGrammarForTest(): dev.textmate.grammar.Grammar {
-        var targetScopeFromPath: String? = null
-        val rawGrammars = testCase.grammars
-            .filter { path ->
-                javaClass.classLoader.getResource("${FIXTURES_BASE}$path") != null
-            }
-            .associate { path ->
-                val raw = ConformanceTestSupport.loadRawGrammar("$FIXTURES_BASE$path")
-                if (path == testCase.grammarPath) {
-                    targetScopeFromPath = raw.scopeName
-                }
-                raw.scopeName to raw
-            }
-
-        val targetScope = when {
-            testCase.grammarScopeName != null -> testCase.grammarScopeName
-            testCase.grammarPath != null -> targetScopeFromPath
-                ?: error("Grammar for path '${testCase.grammarPath}' not found")
-            else -> error("Test '${testCase.desc}' has neither grammarPath nor grammarScopeName")
-        }
-
         val registry = Registry(
-            grammarSource = { scope -> rawGrammars[scope] },
+            grammarSource = { null },
             onigLib = JoniOnigLib()
         )
+
+        // Pre-load all grammars via addGrammar so they're in the registry's
+        // internal map — required for injectionLookup to discover injectors
+        val loadedGrammars = testCase.grammars.mapNotNull { path ->
+            val resource = "${FIXTURES_BASE}$path"
+            if (javaClass.classLoader.getResource(resource) == null) return@mapNotNull null
+            val raw = ConformanceTestSupport.loadRawGrammar(resource)
+            registry.addGrammar(raw)
+            path to raw.scopeName
+        }.toMap()
+
+        val targetScope = testCase.grammarScopeName
+            ?: loadedGrammars[testCase.grammarPath]
+            ?: error("Test '${testCase.desc}': target grammar not found")
 
         return registry.loadGrammar(targetScope)
             ?: error("Grammar for scope '$targetScope' could not be loaded")

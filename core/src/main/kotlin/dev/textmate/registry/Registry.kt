@@ -25,9 +25,13 @@ class Registry(
         grammars[scopeName]?.let { return it }
 
         val raw = resolveRawGrammar(scopeName) ?: return null
-        val grammar = Grammar(raw.scopeName, raw, onigLib) { lookupScope ->
-            resolveRawGrammar(lookupScope)
-        }
+        val grammar = Grammar(
+            rootScopeName = raw.scopeName,
+            rawGrammar = raw,
+            onigLib = onigLib,
+            grammarLookup = { lookupScope -> resolveRawGrammar(lookupScope) },
+            injectionLookup = { rawGrammars.values.filter { it.injectionSelector != null } }
+        )
         grammars[scopeName] = grammar
 
         return grammar

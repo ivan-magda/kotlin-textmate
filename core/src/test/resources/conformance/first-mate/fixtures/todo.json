@@ -1,0 +1,12 @@
+{
+  "scopeName": "text.todo",
+  "name": "TODO",
+  "fileTypes": [],
+  "injectionSelector": "comment",
+  "patterns": [
+    {
+      "match": "\\b(TODO|FIXME|CHANGED|XXX|IDEA|HACK|NOTE|REVIEW)\\b",
+      "name": "storage.type.class.todo"
+    }
+  ]
+}

@@ -196,4 +196,24 @@ class RegistryTest {
         assertEquals(1, result.tokens.size)
         assertTrue(result.tokens[0].scopes.contains("constant.language.json"))
     }
+
+    @Test
+    fun `injection grammar registered before loadGrammar is applied`() {
+        val hostRaw = RawGrammar(
+            scopeName = "source.host",
+            patterns = listOf(RawRule(begin = "//", end = "$", name = "comment.line.host"))
+        )
+        val injectorRaw = RawGrammar(
+            scopeName = "text.injector",
+            injectionSelector = "comment",
+            patterns = listOf(RawRule(match = "TODO", name = "keyword.todo.injected"))
+        )
+        val registry = Registry(grammarSource = { null })
+        registry.addGrammar(hostRaw)
+        registry.addGrammar(injectorRaw)
+
+        val grammar = registry.loadGrammar("source.host")
+            ?: error("Grammar 'source.host' not found")
+        assertEquals(1, grammar.getInjections().size)
+    }
 }
