@@ -149,9 +149,9 @@ internal object InjectionSelectorParser {
 
             private fun scopesAreMatching(scope: String, identifier: String): Boolean {
                 if (scope == identifier) return true
-                return scope.length > identifier.length
-                        && scope.startsWith(identifier)
-                        && scope[identifier.length] == '.'
+                return scope.length > identifier.length &&
+                        scope.startsWith(identifier) &&
+                        scope[identifier.length] == '.'
             }
         }
     }
