@@ -70,7 +70,7 @@ internal object InjectionSelectorParser {
             return when {
                 t == "-" -> {
                     advance()
-                    val inner = parseOperand() ?: return null
+                    val inner = parseOperand() ?: return null;
                     { scopes -> !inner(scopes) }
                 }
 
