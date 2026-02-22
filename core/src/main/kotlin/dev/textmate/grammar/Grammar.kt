@@ -2,6 +2,7 @@ package dev.textmate.grammar
 
 import dev.textmate.grammar.raw.RawGrammar
 import dev.textmate.grammar.raw.RawRule
+import dev.textmate.grammar.raw.deepClone
 import dev.textmate.grammar.rule.IRuleFactoryHelper
 import dev.textmate.grammar.rule.IRuleRegistryOnigLib
 import dev.textmate.grammar.rule.Rule
@@ -62,16 +63,7 @@ class Grammar(
     ): RawGrammar? {
         _includedGrammars[scopeName]?.let { return it }
         val raw = grammarLookup?.invoke(scopeName) ?: return null
-        val initialized = RawGrammar(
-            scopeName = raw.scopeName,
-            name = raw.name,
-            patterns = raw.patterns,
-            repository = raw.repository,
-            injections = raw.injections,
-            injectionSelector = raw.injectionSelector,
-            fileTypes = raw.fileTypes,
-            firstLineMatch = raw.firstLineMatch
-        )
+        val initialized = raw.deepClone()
         _includedGrammars[scopeName] = initialized
         return initialized
     }

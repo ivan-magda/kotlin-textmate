@@ -1,7 +1,9 @@
 package dev.textmate.registry
 
+import dev.textmate.grammar.Grammar
 import dev.textmate.grammar.raw.GrammarReader
 import dev.textmate.grammar.raw.RawGrammar
+import dev.textmate.grammar.raw.RawRule
 import dev.textmate.regex.JoniOnigLib
 import org.junit.Assert.*
 import org.junit.Test
@@ -117,6 +119,42 @@ class RegistryTest {
         assertTrue(
             "Key token should have string scope from JSON grammar, got: ${keyToken!!.scopes}",
             keyToken.scopes.any { it.contains("string") }
+        )
+    }
+
+    @Test
+    fun `two grammars embedding the same external grammar both tokenize correctly`() {
+        // Reproducer for RawRule.id sharing bug:
+        // Two Grammar instances that both embed source.json via the same grammarLookup.
+        // If RawRule objects are shared, Grammar-A's compilation mutates RawRule.id,
+        // and Grammar-B sees stale IDs pointing into Grammar-A's rule table.
+        val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
+
+        // Two synthetic wrapper grammars that both include source.json
+        fun makeWrapper(scope: String) = RawGrammar(
+            scopeName = scope,
+            patterns = listOf(RawRule(include = "source.json"))
+        )
+
+        val onigLib = JoniOnigLib()
+        val lookup: (String) -> RawGrammar? = { if (it == "source.json") rawJson else null }
+
+        val grammarA = Grammar("wrapper.a", makeWrapper("wrapper.a"), onigLib, lookup)
+        val grammarB = Grammar("wrapper.b", makeWrapper("wrapper.b"), onigLib, lookup)
+
+        // Grammar-A compiles first — this mutates RawRule.id fields on the shared rawJson
+        val resultA = grammarA.tokenizeLine("true")
+        assertTrue(
+            "Grammar-A should tokenize JSON correctly",
+            resultA.tokens.any { it.scopes.any { s -> s.contains("constant.language.json") } }
+        )
+
+        // Grammar-B compiles second — if RawRule.id is polluted, this breaks
+        val resultB = grammarB.tokenizeLine("true")
+        assertTrue(
+            "Grammar-B should also tokenize JSON correctly (not get stale rule IDs from A), " +
+                "got: ${resultB.tokens.map { it.scopes }}",
+            resultB.tokens.any { it.scopes.any { s -> s.contains("constant.language.json") } }
         )
     }
 
