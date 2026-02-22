@@ -37,12 +37,14 @@ class AttributedScopeStack private constructor(
         ): AttributedScopeStack? {
             var current = namesScopeList
             var scopeNames = namesScopeList?.scopePath
+
             for (frame in contentNameScopesList) {
                 val pushed = ScopeStack.push(scopeNames, frame.scopeNames)
                 requireNotNull(pushed) { "fromExtension: frame scopeNames must not be empty" }
                 scopeNames = pushed
                 current = AttributedScopeStack(current, pushed, frame.encodedTokenAttributes)
             }
+
             return current
         }
     }
@@ -61,9 +63,11 @@ class AttributedScopeStack private constructor(
 
         val scopes = scopePath.split(' ')
         var result = this
+
         for (scope in scopes) {
             result = result.pushSingle(scope)
         }
+
         return result
     }
 
@@ -87,13 +91,14 @@ class AttributedScopeStack private constructor(
             result.add(AttributedScopeStackFrame(self.tokenAttributes, scopeNames))
             self = self.parent
         }
+
         return if (self === base) result.reversed() else null
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is AttributedScopeStack) return false
-        return Companion.equals(this, other)
+        return equals(this, other)
     }
 
     override fun hashCode(): Int {
