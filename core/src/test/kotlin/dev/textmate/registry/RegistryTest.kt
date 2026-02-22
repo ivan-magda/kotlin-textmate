@@ -33,9 +33,8 @@ class RegistryTest {
     @Test
     fun `load single grammar and tokenize`() {
         val registry = createRegistry()
-        val grammar = registry.loadGrammar("source.json")
-        assertNotNull(grammar)
-        val result = grammar!!.tokenizeLine("true")
+        val grammar = requireNotNull(registry.loadGrammar("source.json"))
+        val result = grammar.tokenizeLine("true")
         assertEquals(1, result.tokens.size)
         assertTrue(result.tokens[0].scopes.contains("source.json"))
         assertTrue(result.tokens[0].scopes.contains("constant.language.json"))
@@ -58,7 +57,7 @@ class RegistryTest {
 
     @Test
     fun `addGrammar pre-loads grammar`() {
-        var sourceCalledFor = mutableListOf<String>()
+        val sourceCalledFor = mutableListOf<String>()
         val registry = Registry(
             grammarSource = { scope ->
                 sourceCalledFor.add(scope)
@@ -68,40 +67,60 @@ class RegistryTest {
         )
         val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
         registry.addGrammar(rawJson)
-        val grammar = registry.loadGrammar("source.json")
-        assertNotNull(grammar)
+        assertNotNull(registry.loadGrammar("source.json"))
         assertFalse("GrammarSource should not be called for pre-loaded grammar",
             sourceCalledFor.contains("source.json"))
     }
 
     @Test
+    fun `addGrammar invalidates alias key entries`() {
+        // Load "source.alias" via grammarSource, which returns a grammar with scopeName "source.json".
+        // resolveRawGrammar caches both rawGrammars["source.alias"] and grammars["source.alias"].
+        // addGrammar(newJson) must also invalidate those alias entries, not just "source.json".
+        val rawJson = loadRaw("grammars/JSON.tmLanguage.json") // scopeName = "source.json"
+        val registry = Registry(
+            grammarSource = { scope -> if (scope == "source.alias") rawJson else null },
+            onigLib = JoniOnigLib()
+        )
+
+        val first = requireNotNull(registry.loadGrammar("source.alias"))
+
+        // Replace the grammar with a new instance
+        val rawJson2 = loadRaw("grammars/JSON.tmLanguage.json")
+        registry.addGrammar(rawJson2)
+
+        // alias key must return a freshly compiled Grammar, not the stale cached one
+        val second = requireNotNull(registry.loadGrammar("source.alias"))
+        assertNotSame("loadGrammar(alias) should return a new Grammar after addGrammar", first, second)
+    }
+
+    @Test
     fun `cross-grammar include resolves JSON inside Markdown fenced code block`() {
         val registry = createRegistry()
-        val grammar = registry.loadGrammar("text.html.markdown")
-        assertNotNull(grammar)
+        val grammar = requireNotNull(registry.loadGrammar("text.html.markdown"))
 
         // Tokenize a Markdown fenced JSON block
-        val state = grammar!!.tokenizeLine("```json").ruleStack
+        val state = grammar.tokenizeLine("```json").ruleStack
         val result = grammar.tokenizeLine("{\"key\": true}", state)
 
         val allScopes = result.tokens.flatMap { it.scopes }
+        // meta.embedded.block.json comes from Markdown's BeginWhileRule contentName
         assertTrue(
-            "JSON tokens inside Markdown should include meta.embedded.block.json",
-            allScopes.any { it.contains("meta.embedded.block.json") }
+            "Expected meta.embedded.block.json, got: $allScopes",
+            allScopes.contains("meta.embedded.block.json")
         )
-        // IncludeOnlyRule flattens sub-patterns, so source.json scope is NOT pushed.
-        // Instead, verify JSON grammar patterns actually matched by checking for
-        // JSON-specific scopes (these only exist if cross-grammar resolution worked).
+        // IncludeOnlyRule flattens sub-patterns, so source.json is NOT pushed as a scope.
+        // Verify JSON grammar patterns matched by checking for specific JSON grammar scopes.
         assertTrue(
-            "JSON tokens inside Markdown should have JSON-grammar scopes, got: $allScopes",
-            allScopes.any { it.contains(".json") && !it.contains("markdown") && !it.contains("meta.embedded") }
+            "Expected constant.language.json (JSON grammar), got: $allScopes",
+            allScopes.contains("constant.language.json")
         )
     }
 
     @Test
     fun `cross-grammar tokens have proper JSON structure scopes`() {
         val registry = createRegistry()
-        val grammar = registry.loadGrammar("text.html.markdown")!!
+        val grammar = requireNotNull(registry.loadGrammar("text.html.markdown"))
 
         val line = "{\"key\": 42}"
         val state = grammar.tokenizeLine("```json").ruleStack
@@ -115,10 +134,11 @@ class RegistryTest {
             )
             text.contains("key")
         }
-        assertNotNull("Should find a token containing 'key'", keyToken)
+        requireNotNull(keyToken) { "Should find a token containing 'key'" }
+        // JSON object keys use the "objectkey" rule with scope "string.json support.type.property-name.json"
         assertTrue(
-            "Key token should have string scope from JSON grammar, got: ${keyToken!!.scopes}",
-            keyToken.scopes.any { it.contains("string") }
+            "Expected support.type.property-name.json (JSON grammar), got: ${keyToken.scopes}",
+            keyToken.scopes.any { "support.type.property-name.json" in it }
         )
     }
 

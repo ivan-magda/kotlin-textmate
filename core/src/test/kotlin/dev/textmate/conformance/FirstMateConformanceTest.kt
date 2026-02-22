@@ -98,7 +98,6 @@ class FirstMateConformanceTest(
             grammarSource = { scope -> rawGrammars[scope] },
             onigLib = JoniOnigLib()
         )
-        rawGrammars.values.forEach { registry.addGrammar(it) }
 
         return registry.loadGrammar(targetScope)
             ?: error("Grammar for scope '$targetScope' could not be loaded")
