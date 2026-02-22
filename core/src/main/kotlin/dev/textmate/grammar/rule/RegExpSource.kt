@@ -1,5 +1,7 @@
 package dev.textmate.grammar.rule
 
+import dev.textmate.regex.CaptureIndex
+
 private val BACK_REFERENCE_REGEX = Regex("""\\(\d+)""")
 
 internal class RegExpSource(regExpSource: String, val ruleId: RuleId) {
@@ -9,6 +11,7 @@ internal class RegExpSource(regExpSource: String, val ruleId: RuleId) {
 
     var hasAnchor: Boolean
         private set
+
     val hasBackReferences: Boolean
     private var _anchorCache: AnchorCache? = null
 
@@ -69,7 +72,7 @@ internal class RegExpSource(regExpSource: String, val ruleId: RuleId) {
         }
     }
 
-    fun resolveBackReferences(lineText: String, captureIndices: List<dev.textmate.regex.CaptureIndex>): String {
+    fun resolveBackReferences(lineText: String, captureIndices: List<CaptureIndex>): String {
         val capturedValues = captureIndices.map { capture ->
             lineText.substring(capture.start, capture.end)
         }
@@ -109,22 +112,27 @@ internal class RegExpSource(regExpSource: String, val ruleId: RuleId) {
             a1g1[pos] = ch
 
             if (ch == '\\' && pos + 1 < len) {
-                val nextCh = this.source[pos + 1]
-                if (nextCh == 'A') {
-                    a0g0[pos + 1] = '\uFFFF'
-                    a0g1[pos + 1] = '\uFFFF'
-                    a1g0[pos + 1] = 'A'
-                    a1g1[pos + 1] = 'A'
-                } else if (nextCh == 'G') {
-                    a0g0[pos + 1] = '\uFFFF'
-                    a0g1[pos + 1] = 'G'
-                    a1g0[pos + 1] = '\uFFFF'
-                    a1g1[pos + 1] = 'G'
-                } else {
-                    a0g0[pos + 1] = nextCh
-                    a0g1[pos + 1] = nextCh
-                    a1g0[pos + 1] = nextCh
-                    a1g1[pos + 1] = nextCh
+                when (val nextCh = this.source[pos + 1]) {
+                    'A' -> {
+                        a0g0[pos + 1] = '\uFFFF'
+                        a0g1[pos + 1] = '\uFFFF'
+                        a1g0[pos + 1] = 'A'
+                        a1g1[pos + 1] = 'A'
+                    }
+
+                    'G' -> {
+                        a0g0[pos + 1] = '\uFFFF'
+                        a0g1[pos + 1] = 'G'
+                        a1g0[pos + 1] = '\uFFFF'
+                        a1g1[pos + 1] = 'G'
+                    }
+
+                    else -> {
+                        a0g0[pos + 1] = nextCh
+                        a0g1[pos + 1] = nextCh
+                        a1g0[pos + 1] = nextCh
+                        a1g1[pos + 1] = nextCh
+                    }
                 }
                 pos++
             }
