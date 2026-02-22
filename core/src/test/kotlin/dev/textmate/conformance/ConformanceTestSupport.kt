@@ -81,6 +81,10 @@ object ConformanceTestSupport {
         return Grammar(rawGrammar.scopeName, rawGrammar, JoniOnigLib())
     }
 
+    fun createGrammar(rawGrammar: RawGrammar, grammarLookup: ((String) -> RawGrammar?)): Grammar {
+        return Grammar(rawGrammar.scopeName, rawGrammar, JoniOnigLib(), grammarLookup)
+    }
+
     // --- Token conversion ---
 
     fun actualToExpected(line: String, tokens: List<Token>): List<ExpectedToken> {
