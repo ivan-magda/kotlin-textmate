@@ -35,9 +35,7 @@ internal object InjectionSelectorParser {
     }
 
     private class Parser(selector: String) {
-        // Port of newTokenizer() — matches priority prefixes, identifiers (with hyphens), and operators
-        private val tokens = TOKEN_RE
-            .findAll(selector).map { it.value }.toList()
+        private val tokens = TOKEN_RE.findAll(selector).map { it.value }.toList()
         private var pos = 0
         private var token: String? = tokens.getOrNull(0)
 
@@ -68,27 +66,30 @@ internal object InjectionSelectorParser {
         }
 
         private fun parseOperand(): ScopeMatcher? {
-            return when (val t = token) {
-                "-" -> {
+            val t = token ?: return null
+            return when {
+                t == "-" -> {
                     advance()
                     val inner = parseOperand() ?: return null
                     { scopes -> !inner(scopes) }
                 }
-                "(" -> {
+                t == "(" -> {
                     advance()
                     val inner = parseInnerExpression()
                     if (token == ")") advance()
                     inner
                 }
-                else -> if (t != null && isIdentifier(t)) {
-                    // Collect consecutive identifiers (space-separated in the original selector)
+                isIdentifier(t) -> {
                     val identifiers = mutableListOf<String>()
-                    while (token != null && isIdentifier(token!!)) {
-                        identifiers.add(token!!)
+                    var current = token
+                    while (current != null && isIdentifier(current)) {
+                        identifiers.add(current)
                         advance()
+                        current = token
                     }
                     { scopes -> nameMatcher(identifiers, scopes) }
-                } else null
+                }
+                else -> null
             }
         }
 
@@ -119,10 +120,10 @@ internal object InjectionSelectorParser {
 
         companion object {
             private val TOKEN_RE = Regex("""([LR]:|[\w\.:][\w\.:\-]*|[,|\-())])""")
-            private val IDENTIFIER_RE = Regex("""[\w\.:]+""")
+            private val IDENTIFIER_RE = Regex("""[\w\.:][\w\.:\-]*""")
 
             private fun isIdentifier(token: String): Boolean =
-                IDENTIFIER_RE.containsMatchIn(token)
+                IDENTIFIER_RE.matches(token)
 
             private fun nameMatcher(identifiers: List<String>, scopes: List<String>): Boolean {
                 if (scopes.size < identifiers.size) return false

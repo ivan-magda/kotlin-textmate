@@ -1,6 +1,5 @@
 package dev.textmate.grammar
 
-import dev.textmate.grammar.raw.GrammarReader
 import dev.textmate.grammar.raw.RawGrammar
 import dev.textmate.grammar.raw.RawRule
 import dev.textmate.registry.Registry
@@ -9,14 +8,7 @@ import org.junit.Test
 
 class InjectionGrammarTest {
 
-    private fun loadFixture(name: String): RawGrammar {
-        val stream = javaClass.classLoader
-            .getResourceAsStream("conformance/first-mate/fixtures/$name")
-            ?: error("Fixture not found: $name")
-        return GrammarReader.readGrammar(stream)
-    }
-
-    // --- Flavor 1: external injection grammar via injectionSelector ---
+    // --- External injection grammar via injectionSelector ---
 
     @Test
     fun `getInjections returns one rule for external injector`() {
@@ -102,7 +94,7 @@ class InjectionGrammarTest {
         )
     }
 
-    // --- Flavor 2: inline grammar.injections map ---
+    // --- Inline grammar.injections map ---
 
     @Test
     fun `getInjections compiles inline injections map`() {

@@ -54,7 +54,7 @@ class Grammar(
         val result = mutableListOf<InjectionRule>()
         val (_, repository) = ensureCompiled()
 
-        // Flavor 2: inline injections from rawGrammar.injections map
+        // Inline injections from rawGrammar.injections map
         rawGrammar.injections?.forEach { (selector, rawRule) ->
             val matchers = InjectionSelectorParser.createMatchers(selector)
             if (matchers.isEmpty()) return@forEach
@@ -64,7 +64,7 @@ class Grammar(
             }
         }
 
-        // Flavor 1: external injection grammars with injectionSelector
+        // External injection grammars with injectionSelector
         injectionLookup?.invoke()?.forEach { injectorRaw ->
             if (injectorRaw.scopeName == rootScopeName) return@forEach
             val selector = injectorRaw.injectionSelector ?: return@forEach
