@@ -23,7 +23,7 @@ internal class InjectionRule(
     val debugSelector: String,
     /** Returns true when the current scope stack matches this injection's target. */
     val matcher: ScopeMatcher,
-    /** Injection priority parsed from selector prefix. */
+    /** Injection priority parsed from a selector prefix. */
     val priority: InjectionPriority,
     /** Rule compiled into the host grammar's rule space. */
     val ruleId: RuleId
