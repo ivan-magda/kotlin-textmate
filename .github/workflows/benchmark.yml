@@ -36,6 +36,15 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Check if baseline exists
+        id: baseline
+        run: |
+          if git ls-remote --exit-code origin gh-pages >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       # ── PR: smoke benchmark (advisory) ──────────────────────────────────
 
       - name: Run smoke benchmark
@@ -54,7 +63,7 @@ jobs:
           echo "file=$RESULT_FILE" >> "$GITHUB_OUTPUT"
 
       - name: Compare smoke result
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.baseline.outputs.exists == 'true'
         uses: benchmark-action/github-action-benchmark@v1
         with:
           name: KotlinTextMate Benchmark
@@ -62,7 +71,7 @@ jobs:
           output-file-path: ${{ steps.smoke-result.outputs.file }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           save-data-file: false
-          skip-fetch-gh-pages: true
+          skip-fetch-gh-pages: false
           comment-always: true
           summary-always: true
           fail-on-alert: false
