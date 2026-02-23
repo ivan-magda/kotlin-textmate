@@ -104,6 +104,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: true
           save-data-file: true
+          skip-fetch-gh-pages: ${{ steps.baseline.outputs.exists != 'true' }}
           summary-always: true
           comment-on-alert: true
           fail-on-alert: false
