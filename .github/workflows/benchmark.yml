@@ -62,6 +62,7 @@ jobs:
           output-file-path: ${{ steps.smoke-result.outputs.file }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           save-data-file: false
+          skip-fetch-gh-pages: true
           comment-always: true
           summary-always: true
           fail-on-alert: false
