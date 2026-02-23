@@ -159,7 +159,7 @@ class RegistryTest {
         val resultB = grammarB.tokenizeLine("true")
         assertTrue(
             "Grammar-B should also tokenize JSON correctly (not get stale rule IDs from A), " +
-                    "got: ${resultB.tokens.map { it.scopes }}",
+                "got: ${resultB.tokens.map { it.scopes }}",
             resultB.tokens.any { it.scopes.any { s -> s.contains("constant.language.json") } }
         )
     }
