@@ -3,7 +3,9 @@ package dev.textmate.grammar
 import dev.textmate.grammar.raw.GrammarReader
 import dev.textmate.grammar.tokenize.StateStack
 import dev.textmate.regex.JoniOnigLib
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**

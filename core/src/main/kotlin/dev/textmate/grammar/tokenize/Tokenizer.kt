@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 package dev.textmate.grammar.tokenize
 
 import dev.textmate.grammar.Grammar

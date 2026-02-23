@@ -1,7 +1,9 @@
 package dev.textmate.grammar.rule
 
 import dev.textmate.regex.CaptureIndex
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class RegExpSourceTest {

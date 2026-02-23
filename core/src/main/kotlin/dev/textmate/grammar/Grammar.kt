@@ -39,6 +39,7 @@ class Grammar(
     private var _lastRuleId = 0
     private val _ruleId2desc = mutableListOf<Rule?>(null) // index 0 unused
 
+    @Suppress("DoubleMutabilityForCollection")
     private var _repository: MutableMap<String, RawRule>? = null
     private var _injections: List<InjectionRule>? = null
 

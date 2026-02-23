@@ -3,7 +3,12 @@ package dev.textmate.grammar.rule
 import dev.textmate.grammar.raw.GrammarReader
 import dev.textmate.grammar.raw.RawGrammar
 import dev.textmate.grammar.raw.RawRule
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Test
 
 class RuleFactoryTest {
@@ -235,7 +240,7 @@ class RuleFactoryTest {
             val rootRuleId = RuleFactory.getCompiledRuleId(rootRule, helper, repository)
             assertNotNull(helper.getRule(rootRuleId))
         } catch (error: StackOverflowError) {
-            fail("Mutual external includes should compile without StackOverflowError")
+            fail("Mutual external includes should compile without StackOverflowError: ${error.message}")
         }
     }
 }

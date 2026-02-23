@@ -3,7 +3,13 @@ package dev.textmate.grammar.tokenize
 import dev.textmate.grammar.rule.MatchRule
 import dev.textmate.grammar.rule.RuleId
 import dev.textmate.grammar.rule.TestRuleFactoryHelper
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotSame
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class StateStackTest {

@@ -49,31 +49,31 @@ object ConformanceTestSupport {
 
     fun loadFirstMateTests(resourcePath: String): List<FirstMateTestCase> {
         val stream = javaClass.classLoader.getResourceAsStream(resourcePath)
-            ?: throw IllegalStateException("Resource not found: $resourcePath")
+            ?: error("Resource not found: $resourcePath")
         return stream.use { s ->
             InputStreamReader(s, Charsets.UTF_8).use { reader ->
                 gson.fromJson<List<FirstMateTestCase>>(
                     reader,
                     object : TypeToken<List<FirstMateTestCase>>() {}.type
-                ) ?: throw IllegalStateException("Failed to parse: $resourcePath")
+                ) ?: error("Failed to parse: $resourcePath")
             }
         }
     }
 
     fun loadGoldenSnapshot(resourcePath: String): GoldenSnapshot {
         val stream = javaClass.classLoader.getResourceAsStream(resourcePath)
-            ?: throw IllegalStateException("Resource not found: $resourcePath")
+            ?: error("Resource not found: $resourcePath")
         return stream.use { s ->
             InputStreamReader(s, Charsets.UTF_8).use { reader ->
                 gson.fromJson(reader, GoldenSnapshot::class.java)
-                    ?: throw IllegalStateException("Failed to parse: $resourcePath")
+                    ?: error("Failed to parse: $resourcePath")
             }
         }
     }
 
     fun loadRawGrammar(resourcePath: String): RawGrammar {
         val stream = javaClass.classLoader.getResourceAsStream(resourcePath)
-            ?: throw IllegalStateException("Resource not found: $resourcePath")
+            ?: error("Resource not found: $resourcePath")
         return stream.use { GrammarReader.readGrammar(it) }
     }
 
