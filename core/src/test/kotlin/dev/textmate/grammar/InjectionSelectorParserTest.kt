@@ -84,6 +84,32 @@ class InjectionSelectorParserTest {
         assertEquals(InjectionPriority.DEFAULT, matchers[0].priority)
     }
 
+    // --- Scope matching boundary tests ---
+
+    @Test
+    fun `exact scope match without dot suffix`() {
+        // "comment" in selector must match scope "comment" exactly
+        assertTrue(match("comment", listOf("comment")))
+    }
+
+    @Test
+    fun `scope prefix followed by dot matches`() {
+        // "comment" in selector must match scope "comment.line"
+        assertTrue(match("comment", listOf("comment.line")))
+    }
+
+    @Test
+    fun `scope prefix not followed by dot does not match`() {
+        // "comment" in selector must NOT match scope "commentary"
+        assertFalse(match("comment", listOf("commentary")))
+    }
+
+    @Test
+    fun `identifier longer than scope does not match`() {
+        // "comment.line" must NOT match scope "comment"
+        assertFalse(match("comment.line", listOf("comment")))
+    }
+
     // --- Edge cases ---
 
     @Test

@@ -162,13 +162,7 @@ internal object InjectionSelectorParser {
             }
 
             private fun scopesAreMatching(scope: String, identifier: String): Boolean =
-                if (scope == identifier) {
-                    true
-                } else {
-                    scope.length > identifier.length &&
-                        scope.startsWith(identifier) &&
-                        scope[identifier.length] == '.'
-                }
+                scope == identifier || scope.startsWith("$identifier.")
         }
     }
 }
