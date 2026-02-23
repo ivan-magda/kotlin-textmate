@@ -2,13 +2,24 @@ package dev.textmate.regex
 
 class OnigString(val content: String) {
 
-    val length: Int get() = content.length
+    val length: Int
+        get() = content.length
 
-    val utf8Bytes: ByteArray = content.toByteArray(Charsets.UTF_8)
+    val utf8Bytes: ByteArray =
+        content.toByteArray(Charsets.UTF_8)
 
-    private val isMultiByte: Boolean = utf8Bytes.size != content.length
+    private val isMultiByte: Boolean =
+        utf8Bytes.size != content.length
 
-    private val byteToCharOffsets: IntArray by lazy { buildByteToCharMap() }
+    private val byteToCharOffsets: IntArray by lazy {
+        buildByteToCharMap()
+    }
+
+    private companion object {
+        const val MAX_1_BYTE = 0x7F
+        const val MAX_2_BYTES = 0x7FF
+        const val MAX_3_BYTES = 0xFFFF
+    }
 
     fun charToByteOffset(charOffset: Int): Int {
         if (charOffset <= 0) return 0
@@ -28,13 +39,15 @@ class OnigString(val content: String) {
         val map = IntArray(utf8Bytes.size + 1)
         var byteIdx = 0
         var charIdx = 0
+
         while (charIdx < content.length) {
             val codePoint = Character.codePointAt(content, charIdx)
             val charCount = Character.charCount(codePoint)
+
             val codePointByteLen = when {
-                codePoint <= 0x7F -> 1
-                codePoint <= 0x7FF -> 2
-                codePoint <= 0xFFFF -> 3
+                codePoint <= MAX_1_BYTE -> 1
+                codePoint <= MAX_2_BYTES -> 2
+                codePoint <= MAX_3_BYTES -> 3
                 else -> 4
             }
 
@@ -43,12 +56,15 @@ class OnigString(val content: String) {
                     map[byteIdx + b] = charIdx
                 }
             }
+
             byteIdx += codePointByteLen
             charIdx += charCount
         }
+
         if (byteIdx < map.size) {
             map[byteIdx] = content.length
         }
+
         return map
     }
 }
