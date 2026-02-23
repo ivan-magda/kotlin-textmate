@@ -4,6 +4,10 @@ plugins {
     alias(libs.plugins.kotlinx.benchmark)
 }
 
+kotlin {
+    jvmToolchain(libs.versions.jvmTarget.get().toInt())
+}
+
 allOpen {
     annotation("org.openjdk.jmh.annotations.State")
 }
