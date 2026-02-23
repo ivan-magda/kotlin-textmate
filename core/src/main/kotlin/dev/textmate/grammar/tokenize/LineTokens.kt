@@ -20,7 +20,7 @@ internal class LineTokens {
             return
         }
 
-        val scopes = scopesList?.getScopeNames() ?: emptyList()
+        val scopes = scopesList?.getScopeNames().orEmpty()
 
         _tokens.add(
             Token(
