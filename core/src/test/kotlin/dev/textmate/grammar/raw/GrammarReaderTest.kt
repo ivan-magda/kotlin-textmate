@@ -38,7 +38,7 @@ class GrammarReaderTest {
         val grammar = loadGrammar("grammars/JSON.tmLanguage.json")
         assertNotNull(grammar.patterns)
         assertTrue(grammar.patterns!!.isNotEmpty())
-        assertEquals("#value", grammar.patterns!![0].include)
+        assertEquals("#value", grammar.patterns[0].include)
     }
 
     @Test
