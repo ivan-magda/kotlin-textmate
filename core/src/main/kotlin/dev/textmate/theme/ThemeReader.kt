@@ -75,8 +75,8 @@ object ThemeReader {
         }
 
         // Extract default style: prefer empty-scope tokenColors entry, then colors.editor.*
-        var defaultFg = editorForeground ?: 0xFF000000L
-        var defaultBg = editorBackground ?: 0xFFFFFFFFL
+        var defaultFg = editorForeground ?: DEFAULT_BLACK
+        var defaultBg = editorBackground ?: DEFAULT_WHITE
         var defaultFontStyle: Set<FontStyle> = emptySet()
 
         val contentRules = mutableListOf<ParsedThemeRule>()
@@ -114,39 +114,47 @@ internal fun parseScopeField(scope: Any?): List<String> {
     }
 }
 
+private const val HEX_RGB_LEN = 6
+private const val HEX_RGBA_LEN = 8
+private const val BYTE_MASK = 0xFFL
+private const val SHIFT_RED = 24
+private const val SHIFT_GREEN = 16
+private const val SHIFT_BLUE = 8
+private const val OPAQUE_ALPHA = 0xFF000000L
+private const val DEFAULT_BLACK = 0xFF000000L
+private const val DEFAULT_WHITE = 0xFFFFFFFFL
+
+@Suppress("MagicNumber") // 16 = hex radix
 internal fun parseHexColor(hex: String): Long? {
     if (!hex.startsWith("#")) return null
     val digits = hex.substring(1)
     return when (digits.length) {
-        6 -> {
-            val rgb = digits.toLongOrNull(16) ?: return null
-            0xFF000000L or rgb
-        }
+        HEX_RGB_LEN -> digits.toLongOrNull(16)?.let { rgb -> OPAQUE_ALPHA or rgb }
 
-        8 -> {
-            val rrggbbaa = digits.toLongOrNull(16) ?: return null
-            val rr = (rrggbbaa shr 24) and 0xFF
-            val gg = (rrggbbaa shr 16) and 0xFF
-            val bb = (rrggbbaa shr 8) and 0xFF
-            val aa = rrggbbaa and 0xFF
-            (aa shl 24) or (rr shl 16) or (gg shl 8) or bb
+        HEX_RGBA_LEN -> digits.toLongOrNull(16)?.let { rrggbbaa ->
+            val rr = (rrggbbaa shr SHIFT_RED) and BYTE_MASK
+            val gg = (rrggbbaa shr SHIFT_GREEN) and BYTE_MASK
+            val bb = (rrggbbaa shr SHIFT_BLUE) and BYTE_MASK
+            val aa = rrggbbaa and BYTE_MASK
+            (aa shl SHIFT_RED) or (rr shl SHIFT_GREEN) or (gg shl SHIFT_BLUE) or bb
         }
 
         else -> null
     }
 }
 
-internal fun parseFontStyle(fontStyle: String?): Set<FontStyle>? {
-    if (fontStyle == null) return null
-    if (fontStyle.isBlank()) return emptySet()
-    val result = mutableSetOf<FontStyle>()
-    for (token in fontStyle.split(" ")) {
-        when (token.lowercase()) {
-            "italic" -> result.add(FontStyle.ITALIC)
-            "bold" -> result.add(FontStyle.BOLD)
-            "underline" -> result.add(FontStyle.UNDERLINE)
-            "strikethrough" -> result.add(FontStyle.STRIKETHROUGH)
+internal fun parseFontStyle(fontStyle: String?): Set<FontStyle>? =
+    when {
+        fontStyle == null -> null
+        fontStyle.isBlank() -> emptySet()
+        else -> buildSet {
+            for (token in fontStyle.split(" ")) {
+                when (token.lowercase()) {
+                    "italic" -> add(FontStyle.ITALIC)
+                    "bold" -> add(FontStyle.BOLD)
+                    "underline" -> add(FontStyle.UNDERLINE)
+                    "strikethrough" -> add(FontStyle.STRIKETHROUGH)
+                }
+            }
         }
     }
-    return result
-}
