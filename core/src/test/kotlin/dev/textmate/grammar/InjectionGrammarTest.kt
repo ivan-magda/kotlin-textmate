@@ -52,7 +52,7 @@ class InjectionGrammarTest {
     }
 
     @Test
-    fun `getInjections result is cached — same list on repeated calls`() {
+    fun `getInjections result is cached same list on repeated calls`() {
         val hostRaw = RawGrammar(scopeName = "source.test", patterns = emptyList())
         val injectorRaw = RawGrammar(
             scopeName = "text.injector",
@@ -146,7 +146,7 @@ class InjectionGrammarTest {
     }
 
     @Test
-    fun `injected scope only fires inside matching scope — not outside comment`() {
+    fun `injected scope only fires inside matching scope not outside comment`() {
         val grammar = createRegistry(loadFixture("c.json"), loadFixture("hyperlink.json"))
             .loadGrammar("source.c")
             ?: error("Grammar 'source.c' not found")
