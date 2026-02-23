@@ -35,6 +35,7 @@ class OnigString(val content: String) {
         return byteToCharOffsets[byteOffset]
     }
 
+    @Suppress("MagicNumber") // UTF-8 byte lengths: 3 and 4 are self-evident from context
     private fun buildByteToCharMap(): IntArray {
         val map = IntArray(utf8Bytes.size + 1)
         var byteIdx = 0
