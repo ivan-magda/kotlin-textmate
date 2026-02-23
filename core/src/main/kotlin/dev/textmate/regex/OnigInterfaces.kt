@@ -1,10 +1,10 @@
 package dev.textmate.regex
 
-interface IOnigLib {
-    fun createOnigScanner(patterns: List<String>): OnigScanner
-    fun createOnigString(str: String): OnigString
+public interface IOnigLib {
+    public fun createOnigScanner(patterns: List<String>): OnigScanner
+    public fun createOnigString(str: String): OnigString
 }
 
-interface OnigScanner {
-    fun findNextMatchSync(string: OnigString, startPosition: Int): MatchResult?
+public interface OnigScanner {
+    public fun findNextMatchSync(string: OnigString, startPosition: Int): MatchResult?
 }

@@ -1,11 +1,11 @@
 package dev.textmate.regex
 
-class OnigString(val content: String) {
+public class OnigString(public val content: String) {
 
-    val length: Int
+    public val length: Int
         get() = content.length
 
-    val utf8Bytes: ByteArray =
+    public val utf8Bytes: ByteArray =
         content.toByteArray(Charsets.UTF_8)
 
     private val isMultiByte: Boolean =
@@ -21,14 +21,14 @@ class OnigString(val content: String) {
         const val MAX_3_BYTES = 0xFFFF
     }
 
-    fun charToByteOffset(charOffset: Int): Int {
+    public fun charToByteOffset(charOffset: Int): Int {
         if (charOffset <= 0) return 0
         if (charOffset >= content.length) return utf8Bytes.size
         if (!isMultiByte) return charOffset
         return content.substring(0, charOffset).toByteArray(Charsets.UTF_8).size
     }
 
-    fun byteToCharOffset(byteOffset: Int): Int {
+    public fun byteToCharOffset(byteOffset: Int): Int {
         if (byteOffset <= 0) return 0
         if (byteOffset >= utf8Bytes.size) return content.length
         if (!isMultiByte) return byteOffset

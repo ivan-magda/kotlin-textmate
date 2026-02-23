@@ -9,19 +9,19 @@ import dev.textmate.regex.JoniOnigLib
  * Registry for loading and caching TextMate grammars with cross-grammar include resolution.
  * Not thread-safe.
  */
-class Registry(
+public class Registry(
     private val grammarSource: GrammarSource,
     private val onigLib: IOnigLib = JoniOnigLib()
 ) {
     private val rawGrammars = mutableMapOf<String, RawGrammar>()
     private val grammars = mutableMapOf<String, Grammar>()
 
-    fun addGrammar(rawGrammar: RawGrammar) {
+    public fun addGrammar(rawGrammar: RawGrammar) {
         rawGrammars[rawGrammar.scopeName] = rawGrammar
         grammars.remove(rawGrammar.scopeName)
     }
 
-    fun loadGrammar(scopeName: String): Grammar? {
+    public fun loadGrammar(scopeName: String): Grammar? {
         grammars[scopeName]?.let { return it }
 
         val raw = resolveRawGrammar(scopeName) ?: return null

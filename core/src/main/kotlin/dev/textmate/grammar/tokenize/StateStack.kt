@@ -8,9 +8,9 @@ import dev.textmate.grammar.rule.RuleId
  * Public interface for the tokenizer state stack.
  * Returned by tokenizeLine, passed back to tokenize the next line.
  */
-interface StateStack {
-    val depth: Int
-    fun clone(): StateStack
+public interface StateStack {
+    public val depth: Int
+    public fun clone(): StateStack
 }
 
 /**
@@ -20,15 +20,15 @@ interface StateStack {
  * Each element represents a "pushed" state during tokenization —
  * a rule that was entered (begin matched) and not yet exited (end not yet matched).
  */
-class StateStackImpl(
-    val parent: StateStackImpl?,
+public class StateStackImpl(
+    public val parent: StateStackImpl?,
     private val ruleId: RuleId,
     enterPos: Int,
     anchorPos: Int,
-    val beginRuleCapturedEOL: Boolean,
-    val endRule: String?,
-    val nameScopesList: AttributedScopeStack?,
-    val contentNameScopesList: AttributedScopeStack?
+    public val beginRuleCapturedEOL: Boolean,
+    public val endRule: String?,
+    public val nameScopesList: AttributedScopeStack?,
+    public val contentNameScopesList: AttributedScopeStack?
 ) : StateStack {
 
     override val depth: Int =
@@ -38,8 +38,8 @@ class StateStackImpl(
     private var _enterPos: Int = enterPos
     private var _anchorPos: Int = anchorPos
 
-    companion object {
-        val NULL = StateStackImpl(
+    public companion object {
+        public val NULL: StateStackImpl = StateStackImpl(
             parent = null,
             ruleId = RuleId.NO_RULE,
             enterPos = 0,
@@ -70,7 +70,7 @@ class StateStackImpl(
         }
     }
 
-    fun push(
+    public fun push(
         ruleId: RuleId,
         enterPos: Int,
         anchorPos: Int,
@@ -90,11 +90,11 @@ class StateStackImpl(
             contentNameScopesList = contentNameScopesList
         )
 
-    fun pop(): StateStackImpl? = parent
+    public fun pop(): StateStackImpl? = parent
 
-    fun safePop(): StateStackImpl = parent ?: this
+    public fun safePop(): StateStackImpl = parent ?: this
 
-    fun reset() {
+    public fun reset() {
         var el: StateStackImpl? = this
         while (el != null) {
             el._enterPos = -1
@@ -103,15 +103,15 @@ class StateStackImpl(
         }
     }
 
-    fun getEnterPos(): Int = _enterPos
+    public fun getEnterPos(): Int = _enterPos
 
-    fun getAnchorPos(): Int = _anchorPos
+    public fun getAnchorPos(): Int = _anchorPos
 
-    fun getRule(grammar: IRuleRegistry): Rule? {
+    public fun getRule(grammar: IRuleRegistry): Rule? {
         return grammar.getRule(ruleId)
     }
 
-    fun withContentNameScopesList(contentNameScopeStack: AttributedScopeStack?): StateStackImpl {
+    public fun withContentNameScopesList(contentNameScopeStack: AttributedScopeStack?): StateStackImpl {
         if (this.contentNameScopesList === contentNameScopeStack) return this
         val p = parent ?: return StateStackImpl(
             parent = null,
@@ -134,7 +134,7 @@ class StateStackImpl(
         )
     }
 
-    fun withEndRule(endRule: String): StateStackImpl {
+    public fun withEndRule(endRule: String): StateStackImpl {
         if (this.endRule == endRule) return this
         return StateStackImpl(
             parent = parent,
@@ -149,7 +149,7 @@ class StateStackImpl(
     }
 
     /** Used to detect endless loops during tokenization. */
-    fun hasSameRuleAs(other: StateStackImpl): Boolean {
+    public fun hasSameRuleAs(other: StateStackImpl): Boolean {
         var el: StateStackImpl? = this
         while (el != null && el._enterPos == other._enterPos) {
             if (el.ruleId == other.ruleId) return true
@@ -193,4 +193,4 @@ class StateStackImpl(
 }
 
 /** The initial tokenizer state: an empty stack. */
-val INITIAL: StateStack = StateStackImpl.NULL
+public val INITIAL: StateStack = StateStackImpl.NULL

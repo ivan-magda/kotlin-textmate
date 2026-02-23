@@ -13,7 +13,7 @@ import java.io.Reader
  * Rule IDs are not assigned during parsing — they are assigned later
  * during rule compilation by [dev.textmate.grammar.rule.RuleFactory].
  */
-object GrammarReader {
+public object GrammarReader {
 
     private val gson: Gson = Gson()
 
@@ -22,7 +22,7 @@ object GrammarReader {
      *
      * @throws JsonSyntaxException if the JSON is malformed or does not match the expected structure
      */
-    fun readGrammar(json: String): RawGrammar =
+    public fun readGrammar(json: String): RawGrammar =
         gson.fromJson(json, RawGrammar::class.java)
 
     /**
@@ -33,7 +33,7 @@ object GrammarReader {
      * @throws JsonSyntaxException if the JSON is malformed or does not match the expected structure
      * @throws JsonIOException if reading from the stream fails
      */
-    fun readGrammar(inputStream: InputStream): RawGrammar =
+    public fun readGrammar(inputStream: InputStream): RawGrammar =
         readGrammar(InputStreamReader(inputStream, Charsets.UTF_8))
 
     /**
@@ -44,6 +44,6 @@ object GrammarReader {
      * @throws JsonSyntaxException if the JSON is malformed or does not match the expected structure
      * @throws JsonIOException if reading from the reader fails
      */
-    fun readGrammar(reader: Reader): RawGrammar =
+    public fun readGrammar(reader: Reader): RawGrammar =
         gson.fromJson(reader, RawGrammar::class.java)
 }

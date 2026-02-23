@@ -1,11 +1,11 @@
 package dev.textmate.theme
 
-enum class FontStyle { ITALIC, BOLD, UNDERLINE, STRIKETHROUGH }
+public enum class FontStyle { ITALIC, BOLD, UNDERLINE, STRIKETHROUGH }
 
-data class ResolvedStyle(
-    val foreground: Long,
-    val background: Long,
-    val fontStyle: Set<FontStyle>
+public data class ResolvedStyle(
+    public val foreground: Long,
+    public val background: Long,
+    public val fontStyle: Set<FontStyle>
 )
 
 internal data class ParsedThemeRule(
@@ -20,9 +20,9 @@ internal data class ParsedThemeRule(
 /**
  * A compiled theme that resolves TextMate scope stacks to visual styles.
  */
-class Theme internal constructor(
-    val name: String,
-    val defaultStyle: ResolvedStyle,
+public class Theme internal constructor(
+    public val name: String,
+    public val defaultStyle: ResolvedStyle,
     private val rules: List<ParsedThemeRule>
 ) {
     /**
@@ -35,7 +35,7 @@ class Theme internal constructor(
      *
      * Returns [defaultStyle] if no rules match or [scopes] is empty.
      */
-    fun match(scopes: List<String>): ResolvedStyle {
+    public fun match(scopes: List<String>): ResolvedStyle {
         if (scopes.isEmpty()) return defaultStyle
 
         var foreground: Long? = null

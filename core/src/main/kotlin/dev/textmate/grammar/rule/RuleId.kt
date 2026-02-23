@@ -1,10 +1,10 @@
 package dev.textmate.grammar.rule
 
 @JvmInline
-value class RuleId(val id: Int) {
-    companion object {
-        val END_RULE = RuleId(-1)
-        val WHILE_RULE = RuleId(-2)
-        val NO_RULE = RuleId(0)
+public value class RuleId(public val id: Int) {
+    public companion object {
+        public val END_RULE: RuleId = RuleId(-1)
+        public val WHILE_RULE: RuleId = RuleId(-2)
+        public val NO_RULE: RuleId = RuleId(0)
     }
 }

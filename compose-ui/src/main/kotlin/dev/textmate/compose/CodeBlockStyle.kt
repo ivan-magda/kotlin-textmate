@@ -8,14 +8,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Immutable
-data class CodeBlockStyle(
-    val textStyle: TextStyle,
-    val softWrap: Boolean,
-    val contentPadding: PaddingValues,
+public data class CodeBlockStyle(
+    public val textStyle: TextStyle,
+    public val softWrap: Boolean,
+    public val contentPadding: PaddingValues,
 )
 
-object CodeBlockDefaults {
-    fun style(
+public object CodeBlockDefaults {
+    public fun style(
         textStyle: TextStyle = DefaultTextStyle,
         softWrap: Boolean = false,
         contentPadding: PaddingValues = PaddingValues(16.dp),

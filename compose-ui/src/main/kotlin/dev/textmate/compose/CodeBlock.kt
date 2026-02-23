@@ -21,7 +21,7 @@ import dev.textmate.theme.Theme
 internal fun Long.toComposeColor(): Color = Color(this.toInt())
 
 @Composable
-fun rememberHighlightedCode(
+public fun rememberHighlightedCode(
     code: String,
     grammar: Grammar,
     theme: Theme,
@@ -30,7 +30,7 @@ fun rememberHighlightedCode(
 }
 
 @Composable
-fun CodeBlock(
+public fun CodeBlock(
     code: String,
     grammar: Grammar,
     theme: Theme,

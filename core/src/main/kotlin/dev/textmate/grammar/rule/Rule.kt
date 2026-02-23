@@ -2,8 +2,8 @@ package dev.textmate.grammar.rule
 
 import dev.textmate.regex.CaptureIndex
 
-sealed class Rule(
-    val id: RuleId,
+public sealed class Rule(
+    public val id: RuleId,
     private val _name: String?,
     private val _contentName: String?
 ) {
@@ -12,14 +12,14 @@ sealed class Rule(
     private val _contentNameIsCapturing: Boolean =
         hasCaptures(_contentName)
 
-    fun getName(lineText: String?, captureIndices: List<CaptureIndex>?): String? =
+    public fun getName(lineText: String?, captureIndices: List<CaptureIndex>?): String? =
         if (!_nameIsCapturing || _name == null || lineText == null || captureIndices == null) {
             _name
         } else {
             replaceCaptures(_name, lineText, captureIndices)
         }
 
-    fun getContentName(lineText: String, captureIndices: List<CaptureIndex>): String? =
+    public fun getContentName(lineText: String, captureIndices: List<CaptureIndex>): String? =
         if (!_contentNameIsCapturing || _contentName == null) {
             _contentName
         } else {
@@ -27,8 +27,8 @@ sealed class Rule(
         }
 
     internal abstract fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList)
-    abstract fun compile(grammar: IRuleRegistryOnigLib, endRegexSource: String?): CompiledRule
-    abstract fun compileAG(
+    public abstract fun compile(grammar: IRuleRegistryOnigLib, endRegexSource: String?): CompiledRule
+    public abstract fun compileAG(
         grammar: IRuleRegistryOnigLib,
         endRegexSource: String?,
         allowA: Boolean,
@@ -36,11 +36,11 @@ sealed class Rule(
     ): CompiledRule
 }
 
-class CaptureRule internal constructor(
+public class CaptureRule internal constructor(
     id: RuleId,
     name: String?,
     contentName: String?,
-    val retokenizeCapturedWithRuleId: RuleId
+    public val retokenizeCapturedWithRuleId: RuleId
 ) : Rule(id, name, contentName) {
 
     override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
@@ -61,11 +61,11 @@ class CaptureRule internal constructor(
     }
 }
 
-class MatchRule internal constructor(
+public class MatchRule internal constructor(
     id: RuleId,
     name: String?,
     match: String,
-    val captures: List<CaptureRule?>
+    public val captures: List<CaptureRule?>
 ) : Rule(id, name, null) {
 
     private val _match = RegExpSource(match, id)
@@ -98,15 +98,15 @@ class MatchRule internal constructor(
     }
 }
 
-class IncludeOnlyRule internal constructor(
+public class IncludeOnlyRule internal constructor(
     id: RuleId,
     name: String?,
     contentName: String?,
     patterns: CompilePatternsResult
 ) : Rule(id, name, contentName) {
 
-    val patterns: List<RuleId> = patterns.patterns
-    val hasMissingPatterns: Boolean = patterns.hasMissingPatterns
+    public val patterns: List<RuleId> = patterns.patterns
+    public val hasMissingPatterns: Boolean = patterns.hasMissingPatterns
     private var _cachedCompiledPatterns: RegExpSourceList? = null
 
     override fun collectPatterns(grammar: IRuleRegistry, out: RegExpSourceList) {
@@ -139,26 +139,26 @@ class IncludeOnlyRule internal constructor(
     }
 }
 
-class BeginEndRule internal constructor(
+public class BeginEndRule internal constructor(
     id: RuleId,
     name: String?,
     contentName: String?,
     begin: String,
-    val beginCaptures: List<CaptureRule?>,
+    public val beginCaptures: List<CaptureRule?>,
     end: String?,
-    val endCaptures: List<CaptureRule?>,
-    val applyEndPatternLast: Boolean,
+    public val endCaptures: List<CaptureRule?>,
+    public val applyEndPatternLast: Boolean,
     patterns: CompilePatternsResult
 ) : Rule(id, name, contentName) {
 
     private val _begin = RegExpSource(begin, id)
     private val _end = RegExpSource(end ?: "\uFFFF", RuleId.END_RULE)
-    val endHasBackReferences: Boolean = _end.hasBackReferences
-    val patterns: List<RuleId> = patterns.patterns
-    val hasMissingPatterns: Boolean = patterns.hasMissingPatterns
+    public val endHasBackReferences: Boolean = _end.hasBackReferences
+    public val patterns: List<RuleId> = patterns.patterns
+    public val hasMissingPatterns: Boolean = patterns.hasMissingPatterns
     private var _cachedCompiledPatterns: RegExpSourceList? = null
 
-    fun getEndWithResolvedBackReferences(lineText: String, captureIndices: List<CaptureIndex>): String {
+    public fun getEndWithResolvedBackReferences(lineText: String, captureIndices: List<CaptureIndex>): String {
         return _end.resolveBackReferences(lineText, captureIndices)
     }
 
@@ -203,26 +203,26 @@ class BeginEndRule internal constructor(
     }
 }
 
-class BeginWhileRule internal constructor(
+public class BeginWhileRule internal constructor(
     id: RuleId,
     name: String?,
     contentName: String?,
     begin: String,
-    val beginCaptures: List<CaptureRule?>,
+    public val beginCaptures: List<CaptureRule?>,
     whilePattern: String,
-    val whileCaptures: List<CaptureRule?>,
+    public val whileCaptures: List<CaptureRule?>,
     patterns: CompilePatternsResult
 ) : Rule(id, name, contentName) {
 
     private val _begin = RegExpSource(begin, id)
     private val _while = RegExpSource(whilePattern, RuleId.WHILE_RULE)
-    val whileHasBackReferences: Boolean = _while.hasBackReferences
-    val patterns: List<RuleId> = patterns.patterns
-    val hasMissingPatterns: Boolean = patterns.hasMissingPatterns
+    public val whileHasBackReferences: Boolean = _while.hasBackReferences
+    public val patterns: List<RuleId> = patterns.patterns
+    public val hasMissingPatterns: Boolean = patterns.hasMissingPatterns
     private var _cachedCompiledPatterns: RegExpSourceList? = null
     private var _cachedCompiledWhilePatterns: RegExpSourceList? = null
 
-    fun getWhileWithResolvedBackReferences(lineText: String, captureIndices: List<CaptureIndex>): String {
+    public fun getWhileWithResolvedBackReferences(lineText: String, captureIndices: List<CaptureIndex>): String {
         return _while.resolveBackReferences(lineText, captureIndices)
     }
 
@@ -254,7 +254,7 @@ class BeginWhileRule internal constructor(
         return result
     }
 
-    fun compileWhileAG(
+    public fun compileWhileAG(
         grammar: IRuleRegistryOnigLib,
         endRegexSource: String?,
         allowA: Boolean,

@@ -1,12 +1,12 @@
 package dev.textmate.regex
 
-data class CaptureIndex(
-    val start: Int,
-    val end: Int,
-    val length: Int
+public data class CaptureIndex(
+    public val start: Int,
+    public val end: Int,
+    public val length: Int
 )
 
-data class MatchResult(
-    val index: Int,
-    val captureIndices: List<CaptureIndex>
+public data class MatchResult(
+    public val index: Int,
+    public val captureIndices: List<CaptureIndex>
 )

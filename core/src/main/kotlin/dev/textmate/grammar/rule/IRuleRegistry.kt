@@ -4,9 +4,9 @@ import dev.textmate.grammar.raw.RawGrammar
 import dev.textmate.grammar.raw.RawRule
 import dev.textmate.regex.IOnigLib
 
-interface IRuleRegistry {
-    fun getRule(ruleId: RuleId): Rule?
-    fun <T : Rule> registerRule(factory: (RuleId) -> T): T
+public interface IRuleRegistry {
+    public fun getRule(ruleId: RuleId): Rule?
+    public fun <T : Rule> registerRule(factory: (RuleId) -> T): T
 }
 
 internal interface IGrammarRegistry {
@@ -20,4 +20,4 @@ internal interface IGrammarRegistry {
 
 internal interface IRuleFactoryHelper : IRuleRegistry, IGrammarRegistry
 
-interface IRuleRegistryOnigLib : IRuleRegistry, IOnigLib
+public interface IRuleRegistryOnigLib : IRuleRegistry, IOnigLib

@@ -6,19 +6,19 @@ package dev.textmate.grammar.tokenize
  *
  * Tracks scope names only — theme resolution is done externally via [dev.textmate.theme.Theme.match].
  */
-class AttributedScopeStack private constructor(
-    val parent: AttributedScopeStack?,
-    val scopePath: ScopeStack,
-    val tokenAttributes: Int
+public class AttributedScopeStack private constructor(
+    public val parent: AttributedScopeStack?,
+    public val scopePath: ScopeStack,
+    public val tokenAttributes: Int
 ) {
-    val scopeName: String get() = scopePath.scopeName
+    public val scopeName: String get() = scopePath.scopeName
 
-    companion object {
-        fun createRoot(scopeName: String, tokenAttributes: Int): AttributedScopeStack {
+    public companion object {
+        public fun createRoot(scopeName: String, tokenAttributes: Int): AttributedScopeStack {
             return AttributedScopeStack(null, ScopeStack(null, scopeName), tokenAttributes)
         }
 
-        fun equals(a: AttributedScopeStack?, b: AttributedScopeStack?): Boolean {
+        public fun equals(a: AttributedScopeStack?, b: AttributedScopeStack?): Boolean {
             var x = a
             var y = b
             while (true) {
@@ -54,7 +54,7 @@ class AttributedScopeStack private constructor(
      * [scopePath] may be null (returns this), a single scope, or space-separated scopes.
      * [grammar] is unused — kept for API compatibility with vscode-textmate.
      */
-    fun pushAttributed(scopePath: String?, grammar: Any?): AttributedScopeStack {
+    public fun pushAttributed(scopePath: String?, grammar: Any?): AttributedScopeStack {
         if (scopePath == null) return this
 
         if (!scopePath.contains(' ')) {
@@ -77,7 +77,7 @@ class AttributedScopeStack private constructor(
         return AttributedScopeStack(this, newPath, tokenAttributes)
     }
 
-    fun getScopeNames(): List<String> {
+    public fun getScopeNames(): List<String> {
         return scopePath.getSegments()
     }
 

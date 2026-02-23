@@ -10,17 +10,17 @@
     <ID>ConstructorParameterNaming:Rule.kt$Rule$private val _contentName: String?</ID>
     <ID>ConstructorParameterNaming:Rule.kt$Rule$private val _name: String?</ID>
     <ID>CyclomaticComplexMethod:RuleFactory.kt$RuleFactory$fun compilePatterns( patterns: List&lt;RawRule&gt;?, helper: IRuleFactoryHelper, repository: MutableMap&lt;String, RawRule&gt; ): CompilePatternsResult</ID>
-    <ID>CyclomaticComplexMethod:Theme.kt$Theme$fun match(scopes: List&lt;String&gt;): ResolvedStyle</ID>
+    <ID>CyclomaticComplexMethod:Theme.kt$Theme$public fun match(scopes: List&lt;String&gt;): ResolvedStyle</ID>
     <ID>CyclomaticComplexMethod:ThemeReader.kt$ThemeReader$private fun readTheme(inputStreams: List&lt;InputStream&gt;): Theme</ID>
     <ID>CyclomaticComplexMethod:Tokenizer.kt$internal fun handleCaptures( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, stack: StateStackImpl, lineTokens: LineTokens, captures: List&lt;CaptureRule?&gt;, captureIndices: List&lt;CaptureIndex&gt; )</ID>
     <ID>CyclomaticComplexMethod:Tokenizer.kt$internal fun tokenizeString( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens, checkWhile: Boolean = false ): StateStackImpl</ID>
     <ID>CyclomaticComplexMethod:Tokenizer.kt$private fun matchInjections( injections: List&lt;InjectionRule&gt;, grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, anchorPosition: Int ): MatchInjectionsResult?</ID>
     <ID>LongMethod:Tokenizer.kt$internal fun handleCaptures( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, stack: StateStackImpl, lineTokens: LineTokens, captures: List&lt;CaptureRule?&gt;, captureIndices: List&lt;CaptureIndex&gt; )</ID>
     <ID>LongMethod:Tokenizer.kt$internal fun tokenizeString( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens, checkWhile: Boolean = false ): StateStackImpl</ID>
-    <ID>LongParameterList:Rule.kt$BeginEndRule$( id: RuleId, name: String?, contentName: String?, begin: String, val beginCaptures: List&lt;CaptureRule?&gt;, end: String?, val endCaptures: List&lt;CaptureRule?&gt;, val applyEndPatternLast: Boolean, patterns: CompilePatternsResult )</ID>
-    <ID>LongParameterList:Rule.kt$BeginWhileRule$( id: RuleId, name: String?, contentName: String?, begin: String, val beginCaptures: List&lt;CaptureRule?&gt;, whilePattern: String, val whileCaptures: List&lt;CaptureRule?&gt;, patterns: CompilePatternsResult )</ID>
+    <ID>LongParameterList:Rule.kt$BeginEndRule$( id: RuleId, name: String?, contentName: String?, begin: String, public val beginCaptures: List&lt;CaptureRule?&gt;, end: String?, public val endCaptures: List&lt;CaptureRule?&gt;, public val applyEndPatternLast: Boolean, patterns: CompilePatternsResult )</ID>
+    <ID>LongParameterList:Rule.kt$BeginWhileRule$( id: RuleId, name: String?, contentName: String?, begin: String, public val beginCaptures: List&lt;CaptureRule?&gt;, whilePattern: String, public val whileCaptures: List&lt;CaptureRule?&gt;, patterns: CompilePatternsResult )</ID>
+    <ID>LongParameterList:StateStack.kt$StateStackImpl$( public val parent: StateStackImpl?, private val ruleId: RuleId, enterPos: Int, anchorPos: Int, public val beginRuleCapturedEOL: Boolean, public val endRule: String?, public val nameScopesList: AttributedScopeStack?, public val contentNameScopesList: AttributedScopeStack? )</ID>
     <ID>LongParameterList:StateStack.kt$StateStackImpl$( ruleId: RuleId, enterPos: Int, anchorPos: Int, beginRuleCapturedEOL: Boolean, endRule: String?, nameScopesList: AttributedScopeStack?, contentNameScopesList: AttributedScopeStack? )</ID>
-    <ID>LongParameterList:StateStack.kt$StateStackImpl$( val parent: StateStackImpl?, private val ruleId: RuleId, enterPos: Int, anchorPos: Int, val beginRuleCapturedEOL: Boolean, val endRule: String?, val nameScopesList: AttributedScopeStack?, val contentNameScopesList: AttributedScopeStack? )</ID>
     <ID>LongParameterList:Tokenizer.kt$( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, anchorPosition: Int )</ID>
     <ID>LongParameterList:Tokenizer.kt$( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens )</ID>
     <ID>LongParameterList:Tokenizer.kt$( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens, checkWhile: Boolean = false )</ID>
@@ -34,20 +34,20 @@
     <ID>NestedBlockDepth:ThemeReader.kt$ThemeReader$private fun readTheme(inputStreams: List&lt;InputStream&gt;): Theme</ID>
     <ID>NestedBlockDepth:Tokenizer.kt$internal fun tokenizeString( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens, checkWhile: Boolean = false ): StateStackImpl</ID>
     <ID>NestedBlockDepth:Tokenizer.kt$private fun checkWhileConditions( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, lineTokens: LineTokens ): WhileCheckResult</ID>
-    <ID>ReturnCount:AttributedScopeStack.kt$AttributedScopeStack$fun pushAttributed(scopePath: String?, grammar: Any?): AttributedScopeStack</ID>
+    <ID>ReturnCount:AttributedScopeStack.kt$AttributedScopeStack$public fun pushAttributed(scopePath: String?, grammar: Any?): AttributedScopeStack</ID>
     <ID>ReturnCount:FirstMateConformanceTest.kt$FirstMateConformanceTest.Companion$private fun canRun(test: FirstMateTestCase): Boolean</ID>
     <ID>ReturnCount:Grammar.kt$Grammar$override fun getExternalGrammar( scopeName: String, repository: MutableMap&lt;String, RawRule&gt; ): RawGrammar?</ID>
     <ID>ReturnCount:Grammar.kt$Grammar$override fun getExternalGrammarRepository( scopeName: String, repository: MutableMap&lt;String, RawRule&gt; ): MutableMap&lt;String, RawRule&gt;?</ID>
     <ID>ReturnCount:InjectionSelectorParser.kt$InjectionSelectorParser.Parser$private fun parseOperand(): ScopeMatcher?</ID>
     <ID>ReturnCount:InjectionSelectorParser.kt$InjectionSelectorParser.Parser.Companion$private fun nameMatcher(identifiers: List&lt;String&gt;, scopes: List&lt;String&gt;): Boolean</ID>
-    <ID>ReturnCount:OnigString.kt$OnigString$fun byteToCharOffset(byteOffset: Int): Int</ID>
-    <ID>ReturnCount:OnigString.kt$OnigString$fun charToByteOffset(charOffset: Int): Int</ID>
+    <ID>ReturnCount:OnigString.kt$OnigString$public fun byteToCharOffset(byteOffset: Int): Int</ID>
+    <ID>ReturnCount:OnigString.kt$OnigString$public fun charToByteOffset(charOffset: Int): Int</ID>
     <ID>ReturnCount:RegExpSourceList.kt$RegExpSourceList$fun compileAG(onigLib: IOnigLib, allowA: Boolean, allowG: Boolean): CompiledRule</ID>
-    <ID>ReturnCount:Registry.kt$Registry$fun loadGrammar(scopeName: String): Grammar?</ID>
     <ID>ReturnCount:Registry.kt$Registry$private fun resolveRawGrammar(scopeName: String): RawGrammar?</ID>
+    <ID>ReturnCount:Registry.kt$Registry$public fun loadGrammar(scopeName: String): Grammar?</ID>
     <ID>ReturnCount:RuleFactoryTest.kt$TestRuleFactoryHelper$override fun getExternalGrammarRepository( scopeName: String, repository: MutableMap&lt;String, RawRule&gt; ): MutableMap&lt;String, RawRule&gt;?</ID>
-    <ID>ReturnCount:ScopeStack.kt$ScopeStack$fun extends(other: ScopeStack): Boolean</ID>
-    <ID>ReturnCount:StateStack.kt$StateStackImpl$fun withContentNameScopesList(contentNameScopeStack: AttributedScopeStack?): StateStackImpl</ID>
+    <ID>ReturnCount:ScopeStack.kt$ScopeStack$public fun extends(other: ScopeStack): Boolean</ID>
+    <ID>ReturnCount:StateStack.kt$StateStackImpl$public fun withContentNameScopesList(contentNameScopeStack: AttributedScopeStack?): StateStackImpl</ID>
     <ID>ReturnCount:StateStack.kt$StateStackImpl.Companion$private fun deepEquals(a: StateStackImpl, b: StateStackImpl): Boolean</ID>
     <ID>ReturnCount:StateStack.kt$StateStackImpl.Companion$private fun structuralEquals(a: StateStackImpl?, b: StateStackImpl?): Boolean</ID>
     <ID>ReturnCount:Tokenizer.kt$internal fun matchRule( grammar: Grammar, lineText: OnigString, isFirstLine: Boolean, linePos: Int, stack: StateStackImpl, anchorPosition: Int ): MatchRuleResult?</ID>

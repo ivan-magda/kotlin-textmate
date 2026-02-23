@@ -4,12 +4,12 @@ package dev.textmate.grammar.tokenize
  * Immutable linked list of scope name strings.
  * Port of `ScopeStack` from vscode-textmate `theme.ts`.
  */
-class ScopeStack(
-    val parent: ScopeStack?,
-    val scopeName: String
+public class ScopeStack(
+    public val parent: ScopeStack?,
+    public val scopeName: String
 ) {
-    companion object {
-        fun from(vararg segments: String): ScopeStack? {
+    public companion object {
+        public fun from(vararg segments: String): ScopeStack? {
             var result: ScopeStack? = null
             for (segment in segments) {
                 result = ScopeStack(result, segment)
@@ -17,7 +17,7 @@ class ScopeStack(
             return result
         }
 
-        fun push(path: ScopeStack?, scopeNames: List<String>): ScopeStack? {
+        public fun push(path: ScopeStack?, scopeNames: List<String>): ScopeStack? {
             var current = path
             for (name in scopeNames) {
                 current = ScopeStack(current, name)
@@ -26,11 +26,11 @@ class ScopeStack(
         }
     }
 
-    fun push(scopeName: String): ScopeStack {
+    public fun push(scopeName: String): ScopeStack {
         return ScopeStack(this, scopeName)
     }
 
-    fun getSegments(): List<String> {
+    public fun getSegments(): List<String> {
         val result = mutableListOf<String>()
         var item: ScopeStack? = this
 
@@ -43,13 +43,13 @@ class ScopeStack(
         return result
     }
 
-    fun extends(other: ScopeStack): Boolean {
+    public fun extends(other: ScopeStack): Boolean {
         if (this === other) return true
         val p = parent ?: return false
         return p.extends(other)
     }
 
-    fun getExtensionIfDefined(base: ScopeStack?): List<String>? {
+    public fun getExtensionIfDefined(base: ScopeStack?): List<String>? {
         val result = mutableListOf<String>()
         var item: ScopeStack? = this
 

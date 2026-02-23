@@ -11,9 +11,9 @@ import dev.textmate.theme.ResolvedStyle
 import dev.textmate.theme.Theme
 import androidx.compose.ui.text.font.FontStyle as ComposeFontStyle
 
-class CodeHighlighter(private val grammar: Grammar, private val theme: Theme) {
+public class CodeHighlighter(private val grammar: Grammar, private val theme: Theme) {
 
-    fun highlight(code: String): AnnotatedString {
+    public fun highlight(code: String): AnnotatedString {
         val builder = AnnotatedString.Builder()
         val lines = code.lines()
         var prevState: StateStack? = null

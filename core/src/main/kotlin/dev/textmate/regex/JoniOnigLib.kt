@@ -9,7 +9,7 @@ import org.joni.Syntax
 import org.joni.WarnCallback
 import org.joni.exception.JOniException
 
-class JoniOnigLib : IOnigLib {
+public class JoniOnigLib : IOnigLib {
 
     private val _sentinelPatterns = mutableSetOf<String>()
 

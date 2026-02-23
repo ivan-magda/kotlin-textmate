@@ -10,15 +10,15 @@ import com.google.gson.stream.JsonWriter
 /**
  * Top-level TextMate grammar, as loaded from a .tmLanguage.json file.
  */
-data class RawGrammar(
-    val scopeName: String,
-    val name: String? = null,
-    val patterns: List<RawRule>? = null,
-    val repository: Map<String, RawRule>? = null,
-    val injections: Map<String, RawRule>? = null,
-    val injectionSelector: String? = null,
-    val fileTypes: List<String>? = null,
-    val firstLineMatch: String? = null
+public data class RawGrammar(
+    public val scopeName: String,
+    public val name: String? = null,
+    public val patterns: List<RawRule>? = null,
+    public val repository: Map<String, RawRule>? = null,
+    public val injections: Map<String, RawRule>? = null,
+    public val injectionSelector: String? = null,
+    public val fileTypes: List<String>? = null,
+    public val firstLineMatch: String? = null
 )
 
 /**
@@ -30,25 +30,25 @@ data class RawGrammar(
  * not during parsing. Because [id] is mutable, instances should not be placed
  * in hash-based collections (e.g. [HashSet], [HashMap] keys).
  */
-data class RawRule(
-    var id: Int? = null,
-    val include: String? = null,
-    val name: String? = null,
-    val contentName: String? = null,
-    val match: String? = null,
-    val captures: Map<String, RawRule>? = null,
-    val begin: String? = null,
-    val beginCaptures: Map<String, RawRule>? = null,
-    val end: String? = null,
-    val endCaptures: Map<String, RawRule>? = null,
+public data class RawRule(
+    public var id: Int? = null,
+    public val include: String? = null,
+    public val name: String? = null,
+    public val contentName: String? = null,
+    public val match: String? = null,
+    public val captures: Map<String, RawRule>? = null,
+    public val begin: String? = null,
+    public val beginCaptures: Map<String, RawRule>? = null,
+    public val end: String? = null,
+    public val endCaptures: Map<String, RawRule>? = null,
     @SerializedName("while")
-    val whilePattern: String? = null,
-    val whileCaptures: Map<String, RawRule>? = null,
-    val patterns: List<RawRule>? = null,
-    val repository: Map<String, RawRule>? = null,
+    public val whilePattern: String? = null,
+    public val whileCaptures: Map<String, RawRule>? = null,
+    public val patterns: List<RawRule>? = null,
+    public val repository: Map<String, RawRule>? = null,
     @JsonAdapter(BooleanOrIntAdapter::class)
-    val applyEndPatternLast: Int? = null,
-    val comment: String? = null
+    public val applyEndPatternLast: Int? = null,
+    public val comment: String? = null
 )
 
 /**

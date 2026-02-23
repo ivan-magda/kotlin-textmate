@@ -25,7 +25,7 @@ import dev.textmate.regex.OnigString
  * Supports cross-grammar `include` resolution via [grammarLookup].
  * Supports injection grammars (both inline [RawGrammar.injections] and external [injectionLookup]).
  */
-class Grammar(
+public class Grammar(
     private val rootScopeName: String,
     private val rawGrammar: RawGrammar,
     private val onigLib: IOnigLib,
@@ -161,7 +161,7 @@ class Grammar(
         return newRootId to newRepo
     }
 
-    fun tokenizeLine(lineText: String, prevState: StateStack? = null): TokenizeLineResult {
+    public fun tokenizeLine(lineText: String, prevState: StateStack? = null): TokenizeLineResult {
         val (rootId, _) = ensureCompiled()
 
         val isFirstLine: Boolean

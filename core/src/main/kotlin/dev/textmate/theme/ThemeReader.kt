@@ -7,7 +7,7 @@ import java.io.InputStreamReader
 /**
  * Reads VS Code color themes from JSON files and constructs [Theme] instances.
  */
-object ThemeReader {
+public object ThemeReader {
 
     private val gson: Gson = Gson()
 
@@ -17,7 +17,7 @@ object ThemeReader {
      *
      * The caller is responsible for closing the [inputStream] after this method returns.
      */
-    fun readTheme(inputStream: InputStream): Theme {
+    public fun readTheme(inputStream: InputStream): Theme {
         return readTheme(listOf(inputStream))
     }
 
@@ -27,7 +27,7 @@ object ThemeReader {
      *
      * The caller is responsible for closing the streams after this method returns.
      */
-    fun readTheme(vararg inputStreams: InputStream): Theme {
+    public fun readTheme(vararg inputStreams: InputStream): Theme {
         require(inputStreams.isNotEmpty()) { "At least one theme InputStream is required" }
         return readTheme(inputStreams.toList())
     }

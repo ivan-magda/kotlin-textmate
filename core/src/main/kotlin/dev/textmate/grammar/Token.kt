@@ -2,6 +2,13 @@ package dev.textmate.grammar
 
 import dev.textmate.grammar.tokenize.StateStack
 
-data class Token(val startIndex: Int, val endIndex: Int, val scopes: List<String>)
+public data class Token(
+    public val startIndex: Int,
+    public val endIndex: Int,
+    public val scopes: List<String>
+)
 
-data class TokenizeLineResult(val tokens: List<Token>, val ruleStack: StateStack)
+public data class TokenizeLineResult(
+    public val tokens: List<Token>,
+    public val ruleStack: StateStack
+)
