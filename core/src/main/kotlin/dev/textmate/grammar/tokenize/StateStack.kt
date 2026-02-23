@@ -11,7 +11,6 @@ import dev.textmate.grammar.rule.RuleId
 interface StateStack {
     val depth: Int
     fun clone(): StateStack
-    fun equals(other: StateStack): Boolean
 }
 
 /**
@@ -160,11 +159,6 @@ class StateStackImpl(
     }
 
     override fun clone(): StateStackImpl = this
-
-    override fun equals(other: StateStack): Boolean {
-        if (other !is StateStackImpl) return false
-        return deepEquals(this, other)
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
