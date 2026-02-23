@@ -14,8 +14,9 @@ class GrammarReaderTest {
     }
 
     private fun loadGrammarAsString(resourcePath: String): RawGrammar {
-        val json = javaClass.classLoader.getResourceAsStream(resourcePath)!!
-            .use { it.bufferedReader(Charsets.UTF_8).readText() }
+        val json = javaClass.classLoader.getResourceAsStream(resourcePath)
+            ?.use { it.bufferedReader(Charsets.UTF_8).readText() }
+            ?: throw IllegalArgumentException("Resource not found: $resourcePath")
         return GrammarReader.readGrammar(json)
     }
 
@@ -153,9 +154,27 @@ class GrammarReaderTest {
     }
 
     @Test
-    fun `readGrammar from string produces same result`() {
+    fun `readGrammar from string produces same result for JSON`() {
         val fromStream = loadGrammar("grammars/JSON.tmLanguage.json")
         val fromString = loadGrammarAsString("grammars/JSON.tmLanguage.json")
+        assertEquals(fromStream.scopeName, fromString.scopeName)
+        assertEquals(fromStream.patterns!!.size, fromString.patterns!!.size)
+        assertEquals(fromStream.repository!!.keys, fromString.repository!!.keys)
+    }
+
+    @Test
+    fun `readGrammar from string produces same result for Kotlin`() {
+        val fromStream = loadGrammar("grammars/kotlin.tmLanguage.json")
+        val fromString = loadGrammarAsString("grammars/kotlin.tmLanguage.json")
+        assertEquals(fromStream.scopeName, fromString.scopeName)
+        assertEquals(fromStream.patterns!!.size, fromString.patterns!!.size)
+        assertEquals(fromStream.repository!!.keys, fromString.repository!!.keys)
+    }
+
+    @Test
+    fun `readGrammar from string produces same result for Markdown`() {
+        val fromStream = loadGrammar("grammars/markdown.tmLanguage.json")
+        val fromString = loadGrammarAsString("grammars/markdown.tmLanguage.json")
         assertEquals(fromStream.scopeName, fromString.scopeName)
         assertEquals(fromStream.patterns!!.size, fromString.patterns!!.size)
         assertEquals(fromStream.repository!!.keys, fromString.repository!!.keys)
