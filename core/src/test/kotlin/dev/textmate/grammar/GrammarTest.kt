@@ -182,7 +182,7 @@ class GrammarTest {
 
     @Test
     fun `Kotlin fun keyword and function name scoped correctly`() {
-        val ktGrammar = loadGrammar("grammars/Kotlin.tmLanguage.json")
+        val ktGrammar = loadGrammar("grammars/kotlin.tmLanguage.json")
         val result = ktGrammar.tokenizeLine("fun main(args: Array<String>)")
         assertTrue(
             "Should have keyword.hard.fun scope",
@@ -196,7 +196,7 @@ class GrammarTest {
 
     @Test
     fun `Kotlin generic function retokenizes type parameters`() {
-        val ktGrammar = loadGrammar("grammars/Kotlin.tmLanguage.json")
+        val ktGrammar = loadGrammar("grammars/kotlin.tmLanguage.json")
         val result = ktGrammar.tokenizeLine("fun <T> test()")
         assertTrue(
             "Should have type parameter scope from retokenization",
@@ -210,7 +210,7 @@ class GrammarTest {
 
     @Test
     fun `Kotlin function tokens cover entire line`() {
-        val ktGrammar = loadGrammar("grammars/Kotlin.tmLanguage.json")
+        val ktGrammar = loadGrammar("grammars/kotlin.tmLanguage.json")
         val line = "fun main(args: Array<String>)"
         val result = ktGrammar.tokenizeLine(line)
         val tokens = result.tokens
@@ -308,7 +308,7 @@ class GrammarTest {
 
     @Test
     fun `Kotlin multiline string carries state across lines`() {
-        val ktGrammar = loadGrammar("grammars/Kotlin.tmLanguage.json")
+        val ktGrammar = loadGrammar("grammars/kotlin.tmLanguage.json")
 
         val r1 = ktGrammar.tokenizeLine("val s = \"\"\"")
         assertTrue(

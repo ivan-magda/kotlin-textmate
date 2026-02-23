@@ -1,6 +1,8 @@
 ![Hero](docs/images/kotlin-textmate-hero.png)
 
-<!-- TODO: CI, license, Maven Central badges once published -->
+[![CI](https://github.com/ivan-magda/kotlin-textmate/actions/workflows/ci.yml/badge.svg)](https://github.com/ivan-magda/kotlin-textmate/actions/workflows/ci.yml)
+[![Benchmark](https://github.com/ivan-magda/kotlin-textmate/actions/workflows/benchmark.yml/badge.svg)](https://github.com/ivan-magda/kotlin-textmate/actions/workflows/benchmark.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A Kotlin/JVM port of [vscode-textmate](https://github.com/microsoft/vscode-textmate) — TextMate grammar tokenizer for syntax highlighting on Android and JVM.
 
