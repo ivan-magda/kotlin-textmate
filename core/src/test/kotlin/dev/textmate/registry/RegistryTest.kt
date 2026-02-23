@@ -159,7 +159,7 @@ class RegistryTest {
         val resultB = grammarB.tokenizeLine("true")
         assertTrue(
             "Grammar-B should also tokenize JSON correctly (not get stale rule IDs from A), " +
-                "got: ${resultB.tokens.map { it.scopes }}",
+                    "got: ${resultB.tokens.map { it.scopes }}",
             resultB.tokens.any { it.scopes.any { s -> s.contains("constant.language.json") } }
         )
     }
@@ -197,7 +197,7 @@ class RegistryTest {
     fun `Grammar without lookup still works`() {
         // Verify backward compatibility: Grammar without grammarLookup
         val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
-        val grammar = dev.textmate.grammar.Grammar(
+        val grammar = Grammar(
             rawJson.scopeName,
             rawJson,
             JoniOnigLib()
