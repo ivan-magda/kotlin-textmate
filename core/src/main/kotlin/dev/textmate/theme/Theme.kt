@@ -103,10 +103,5 @@ internal fun scopeDepth(scope: String): Int {
     return count
 }
 
-internal fun compareRules(a: ParsedThemeRule, b: ParsedThemeRule): Int {
-    val depthCmp = scopeDepth(a.scope).compareTo(scopeDepth(b.scope))
-    if (depthCmp != 0) return depthCmp
-    val parentCmp = (a.parentScopes?.size ?: 0).compareTo(b.parentScopes?.size ?: 0)
-    if (parentCmp != 0) return parentCmp
-    return a.index.compareTo(b.index)
-}
+internal fun compareRules(a: ParsedThemeRule, b: ParsedThemeRule): Int =
+    compareValuesBy(a, b, { scopeDepth(it.scope) }, { it.parentScopes?.size ?: 0 }, { it.index })
