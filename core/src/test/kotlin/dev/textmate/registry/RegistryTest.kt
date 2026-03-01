@@ -129,6 +129,35 @@ class RegistryTest {
     }
 
     @Test
+    fun `two grammars sharing RawGrammar without deepClone both tokenize correctly`() {
+        // TDD test for RawRule.id immutability fix.
+        // Two Grammar instances share the exact same RawGrammar as their root grammar,
+        // bypassing the deepClone protection in getExternalGrammar.
+        // Grammar-A's compilation mutates RawRule.id on shared objects,
+        // so Grammar-B sees stale rule IDs pointing into Grammar-A's rule table.
+        val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
+
+        val grammarA = Grammar(rawJson.scopeName, rawJson, JoniOnigLib())
+        val grammarB = Grammar(rawJson.scopeName, rawJson, JoniOnigLib())
+
+        // Grammar-A compiles first — mutates RawRule.id on the shared rawJson
+        val resultA = grammarA.tokenizeLine("true")
+        assertTrue(
+            "Grammar-A should tokenize JSON correctly",
+            resultA.tokens.any { it.scopes.any { s -> s.contains("constant.language.json") } }
+        )
+
+        // Grammar-B compiles second — if RawRule.id is polluted, rule IDs point to
+        // Grammar-A's rule table which Grammar-B doesn't have
+        val resultB = grammarB.tokenizeLine("true")
+        assertTrue(
+            "Grammar-B should also tokenize JSON correctly (shared RawGrammar, no deepClone), " +
+                "got: ${resultB.tokens.map { it.scopes }}",
+            resultB.tokens.any { it.scopes.any { s -> s.contains("constant.language.json") } }
+        )
+    }
+
+    @Test
     fun `two grammars embedding the same external grammar both tokenize correctly`() {
         // Reproducer for RawRule.id sharing bug:
         // Two Grammar instances that both embed source.json via the same grammarLookup.
