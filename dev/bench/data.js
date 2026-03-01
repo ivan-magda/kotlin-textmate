@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772385491285,
+  "lastUpdate": 1772386802880,
   "repoUrl": "https://github.com/ivan-magda/kotlin-textmate",
   "entries": {
     "KotlinTextMate Benchmark": [
@@ -94,6 +94,54 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
             "value": 1453.4293224,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "imagda15@gmail.com",
+            "name": "Ivan Magda",
+            "username": "ivan-magda"
+          },
+          "committer": {
+            "email": "imagda15@gmail.com",
+            "name": "Ivan Magda",
+            "username": "ivan-magda"
+          },
+          "distinct": true,
+          "id": "daafccd09a6ef22495e82eff9a1f445ecf65ab59",
+          "message": "Merge branch 'main' of https://github.com/ivan-magda/kotlin-textmate",
+          "timestamp": "2026-03-01T20:37:24+03:00",
+          "tree_id": "89c6e11d8cf017b7c5a0f28f205b888b1ba00595",
+          "url": "https://github.com/ivan-magda/kotlin-textmate/commit/daafccd09a6ef22495e82eff9a1f445ecf65ab59"
+        },
+        "date": 1772386802414,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"kotlin\"} )",
+            "value": 32.500244101480696,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"json\"} )",
+            "value": 12.795695046823452,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"markdown\"} )",
+            "value": 392.73723266666667,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
+            "value": 1436.2108266999999,
             "unit": "ms/op",
             "extra": "iterations: 5\nforks: 1\nthreads: 1"
           }
