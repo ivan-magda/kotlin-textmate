@@ -38,6 +38,7 @@ public class Grammar(
     private var _rootId: RuleId? = null
     private var _lastRuleId = 0
     private val _ruleId2desc = mutableListOf<Rule?>(null) // index 0 unused
+    private val _rawRuleIdCache = java.util.IdentityHashMap<RawRule, RuleId>()
 
     @Suppress("DoubleMutabilityForCollection")
     private var _repository: MutableMap<String, RawRule>? = null
@@ -105,6 +106,14 @@ public class Grammar(
         val rule = factory(id)
         _ruleId2desc[id.id] = rule
         return rule
+    }
+
+    // --- IRuleFactoryHelper cache ---
+
+    override fun getCachedRuleId(desc: RawRule): RuleId? = _rawRuleIdCache[desc]
+
+    override fun cacheRuleId(desc: RawRule, id: RuleId) {
+        _rawRuleIdCache[desc] = id
     }
 
     // --- IGrammarRegistry ---

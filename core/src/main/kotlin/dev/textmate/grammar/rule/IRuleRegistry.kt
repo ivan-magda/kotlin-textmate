@@ -18,6 +18,9 @@ internal interface IGrammarRegistry {
     ): MutableMap<String, RawRule>?
 }
 
-internal interface IRuleFactoryHelper : IRuleRegistry, IGrammarRegistry
+internal interface IRuleFactoryHelper : IRuleRegistry, IGrammarRegistry {
+    fun getCachedRuleId(desc: RawRule): RuleId?
+    fun cacheRuleId(desc: RawRule, id: RuleId)
+}
 
 public interface IRuleRegistryOnigLib : IRuleRegistry, IOnigLib
