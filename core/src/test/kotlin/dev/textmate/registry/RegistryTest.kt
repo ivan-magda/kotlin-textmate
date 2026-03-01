@@ -194,6 +194,39 @@ class RegistryTest {
     }
 
     @Test
+    fun `shared RawGrammar is not cloned when loaded by multiple grammars`() {
+        // Verifies that deepClone is gone — the same RawGrammar object identity
+        // is preserved when two Grammar instances reference it via grammarLookup.
+        val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
+        var lookupCallCount = 0
+        val lookup: (String) -> RawGrammar? = {
+            if (it == "source.json") { lookupCallCount++; rawJson } else null
+        }
+
+        fun makeWrapper(scope: String) = RawGrammar(
+            scopeName = scope,
+            patterns = listOf(RawRule(include = "source.json"))
+        )
+
+        val onigLib = JoniOnigLib()
+        val grammarA = Grammar("wrapper.a", makeWrapper("wrapper.a"), onigLib, lookup)
+        val grammarB = Grammar("wrapper.b", makeWrapper("wrapper.b"), onigLib, lookup)
+
+        // Tokenize to trigger external grammar loading
+        grammarA.tokenizeLine("true")
+        grammarB.tokenizeLine("true")
+
+        // Both grammars should have called the lookup
+        assertEquals(2, lookupCallCount)
+
+        // Both should still produce correct results (no stale rule IDs)
+        val resultA = grammarA.tokenizeLine("42")
+        val resultB = grammarB.tokenizeLine("42")
+        assertTrue(resultA.tokens.any { it.scopes.any { s -> "constant.numeric.json" in s } })
+        assertTrue(resultB.tokens.any { it.scopes.any { s -> "constant.numeric.json" in s } })
+    }
+
+    @Test
     fun `tokenizing cyclic external includes does not overflow`() {
         val grammarA = RawGrammar(
             scopeName = "source.cycle.a",

@@ -46,32 +46,6 @@ public data class RawRule(
     public val comment: String? = null
 )
 
-/**
- * Deep-clones this grammar, producing independent [RawRule] objects.
- * Legacy: was needed when [RawRule] had a mutable `id` field. Now that rule ID caching
- * is external (per-Grammar [IdentityHashMap]), this is no longer necessary and will be removed.
- */
-internal fun RawGrammar.deepClone(): RawGrammar = copy(
-    patterns = patterns.deepCloneRules(),
-    repository = repository.deepCloneRuleValues(),
-    injections = injections.deepCloneRuleValues()
-)
-
-private fun RawRule.deepClone(): RawRule = copy(
-    captures = captures.deepCloneRuleValues(),
-    beginCaptures = beginCaptures.deepCloneRuleValues(),
-    endCaptures = endCaptures.deepCloneRuleValues(),
-    whileCaptures = whileCaptures.deepCloneRuleValues(),
-    patterns = patterns.deepCloneRules(),
-    repository = repository.deepCloneRuleValues()
-)
-
-private fun List<RawRule>?.deepCloneRules(): List<RawRule>? =
-    this?.map(RawRule::deepClone)
-
-private fun Map<String, RawRule>?.deepCloneRuleValues(): Map<String, RawRule>? =
-    this?.mapValues { it.value.deepClone() }
-
 /** Deserializes both JSON booleans (`true`/`false`) and integers (`1`/`0`) to `Int?`. */
 internal class BooleanOrIntAdapter : TypeAdapter<Int?>() {
     override fun write(out: JsonWriter, value: Int?) {

@@ -2,7 +2,6 @@ package dev.textmate.grammar
 
 import dev.textmate.grammar.raw.RawGrammar
 import dev.textmate.grammar.raw.RawRule
-import dev.textmate.grammar.raw.deepClone
 import dev.textmate.grammar.rule.IRuleFactoryHelper
 import dev.textmate.grammar.rule.IRuleRegistryOnigLib
 import dev.textmate.grammar.rule.Rule
@@ -78,9 +77,8 @@ public class Grammar(
                 return@forEach
             }
 
-            val cloned = injectorRaw.deepClone()
-            val injectorRepo = RuleFactory.initGrammarRepository(cloned)
-            val injectorRule = RawRule(patterns = cloned.patterns)
+            val injectorRepo = RuleFactory.initGrammarRepository(injectorRaw)
+            val injectorRule = RawRule(patterns = injectorRaw.patterns)
             val ruleId = RuleFactory.getCompiledRuleId(injectorRule, this, injectorRepo)
 
             for (mwp in matchers) {
@@ -124,9 +122,8 @@ public class Grammar(
     ): RawGrammar? {
         _includedGrammars[scopeName]?.let { return it }
         val raw = grammarLookup?.invoke(scopeName) ?: return null
-        val initialized = raw.deepClone()
-        _includedGrammars[scopeName] = initialized
-        return initialized
+        _includedGrammars[scopeName] = raw
+        return raw
     }
 
     override fun getExternalGrammarRepository(
