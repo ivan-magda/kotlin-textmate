@@ -38,6 +38,8 @@ public class Grammar(
     private var _rootId: RuleId? = null
     private var _lastRuleId = 0
     private val _ruleId2desc = mutableListOf<Rule?>(null) // index 0 unused
+
+    // IdentityHashMap: structurally-equal RawRule objects at different tree positions must get independent rule IDs.
     private val _rawRuleIdCache = java.util.IdentityHashMap<RawRule, RuleId>()
 
     @Suppress("DoubleMutabilityForCollection")

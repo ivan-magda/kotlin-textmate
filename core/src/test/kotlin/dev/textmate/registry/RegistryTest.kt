@@ -130,25 +130,21 @@ class RegistryTest {
 
     @Test
     fun `two grammars sharing RawGrammar without deepClone both tokenize correctly`() {
-        // TDD test for RawRule.id immutability fix.
-        // Two Grammar instances share the exact same RawGrammar as their root grammar,
-        // bypassing the deepClone protection in getExternalGrammar.
-        // Grammar-A's compilation mutates RawRule.id on shared objects,
-        // so Grammar-B sees stale rule IDs pointing into Grammar-A's rule table.
+        // Regression test: two Grammar instances share the exact same RawGrammar
+        // as their root grammar. Per-Grammar IdentityHashMap caching ensures each
+        // Grammar compiles independent rule IDs for the shared RawRule objects.
         val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
 
         val grammarA = Grammar(rawJson.scopeName, rawJson, JoniOnigLib())
         val grammarB = Grammar(rawJson.scopeName, rawJson, JoniOnigLib())
 
-        // Grammar-A compiles first — mutates RawRule.id on the shared rawJson
         val resultA = grammarA.tokenizeLine("true")
         assertTrue(
             "Grammar-A should tokenize JSON correctly",
             resultA.tokens.any { it.scopes.any { s -> s.contains("constant.language.json") } }
         )
 
-        // Grammar-B compiles second — if RawRule.id is polluted, rule IDs point to
-        // Grammar-A's rule table which Grammar-B doesn't have
+        // Grammar-B compiles the same shared RawRule objects independently
         val resultB = grammarB.tokenizeLine("true")
         assertTrue(
             "Grammar-B should also tokenize JSON correctly (shared RawGrammar, no deepClone), " +
@@ -159,10 +155,9 @@ class RegistryTest {
 
     @Test
     fun `two grammars embedding the same external grammar both tokenize correctly`() {
-        // Reproducer for RawRule.id sharing bug:
-        // Two Grammar instances that both embed source.json via the same grammarLookup.
-        // If RawRule objects are shared, Grammar-A's compilation mutates RawRule.id,
-        // and Grammar-B sees stale IDs pointing into Grammar-A's rule table.
+        // Regression test: two Grammar instances embed source.json via the same grammarLookup.
+        // Per-Grammar IdentityHashMap caching ensures each Grammar compiles independent
+        // rule IDs for the shared RawRule objects from the external grammar.
         val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
 
         // Two synthetic wrapper grammars that both include source.json
@@ -177,14 +172,13 @@ class RegistryTest {
         val grammarA = Grammar("wrapper.a", makeWrapper("wrapper.a"), onigLib, lookup)
         val grammarB = Grammar("wrapper.b", makeWrapper("wrapper.b"), onigLib, lookup)
 
-        // Grammar-A compiles first — this mutates RawRule.id fields on the shared rawJson
         val resultA = grammarA.tokenizeLine("true")
         assertTrue(
             "Grammar-A should tokenize JSON correctly",
             resultA.tokens.any { it.scopes.any { s -> s.contains("constant.language.json") } }
         )
 
-        // Grammar-B compiles second — if RawRule.id is polluted, this breaks
+        // Grammar-B compiles the same shared RawRule objects independently
         val resultB = grammarB.tokenizeLine("true")
         assertTrue(
             "Grammar-B should also tokenize JSON correctly (not get stale rule IDs from A), " +
@@ -194,9 +188,9 @@ class RegistryTest {
     }
 
     @Test
-    fun `shared RawGrammar is not cloned when loaded by multiple grammars`() {
-        // Verifies that deepClone is gone — the same RawGrammar object identity
-        // is preserved when two Grammar instances reference it via grammarLookup.
+    fun `each grammar invokes lookup independently for the same external grammar`() {
+        // Verifies that both Grammar instances call grammarLookup independently
+        // and both produce correct results when sharing the same RawGrammar reference.
         val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
         var lookupCallCount = 0
         val lookup: (String) -> RawGrammar? = {
@@ -224,7 +218,7 @@ class RegistryTest {
         // Both grammars should have called the lookup
         assertEquals(2, lookupCallCount)
 
-        // Both should still produce correct results (no stale rule IDs)
+        // Both should still produce correct results
         val resultA = grammarA.tokenizeLine("42")
         val resultB = grammarB.tokenizeLine("42")
         assertTrue(resultA.tokens.any { it.scopes.any { s -> "constant.numeric.json" in s } })

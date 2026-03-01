@@ -100,11 +100,11 @@ In TextMate grammars, captures are `Map<String, Rule>` — the values have the s
 
 Production VS Code grammars use `1`/`0`. First-mate test fixture grammars use `true`/`false`. JavaScript is lenient about truthiness; Kotlin/Gson is not. A `@JsonAdapter(BooleanOrIntAdapter::class)` on the field coerces both to `Int?`, then `RuleFactory` converts to `Boolean` at the compilation boundary.
 
-### Mutable `id` on `RawRule`
+### Per-Grammar rule ID caching
 
-`RawRule.id` is a mutable `var` that `RuleFactory` writes during compilation to mark a rule as "already compiled." This prevents infinite recursion when grammars have circular `$self` references. The same `RawRule` instance hit a second time returns its pre-assigned ID immediately.
+`RawRule` is fully immutable (all `val` fields). Rule IDs are cached externally in each `Grammar` instance via an `IdentityHashMap<RawRule, RuleId>`, exposed through `IRuleFactoryHelper.getCachedRuleId()`/`cacheRuleId()`. This prevents infinite recursion when grammars have circular `$self` references — the same `RawRule` instance hit a second time returns its pre-assigned ID immediately.
 
-This is a direct port of vscode-textmate's approach. The trade-off is that `RawRule` (a `data class`) is impure after compilation — its `equals`/`hashCode` include `id`, which changes. The `RawRule` KDoc warns against using it in hash-based collections.
+This departs from vscode-textmate, which stores the ID on the rule object itself (`rule.id`). The per-Grammar cache avoids cross-grammar pollution when multiple `Grammar` instances share the same `RawGrammar` object graph, and preserves `data class` semantics (stable `equals`/`hashCode`). `IdentityHashMap` (not `HashMap`) is required because structurally-equal `RawRule` objects at different tree positions must compile to independent rules. No `deepClone()` is needed.
 
 ### Anchor caching in RegExpSource
 
@@ -154,11 +154,11 @@ No part of the codebase uses synchronization. This is by design — vscode-textm
 
 **Test infrastructure.** Dual conformance testing (33 first-mate tests + 4 golden snapshot tests) against two independent reference implementations provides strong correctness guarantees. The sentinel regression test catches regex engine issues early.
 
+**Immutable `RawRule` with per-Grammar ID caching.** Rule IDs are cached in an `IdentityHashMap<RawRule, RuleId>` per `Grammar`, keeping `RawRule` fully immutable. Multiple `Grammar` instances safely share the same `RawGrammar` without cloning.
+
 ### What I would change in a v2
 
 **Tighten the public API surface.** The `grammar.rule` package leaks ~10 types that should be `internal`: `Rule` hierarchy, `RuleId`, `CompiledRule`, `IRuleRegistry`, `IRuleRegistryOnigLib`. These are visible because `Grammar` directly implements `IRuleFactoryHelper` + `IRuleRegistryOnigLib`. A v2 should delegate to an internal helper object instead of implementing these interfaces on `Grammar` itself. Similarly, `StateStackImpl` should be `internal` — consumers only need the `StateStack` interface.
-
-**Decouple `RawRule.id` from the data class.** The mutable `var id` on `RawRule` is a pragmatic port of the TypeScript approach, but it breaks `data class` semantics (equals/hashCode change after compilation). A `Map<RawRule, RuleId>` in the compilation context would be cleaner, though it requires identity-based mapping since `RawRule` instances can be structurally identical.
 
 **Add a null guard to `GrammarReader`.** `Gson.fromJson()` returns `null` for empty input even with a non-null Kotlin return type. `ThemeReader` guards against this; `GrammarReader` does not. A one-line `?: throw` would prevent deferred NPEs.
 
