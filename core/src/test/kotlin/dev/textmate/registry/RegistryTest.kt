@@ -200,7 +200,12 @@ class RegistryTest {
         val rawJson = loadRaw("grammars/JSON.tmLanguage.json")
         var lookupCallCount = 0
         val lookup: (String) -> RawGrammar? = {
-            if (it == "source.json") { lookupCallCount++; rawJson } else null
+            if (it == "source.json") {
+                lookupCallCount++
+                rawJson
+            } else {
+                null
+            }
         }
 
         fun makeWrapper(scope: String) = RawGrammar(

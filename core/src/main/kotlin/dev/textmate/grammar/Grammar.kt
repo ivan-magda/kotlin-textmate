@@ -24,6 +24,7 @@ import dev.textmate.regex.OnigString
  * Supports cross-grammar `include` resolution via [grammarLookup].
  * Supports injection grammars (both inline [RawGrammar.injections] and external [injectionLookup]).
  */
+@Suppress("TooManyFunctions")
 public class Grammar(
     private val rootScopeName: String,
     private val rawGrammar: RawGrammar,

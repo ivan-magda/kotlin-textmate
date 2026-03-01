@@ -68,13 +68,13 @@
 - [x] Run `./gradlew :core:test` — all tests pass
 
 ### Task 5: Verify acceptance criteria
-- [ ] Verify `RawRule.id` field is removed
-- [ ] Verify `IRuleFactoryHelper` has `getCachedRuleId` / `cacheRuleId`
-- [ ] Verify `Grammar` stores `IdentityHashMap<RawRule, RuleId>`
-- [ ] Verify reproducer test in `RegistryTest` passes
-- [ ] Verify `RawRule` KDoc warning about hash collections is removed
-- [ ] Run `./gradlew :core:test` — full test suite passes
-- [ ] Run `./gradlew build` — full project builds
+- [x] Verify `RawRule.id` field is removed
+- [x] Verify `IRuleFactoryHelper` has `getCachedRuleId` / `cacheRuleId`
+- [x] Verify `Grammar` stores `IdentityHashMap<RawRule, RuleId>`
+- [x] Verify reproducer test in `RegistryTest` passes
+- [x] Verify `RawRule` KDoc warning about hash collections is removed
+- [x] Run `./gradlew :core:test` — full test suite passes
+- [x] Run `./gradlew build` — full project builds
 
 ### Task 6: [Final] Update documentation
 - [ ] Update CLAUDE.md if architectural notes about deepClone or RawRule.id need changing
