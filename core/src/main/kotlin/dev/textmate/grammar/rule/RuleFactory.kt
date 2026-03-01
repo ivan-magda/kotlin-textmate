@@ -18,7 +18,7 @@ internal object RuleFactory {
         helper.getCachedRuleId(desc)?.let { return it }
 
         val rule = helper.registerRule { id ->
-            helper.cacheRuleId(desc, id)
+            helper.setCachedRuleId(desc, id)
 
             if (desc.match != null) {
                 return@registerRule MatchRule(

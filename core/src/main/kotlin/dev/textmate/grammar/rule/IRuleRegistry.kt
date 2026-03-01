@@ -19,8 +19,8 @@ internal interface IGrammarRegistry {
 }
 
 internal interface IRuleFactoryHelper : IRuleRegistry, IGrammarRegistry {
-    fun getCachedRuleId(desc: RawRule): RuleId?
-    fun cacheRuleId(desc: RawRule, id: RuleId)
+    fun getCachedRuleId(rawRule: RawRule): RuleId?
+    fun setCachedRuleId(rawRule: RawRule, id: RuleId)
 }
 
 public interface IRuleRegistryOnigLib : IRuleRegistry, IOnigLib

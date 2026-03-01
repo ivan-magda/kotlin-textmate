@@ -112,10 +112,11 @@ public class Grammar(
 
     // --- IRuleFactoryHelper cache ---
 
-    override fun getCachedRuleId(desc: RawRule): RuleId? = _rawRuleIdCache[desc]
+    override fun getCachedRuleId(rawRule: RawRule): RuleId? =
+        _rawRuleIdCache[rawRule]
 
-    override fun cacheRuleId(desc: RawRule, id: RuleId) {
-        _rawRuleIdCache[desc] = id
+    override fun setCachedRuleId(rawRule: RawRule, id: RuleId) {
+        _rawRuleIdCache[rawRule] = id
     }
 
     // --- IGrammarRegistry ---
