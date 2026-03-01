@@ -40,3 +40,6 @@ vscode-textmate/
 # Plans
 docs/plans/
 !docs/plans/plan-poc.md
+
+# ralphex progress logs
+.ralphex/progress/

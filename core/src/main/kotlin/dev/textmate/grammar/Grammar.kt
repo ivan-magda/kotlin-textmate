@@ -2,7 +2,6 @@ package dev.textmate.grammar
 
 import dev.textmate.grammar.raw.RawGrammar
 import dev.textmate.grammar.raw.RawRule
-import dev.textmate.grammar.raw.deepClone
 import dev.textmate.grammar.rule.IRuleFactoryHelper
 import dev.textmate.grammar.rule.IRuleRegistryOnigLib
 import dev.textmate.grammar.rule.Rule
@@ -17,6 +16,7 @@ import dev.textmate.grammar.tokenize.tokenizeString
 import dev.textmate.regex.IOnigLib
 import dev.textmate.regex.OnigScanner
 import dev.textmate.regex.OnigString
+import java.util.*
 
 /**
  * Main Grammar class — compiles a [RawGrammar] into rules and tokenizes lines.
@@ -25,6 +25,7 @@ import dev.textmate.regex.OnigString
  * Supports cross-grammar `include` resolution via [grammarLookup].
  * Supports injection grammars (both inline [RawGrammar.injections] and external [injectionLookup]).
  */
+@Suppress("TooManyFunctions")
 public class Grammar(
     private val rootScopeName: String,
     private val rawGrammar: RawGrammar,
@@ -38,6 +39,9 @@ public class Grammar(
     private var _rootId: RuleId? = null
     private var _lastRuleId = 0
     private val _ruleId2desc = mutableListOf<Rule?>(null) // index 0 unused
+
+    // IdentityHashMap: structurally equal RawRule objects at different tree positions must get independent rule IDs.
+    private val _rawRuleIdCache = IdentityHashMap<RawRule, RuleId>()
 
     @Suppress("DoubleMutabilityForCollection")
     private var _repository: MutableMap<String, RawRule>? = null
@@ -77,9 +81,8 @@ public class Grammar(
                 return@forEach
             }
 
-            val cloned = injectorRaw.deepClone()
-            val injectorRepo = RuleFactory.initGrammarRepository(cloned)
-            val injectorRule = RawRule(patterns = cloned.patterns)
+            val injectorRepo = RuleFactory.initGrammarRepository(injectorRaw)
+            val injectorRule = RawRule(patterns = injectorRaw.patterns)
             val ruleId = RuleFactory.getCompiledRuleId(injectorRule, this, injectorRepo)
 
             for (mwp in matchers) {
@@ -107,6 +110,15 @@ public class Grammar(
         return rule
     }
 
+    // --- IRuleFactoryHelper cache ---
+
+    override fun getCachedRuleId(rawRule: RawRule): RuleId? =
+        _rawRuleIdCache[rawRule]
+
+    override fun setCachedRuleId(rawRule: RawRule, id: RuleId) {
+        _rawRuleIdCache[rawRule] = id
+    }
+
     // --- IGrammarRegistry ---
 
     override fun getExternalGrammar(
@@ -115,9 +127,8 @@ public class Grammar(
     ): RawGrammar? {
         _includedGrammars[scopeName]?.let { return it }
         val raw = grammarLookup?.invoke(scopeName) ?: return null
-        val initialized = raw.deepClone()
-        _includedGrammars[scopeName] = initialized
-        return initialized
+        _includedGrammars[scopeName] = raw
+        return raw
     }
 
     override fun getExternalGrammarRepository(
