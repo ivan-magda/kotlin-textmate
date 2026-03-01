@@ -77,8 +77,8 @@
 - [x] Run `./gradlew build` — full project builds
 
 ### Task 6: [Final] Update documentation
-- [ ] Update CLAUDE.md if architectural notes about deepClone or RawRule.id need changing
-- [ ] Update memory notes if patterns changed
+- [x] Update CLAUDE.md if architectural notes about deepClone or RawRule.id need changing
+- [x] Update memory notes if patterns changed
 
 ## Technical Details
 
