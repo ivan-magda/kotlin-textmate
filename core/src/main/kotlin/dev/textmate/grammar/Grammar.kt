@@ -16,6 +16,7 @@ import dev.textmate.grammar.tokenize.tokenizeString
 import dev.textmate.regex.IOnigLib
 import dev.textmate.regex.OnigScanner
 import dev.textmate.regex.OnigString
+import java.util.*
 
 /**
  * Main Grammar class — compiles a [RawGrammar] into rules and tokenizes lines.
@@ -39,8 +40,8 @@ public class Grammar(
     private var _lastRuleId = 0
     private val _ruleId2desc = mutableListOf<Rule?>(null) // index 0 unused
 
-    // IdentityHashMap: structurally-equal RawRule objects at different tree positions must get independent rule IDs.
-    private val _rawRuleIdCache = java.util.IdentityHashMap<RawRule, RuleId>()
+    // IdentityHashMap: structurally equal RawRule objects at different tree positions must get independent rule IDs.
+    private val _rawRuleIdCache = IdentityHashMap<RawRule, RuleId>()
 
     @Suppress("DoubleMutabilityForCollection")
     private var _repository: MutableMap<String, RawRule>? = null
