@@ -255,6 +255,7 @@ class TestRuleFactoryHelper(
     private var _lastRuleId = 0
     private val _ruleId2desc = mutableListOf<Rule?>()
     private val _externalRepositories = mutableMapOf<String, MutableMap<String, RawRule>>()
+    private val _rawRuleIdCache = java.util.IdentityHashMap<RawRule, RuleId>()
 
     override fun getRule(ruleId: RuleId): Rule? {
         return _ruleId2desc.getOrNull(ruleId.id)
@@ -287,5 +288,12 @@ class TestRuleFactoryHelper(
         val initialized = RuleFactory.initGrammarRepository(externalGrammar, base = repository["\$base"])
         _externalRepositories[scopeName] = initialized
         return initialized
+    }
+
+    override fun getCachedRuleId(rawRule: RawRule): RuleId? =
+        _rawRuleIdCache[rawRule]
+
+    override fun setCachedRuleId(rawRule: RawRule, id: RuleId) {
+        _rawRuleIdCache[rawRule] = id
     }
 }

@@ -15,10 +15,10 @@ internal object RuleFactory {
         helper: IRuleFactoryHelper,
         repository: MutableMap<String, RawRule>
     ): RuleId {
-        desc.id?.let { return RuleId(it) }
+        helper.getCachedRuleId(desc)?.let { return it }
 
         val rule = helper.registerRule { id ->
-            desc.id = id.id
+            helper.setCachedRuleId(desc, id)
 
             if (desc.match != null) {
                 return@registerRule MatchRule(
@@ -207,7 +207,7 @@ internal object RuleFactory {
         helper: IRuleFactoryHelper,
         repository: MutableMap<String, RawRule>
     ): RuleId? {
-        val existingId = desc.id?.let(::RuleId)
+        val existingId = helper.getCachedRuleId(desc)
         val inProgress = existingId != null && helper.getRule(existingId) == null
         if (inProgress) return null
         return getCompiledRuleId(desc, helper, repository)
