@@ -55,6 +55,16 @@ KotlinTextMate/
 └── sample-app/     Android demo
 ```
 
+### Core package layout (`dev.textmate.*`)
+
+- **regex/** — Joni-based Oniguruma wrapper. `IOnigLib`/`OnigScanner` interfaces abstract the regex engine. `OnigString` handles UTF-8 byte↔char offset conversion (critical because Joni operates on byte offsets while the API uses char offsets).
+- **grammar/** — Public API entry point: `Grammar` class (compiles raw grammars and exposes `tokenizeLine()`), `Token`/`TokenizeLineResult`, `TextMateGrammar` (version constant).
+- **grammar/raw/** — Data classes (`RawGrammar`, `RawRule`) and `GrammarReader` for parsing `.tmLanguage.json` files. Captures are `Map<String, RawRule>` (no separate `RawCapture` type — see [No separate RawCapture type](#no-separate-rawcapture-type)). `RawRule` is fully immutable (all `val` fields) and safe to share across `Grammar` instances.
+- **grammar/rule/** — Rule hierarchy and compilation: `sealed class Rule` (`CaptureRule`, `MatchRule`, `IncludeOnlyRule`, `BeginEndRule`, `BeginWhileRule`), `RuleFactory` (compiles `RawRule` → `Rule`), `RegExpSource`/`RegExpSourceList` (regex pattern management with anchor caching), `CompiledRule` (OnigScanner wrapper), `IRuleRegistry`/`IRuleFactoryHelper` interfaces. Implementation details are `internal`; `Rule` constructors are `internal` (only `RuleFactory` creates them). `IRuleRegistry.getRule()` returns nullable `Rule?` to handle circular references during compilation.
+- **grammar/tokenize/** — Tokenization engine and state: `Tokenizer.kt` (core `tokenizeString` loop), `LineTokens` (token accumulator), `StateStack`/`StateStackImpl` (parser state across lines), `ScopeStack`/`AttributedScopeStack` (scope name tracking).
+- **theme/** — Theme engine: `Theme` (scope-to-style resolution via `match()`), `ThemeReader` (JSON parsing, theme merging), `FontStyle`/`ResolvedStyle` (public API). Supports legacy (`settings`) and modern (`tokenColors`) VS Code theme formats. Theme files are production VS Code themes (stripped of JSONC trailing commas).
+- **registry/** — Grammar registry: `Registry` (public API for multi-grammar loading and caching), `GrammarSource` (functional interface for on-demand grammar loading). Cross-grammar `include` resolution is wired through `Grammar.grammarLookup`.
+
 ### File mapping: vscode-textmate → KotlinTextMate
 
 | vscode-textmate (TypeScript)     | KotlinTextMate (Kotlin)                                                                               | Notes                                                               |
