@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772386802880,
+  "lastUpdate": 1776358487869,
   "repoUrl": "https://github.com/ivan-magda/kotlin-textmate",
   "entries": {
     "KotlinTextMate Benchmark": [
@@ -142,6 +142,54 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
             "value": 1436.2108266999999,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "imagda15@gmail.com",
+            "name": "Ivan Magda",
+            "username": "ivan-magda"
+          },
+          "committer": {
+            "email": "imagda15@gmail.com",
+            "name": "Ivan Magda",
+            "username": "ivan-magda"
+          },
+          "distinct": true,
+          "id": "05bada79a584938e528f6ad854d712eb0db973a6",
+          "message": "Move package-layout detail from CLAUDE.md to ARCHITECTURE.md\n\nShrinks the always-loaded instruction surface: CLAUDE.md drops from\n56 to 42 lines (5.5KB → 2.8KB) by replacing the inline architecture\nsection with a pitch-style pointer. The per-package detail is merged\ninto ARCHITECTURE.md's Module map as \"Core package layout\", avoiding\nduplication with existing key-design-decision sections.",
+          "timestamp": "2026-04-16T19:51:24+03:00",
+          "tree_id": "3a4ac8a29a6735cb239965564de0c6e2d5d2f56e",
+          "url": "https://github.com/ivan-magda/kotlin-textmate/commit/05bada79a584938e528f6ad854d712eb0db973a6"
+        },
+        "date": 1776358487532,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"kotlin\"} )",
+            "value": 32.36528707028783,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"json\"} )",
+            "value": 12.52838108375,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"markdown\"} )",
+            "value": 379.64952946666665,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
+            "value": 1444.3143193,
             "unit": "ms/op",
             "extra": "iterations: 5\nforks: 1\nthreads: 1"
           }
