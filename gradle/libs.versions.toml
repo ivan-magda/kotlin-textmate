@@ -20,6 +20,10 @@ kotlinxBenchmark = "0.4.16"
 # Static analysis
 detekt = "1.23.8"
 
+# Publishing
+mavenPublish = "0.35.0"
+dokka = "2.0.0"
+
 # AndroidX & Compose
 composeBom = "2024.12.01"
 activityCompose = "1.9.3"
@@ -71,3 +75,5 @@ kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "ko
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinxBenchmark" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }

@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.maven.publish)
 }
 
 kotlin {
@@ -37,6 +39,11 @@ android {
     buildFeatures {
         compose = true
     }
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
 }
 
 dependencies {
