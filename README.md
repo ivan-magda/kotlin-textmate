@@ -1,5 +1,6 @@
 ![Hero](docs/images/kotlin-textmate-hero.png)
 
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.ivan-magda/kotlin-textmate-core?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.ivan-magda/kotlin-textmate-core)
 [![CI](https://github.com/ivan-magda/kotlin-textmate/actions/workflows/ci.yml/badge.svg)](https://github.com/ivan-magda/kotlin-textmate/actions/workflows/ci.yml)
 [![Benchmark](https://github.com/ivan-magda/kotlin-textmate/actions/workflows/benchmark.yml/badge.svg)](https://github.com/ivan-magda/kotlin-textmate/actions/workflows/benchmark.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -25,6 +26,24 @@ KotlinTextMate ports vscode-textmate to Kotlin with Compose integration and publ
 - Jetpack Compose `CodeBlock` composable with `AnnotatedString` output
 - [Joni](https://github.com/jruby/joni) (Java Oniguruma) regex engine with graceful fallback for unsupported patterns
 - Line-by-line tokenization with persistent state across lines
+
+## Install
+
+Artifacts are published to Maven Central.
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Android + Jetpack Compose (pulls in `core` transitively)
+    implementation("io.github.ivan-magda:kotlin-textmate-compose:0.1.0")
+
+    // Or, for JVM-only consumers, depend on the tokenizer alone:
+    implementation("io.github.ivan-magda:kotlin-textmate-core:0.1.0")
+}
+```
 
 ## Quick start
 
