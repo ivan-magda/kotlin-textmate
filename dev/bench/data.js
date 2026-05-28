@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778776042591,
+  "lastUpdate": 1779998576411,
   "repoUrl": "https://github.com/ivan-magda/kotlin-textmate",
   "entries": {
     "KotlinTextMate Benchmark": [
@@ -238,6 +238,54 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
             "value": 1463.3062834,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "imagda15@gmail.com",
+            "name": "Ivan Magda",
+            "username": "ivan-magda"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c729827d57d823af7997c3a7e7c337478c668092",
+          "message": "Force patched versions of build-time AGP buildscript transitive deps (#34)\n\nResolves 27 Dependabot alerts. All flagged packages (netty, bouncycastle, protobuf, commons-io, commons-compress, jose4j, jdom2) are transitive dependencies of the Android Gradle Plugin's buildscript classpath (bundletool/apksig/sdklib/analytics-grpc) — build tooling only, not shipped in the published core/compose-ui artifacts or the app runtime.\n\nPin them to patched versions via buildscript classpath resolutionStrategy.force:\n- io.netty:* (11 modules) 4.1.93.Final -> 4.1.132.Final\n- org.bouncycastle:bc{prov,pkix,util}-jdk18on 1.77 -> 1.84\n- com.google.protobuf:protobuf-java{,-util} 3.22.3 -> 3.25.5\n- commons-io:commons-io -> 2.15.1 (>=2.14.0 patch floor; highest already on classpath)\n- org.apache.commons:commons-compress 1.21 -> 1.26.0\n- org.bitbucket.b_c:jose4j 0.9.5 -> 0.9.6\n- org.jdom:jdom2 2.0.6 -> 2.0.6.1\n\n./gradlew build (unit tests + Android assemble) passes; buildEnvironment confirms every flagged module resolves to its patched version.",
+          "timestamp": "2026-05-28T22:59:19+03:00",
+          "tree_id": "dcc969e80f0ed96ea8a2aac60565e5e92f239f46",
+          "url": "https://github.com/ivan-magda/kotlin-textmate/commit/c729827d57d823af7997c3a7e7c337478c668092"
+        },
+        "date": 1779998575764,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"kotlin\"} )",
+            "value": 32.253007061187915,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"json\"} )",
+            "value": 12.145240534774931,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"markdown\"} )",
+            "value": 439.63217492,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
+            "value": 1582.4230711999999,
             "unit": "ms/op",
             "extra": "iterations: 5\nforks: 1\nthreads: 1"
           }
