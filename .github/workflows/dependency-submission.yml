@@ -1,0 +1,53 @@
+name: Dependency Submission
+
+# Submits the dependency graph that Dependabot audits.
+#
+# This project publishes two libraries (:core, :compose-ui). Only the dependencies
+# on their runtime classpaths actually reach consumers. The rest of the Gradle graph
+# is build-time tooling — the Android Gradle Plugin and its transitive stack
+# (bundletool, apksig, lint, the Unified Test Platform, grpc-netty, bouncycastle,
+# protobuf, jackson, woodstox, okhttp, ...). None of it ships in the published
+# artifacts or runs for users.
+#
+# GitHub's managed "Automatic Dependency Submission" submits the *entire* graph, which
+# floods Dependabot with alerts for that build-time tooling. This workflow replaces it
+# with a graph scoped to what we actually ship, so Dependabot tracks real consumer-facing
+# risk and still catches future vulnerabilities in joni / gson / Compose / etc.
+#
+# NOTE: For this to take effect, disable the managed submission at
+#   Settings → Advanced Security (Code security) → Automatic dependency submission.
+# Otherwise its full-graph snapshot is merged with this one and the tooling noise remains.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dependency-submission-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-submission:
+    name: Submit dependency graph
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Submit dependency graph (published runtime deps only)
+        uses: gradle/actions/dependency-submission@v5
+        env:
+          # Only the published libraries, and only their runtime classpaths
+          # (:core -> runtimeClasspath, :compose-ui -> releaseRuntimeClasspath).
+          DEPENDENCY_GRAPH_INCLUDE_PROJECTS: "^(:core|:compose-ui)$"
+          DEPENDENCY_GRAPH_INCLUDE_CONFIGURATIONS: "^(runtimeClasspath|releaseRuntimeClasspath)$"
