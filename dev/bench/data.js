@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779999897170,
+  "lastUpdate": 1780000287890,
   "repoUrl": "https://github.com/ivan-magda/kotlin-textmate",
   "entries": {
     "KotlinTextMate Benchmark": [
@@ -334,6 +334,54 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
             "value": 1515.6506855999999,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "imagda15@gmail.com",
+            "name": "Ivan Magda",
+            "username": "ivan-magda"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "458abc1e5fe6cae6f2ce0d6c8607a450938b3b44",
+          "message": "Remove redundant buildscript force block (revert #34) (#37)\n\nThe alerts #34 targeted were all build-time AGP tooling transitives that never ship. They are now resolved at the source by scoping the dependency submission to the published runtime classpaths (#36) — the Dependabot dashboard shows 0 open alerts.\n\nWith the buildscript classpath no longer in the submitted graph, this force block silences nothing. Keeping it only risks silently downgrading/conflicting with AGP's bundled tooling on a future AGP upgrade (already seen with commons-io 2.15.1 -> 2.14.0). ./gradlew build stays green without it.\n\nThis reverts commit c729827d57d823af7997c3a7e7c337478c668092.",
+          "timestamp": "2026-05-28T23:28:36+03:00",
+          "tree_id": "deb7ce0a630cf054e8262c69030a77e15a110684",
+          "url": "https://github.com/ivan-magda/kotlin-textmate/commit/458abc1e5fe6cae6f2ce0d6c8607a450938b3b44"
+        },
+        "date": 1780000287536,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"kotlin\"} )",
+            "value": 32.430759259875934,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"json\"} )",
+            "value": 12.310933302566212,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"markdown\"} )",
+            "value": 440.65644235999997,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
+            "value": 1676.8598637,
             "unit": "ms/op",
             "extra": "iterations: 5\nforks: 1\nthreads: 1"
           }
