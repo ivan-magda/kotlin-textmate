@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779998576411,
+  "lastUpdate": 1779999897170,
   "repoUrl": "https://github.com/ivan-magda/kotlin-textmate",
   "entries": {
     "KotlinTextMate Benchmark": [
@@ -286,6 +286,54 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
             "value": 1582.4230711999999,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "imagda15@gmail.com",
+            "name": "Ivan Magda",
+            "username": "ivan-magda"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7cd6ed95ae387a17d777bd332590f5b2c3930f65",
+          "message": "Scope Dependabot to published runtime deps via dependency submission (#36)\n\nEvery Dependabot alert on this repo has been a build-time tooling transitive: the Android Gradle Plugin and its stack (bundletool, apksig, lint, the Unified Test Platform, grpc-netty, bouncycastle, protobuf, jackson, woodstox, okhttp, ...). None of it ships in the published :core / :compose-ui artifacts.\n\nGitHub's managed Automatic Dependency Submission submits the entire Gradle graph, so Dependabot audits all of that build tooling. This scopes a custom submission to the published libraries' runtime classpaths (:core runtimeClasspath, :compose-ui releaseRuntimeClasspath) — which resolve to only kotlin-stdlib/joni/jcodings/gson and Compose, i.e. exactly what consumers get. Real future vulns in those still get flagged; build-time noise stops.\n\nActivation: disable the managed 'Automatic dependency submission' in Settings -> Code security, so its full-graph snapshot no longer merges with this scoped one.\n\nFollow-up: once that is verified clean, the buildscript force(...) block from #34 is redundant (the buildscript classpath is no longer submitted) and can be removed.",
+          "timestamp": "2026-05-28T23:22:17+03:00",
+          "tree_id": "245da6ed1b3bb5c7b3b9414bfd99443e4f09b77c",
+          "url": "https://github.com/ivan-magda/kotlin-textmate/commit/7cd6ed95ae387a17d777bd332590f5b2c3930f65"
+        },
+        "date": 1779999896375,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"kotlin\"} )",
+            "value": 31.824729118055558,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"json\"} )",
+            "value": 13.212511730263156,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"markdown\"} )",
+            "value": 411.82717652,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
+            "value": 1515.6506855999999,
             "unit": "ms/op",
             "extra": "iterations: 5\nforks: 1\nthreads: 1"
           }
