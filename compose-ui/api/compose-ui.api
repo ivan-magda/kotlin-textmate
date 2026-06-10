@@ -31,3 +31,4 @@ public final class dev/textmate/compose/CodeHighlighter {
 	public fun <init> (Ldev/textmate/grammar/Grammar;Ldev/textmate/theme/Theme;)V
 	public final fun highlight (Ljava/lang/String;)Landroidx/compose/ui/text/AnnotatedString;
 }
+

@@ -397,3 +397,4 @@ public final class dev/textmate/theme/ThemeReader {
 	public final fun readTheme (Ljava/io/InputStream;)Ldev/textmate/theme/Theme;
 	public final fun readTheme ([Ljava/io/InputStream;)Ldev/textmate/theme/Theme;
 }
+
