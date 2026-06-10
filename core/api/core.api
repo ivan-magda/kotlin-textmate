@@ -1,0 +1,399 @@
+public final class dev/textmate/grammar/Grammar : dev/textmate/grammar/rule/IRuleFactoryHelper, dev/textmate/grammar/rule/IRuleRegistryOnigLib {
+	public fun <init> (Ljava/lang/String;Ldev/textmate/grammar/raw/RawGrammar;Ldev/textmate/regex/IOnigLib;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Ljava/lang/String;Ldev/textmate/grammar/raw/RawGrammar;Ldev/textmate/regex/IOnigLib;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun createOnigScanner (Ljava/util/List;)Ldev/textmate/regex/OnigScanner;
+	public fun createOnigString (Ljava/lang/String;)Ldev/textmate/regex/OnigString;
+	public fun getCachedRuleId-boKtvyc (Ldev/textmate/grammar/raw/RawRule;)Ldev/textmate/grammar/rule/RuleId;
+	public fun getExternalGrammar (Ljava/lang/String;Ljava/util/Map;)Ldev/textmate/grammar/raw/RawGrammar;
+	public fun getExternalGrammarRepository (Ljava/lang/String;Ljava/util/Map;)Ljava/util/Map;
+	public fun getRule-PECIOT0 (I)Ldev/textmate/grammar/rule/Rule;
+	public fun registerRule (Lkotlin/jvm/functions/Function1;)Ldev/textmate/grammar/rule/Rule;
+	public fun setCachedRuleId-I7Y5LfQ (Ldev/textmate/grammar/raw/RawRule;I)V
+	public final fun tokenizeLine (Ljava/lang/String;Ldev/textmate/grammar/tokenize/StateStack;)Ldev/textmate/grammar/TokenizeLineResult;
+	public static synthetic fun tokenizeLine$default (Ldev/textmate/grammar/Grammar;Ljava/lang/String;Ldev/textmate/grammar/tokenize/StateStack;ILjava/lang/Object;)Ldev/textmate/grammar/TokenizeLineResult;
+}
+
+public final class dev/textmate/grammar/TextMateGrammar {
+	public static final field INSTANCE Ldev/textmate/grammar/TextMateGrammar;
+	public static final field VERSION Ljava/lang/String;
+}
+
+public final class dev/textmate/grammar/Token {
+	public fun <init> (IILjava/util/List;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (IILjava/util/List;)Ldev/textmate/grammar/Token;
+	public static synthetic fun copy$default (Ldev/textmate/grammar/Token;IILjava/util/List;ILjava/lang/Object;)Ldev/textmate/grammar/Token;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEndIndex ()I
+	public final fun getScopes ()Ljava/util/List;
+	public final fun getStartIndex ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/textmate/grammar/TokenizeLineResult {
+	public fun <init> (Ljava/util/List;Ldev/textmate/grammar/tokenize/StateStack;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ldev/textmate/grammar/tokenize/StateStack;
+	public final fun copy (Ljava/util/List;Ldev/textmate/grammar/tokenize/StateStack;)Ldev/textmate/grammar/TokenizeLineResult;
+	public static synthetic fun copy$default (Ldev/textmate/grammar/TokenizeLineResult;Ljava/util/List;Ldev/textmate/grammar/tokenize/StateStack;ILjava/lang/Object;)Ldev/textmate/grammar/TokenizeLineResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRuleStack ()Ldev/textmate/grammar/tokenize/StateStack;
+	public final fun getTokens ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/textmate/grammar/raw/GrammarReader {
+	public static final field INSTANCE Ldev/textmate/grammar/raw/GrammarReader;
+	public final fun readGrammar (Ljava/io/InputStream;)Ldev/textmate/grammar/raw/RawGrammar;
+	public final fun readGrammar (Ljava/io/Reader;)Ldev/textmate/grammar/raw/RawGrammar;
+	public final fun readGrammar (Ljava/lang/String;)Ldev/textmate/grammar/raw/RawGrammar;
+}
+
+public final class dev/textmate/grammar/raw/RawGrammar {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;Ljava/util/Map;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;Ljava/util/Map;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/util/Map;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/util/List;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;Ljava/util/Map;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;)Ldev/textmate/grammar/raw/RawGrammar;
+	public static synthetic fun copy$default (Ldev/textmate/grammar/raw/RawGrammar;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;Ljava/util/Map;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ldev/textmate/grammar/raw/RawGrammar;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFileTypes ()Ljava/util/List;
+	public final fun getFirstLineMatch ()Ljava/lang/String;
+	public final fun getInjectionSelector ()Ljava/lang/String;
+	public final fun getInjections ()Ljava/util/Map;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPatterns ()Ljava/util/List;
+	public final fun getRepository ()Ljava/util/Map;
+	public final fun getScopeName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/textmate/grammar/raw/RawRule {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/util/List;Ljava/util/Map;Ljava/lang/Integer;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/util/List;Ljava/util/Map;Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Ljava/util/Map;
+	public final fun component12 ()Ljava/util/List;
+	public final fun component13 ()Ljava/util/Map;
+	public final fun component14 ()Ljava/lang/Integer;
+	public final fun component15 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/util/Map;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/util/Map;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/util/List;Ljava/util/Map;Ljava/lang/Integer;Ljava/lang/String;)Ldev/textmate/grammar/raw/RawRule;
+	public static synthetic fun copy$default (Ldev/textmate/grammar/raw/RawRule;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;Ljava/util/List;Ljava/util/Map;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)Ldev/textmate/grammar/raw/RawRule;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getApplyEndPatternLast ()Ljava/lang/Integer;
+	public final fun getBegin ()Ljava/lang/String;
+	public final fun getBeginCaptures ()Ljava/util/Map;
+	public final fun getCaptures ()Ljava/util/Map;
+	public final fun getComment ()Ljava/lang/String;
+	public final fun getContentName ()Ljava/lang/String;
+	public final fun getEnd ()Ljava/lang/String;
+	public final fun getEndCaptures ()Ljava/util/Map;
+	public final fun getInclude ()Ljava/lang/String;
+	public final fun getMatch ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPatterns ()Ljava/util/List;
+	public final fun getRepository ()Ljava/util/Map;
+	public final fun getWhileCaptures ()Ljava/util/Map;
+	public final fun getWhilePattern ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/textmate/grammar/rule/BeginEndRule : dev/textmate/grammar/rule/Rule {
+	public fun compile (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;)Ldev/textmate/grammar/rule/CompiledRule;
+	public fun compileAG (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;ZZ)Ldev/textmate/grammar/rule/CompiledRule;
+	public final fun getApplyEndPatternLast ()Z
+	public final fun getBeginCaptures ()Ljava/util/List;
+	public final fun getEndCaptures ()Ljava/util/List;
+	public final fun getEndHasBackReferences ()Z
+	public final fun getEndWithResolvedBackReferences (Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
+	public final fun getHasMissingPatterns ()Z
+	public final fun getPatterns ()Ljava/util/List;
+}
+
+public final class dev/textmate/grammar/rule/BeginWhileRule : dev/textmate/grammar/rule/Rule {
+	public fun compile (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;)Ldev/textmate/grammar/rule/CompiledRule;
+	public fun compileAG (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;ZZ)Ldev/textmate/grammar/rule/CompiledRule;
+	public final fun compileWhileAG (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;ZZ)Ldev/textmate/grammar/rule/CompiledRule;
+	public final fun getBeginCaptures ()Ljava/util/List;
+	public final fun getHasMissingPatterns ()Z
+	public final fun getPatterns ()Ljava/util/List;
+	public final fun getWhileCaptures ()Ljava/util/List;
+	public final fun getWhileHasBackReferences ()Z
+	public final fun getWhileWithResolvedBackReferences (Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
+}
+
+public final class dev/textmate/grammar/rule/CaptureRule : dev/textmate/grammar/rule/Rule {
+	public fun compile (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;)Ldev/textmate/grammar/rule/CompiledRule;
+	public fun compileAG (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;ZZ)Ldev/textmate/grammar/rule/CompiledRule;
+	public final fun getRetokenizeCapturedWithRuleId-FmmR8HE ()I
+}
+
+public final class dev/textmate/grammar/rule/CompiledRule {
+	public fun <init> (Ldev/textmate/regex/IOnigLib;Ljava/util/List;Ljava/util/List;)V
+	public final fun findNextMatchSync (Ldev/textmate/regex/OnigString;I)Ldev/textmate/grammar/rule/FindNextMatchResult;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/textmate/grammar/rule/FindNextMatchResult {
+	public synthetic fun <init> (ILjava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-FmmR8HE ()I
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy-gZ161fA (ILjava/util/List;)Ldev/textmate/grammar/rule/FindNextMatchResult;
+	public static synthetic fun copy-gZ161fA$default (Ldev/textmate/grammar/rule/FindNextMatchResult;ILjava/util/List;ILjava/lang/Object;)Ldev/textmate/grammar/rule/FindNextMatchResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCaptureIndices ()Ljava/util/List;
+	public final fun getRuleId-FmmR8HE ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class dev/textmate/grammar/rule/IRuleRegistry {
+	public abstract fun getRule-PECIOT0 (I)Ldev/textmate/grammar/rule/Rule;
+	public abstract fun registerRule (Lkotlin/jvm/functions/Function1;)Ldev/textmate/grammar/rule/Rule;
+}
+
+public abstract interface class dev/textmate/grammar/rule/IRuleRegistryOnigLib : dev/textmate/grammar/rule/IRuleRegistry, dev/textmate/regex/IOnigLib {
+}
+
+public final class dev/textmate/grammar/rule/IncludeOnlyRule : dev/textmate/grammar/rule/Rule {
+	public fun compile (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;)Ldev/textmate/grammar/rule/CompiledRule;
+	public fun compileAG (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;ZZ)Ldev/textmate/grammar/rule/CompiledRule;
+	public final fun getHasMissingPatterns ()Z
+	public final fun getPatterns ()Ljava/util/List;
+}
+
+public final class dev/textmate/grammar/rule/MatchRule : dev/textmate/grammar/rule/Rule {
+	public fun compile (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;)Ldev/textmate/grammar/rule/CompiledRule;
+	public fun compileAG (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;ZZ)Ldev/textmate/grammar/rule/CompiledRule;
+	public final fun getCaptures ()Ljava/util/List;
+}
+
+public abstract class dev/textmate/grammar/rule/Rule {
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public abstract fun compile (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;)Ldev/textmate/grammar/rule/CompiledRule;
+	public abstract fun compileAG (Ldev/textmate/grammar/rule/IRuleRegistryOnigLib;Ljava/lang/String;ZZ)Ldev/textmate/grammar/rule/CompiledRule;
+	public final fun getContentName (Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
+	public final fun getId-FmmR8HE ()I
+	public final fun getName (Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
+}
+
+public final class dev/textmate/grammar/rule/RuleId {
+	public static final field Companion Ldev/textmate/grammar/rule/RuleId$Companion;
+	public static final synthetic fun box-impl (I)Ldev/textmate/grammar/rule/RuleId;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public final fun getId ()I
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class dev/textmate/grammar/rule/RuleId$Companion {
+	public final fun getEND_RULE-FmmR8HE ()I
+	public final fun getNO_RULE-FmmR8HE ()I
+	public final fun getWHILE_RULE-FmmR8HE ()I
+}
+
+public final class dev/textmate/grammar/tokenize/AttributedScopeStack {
+	public static final field Companion Ldev/textmate/grammar/tokenize/AttributedScopeStack$Companion;
+	public synthetic fun <init> (Ldev/textmate/grammar/tokenize/AttributedScopeStack;Ldev/textmate/grammar/tokenize/ScopeStack;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getParent ()Ldev/textmate/grammar/tokenize/AttributedScopeStack;
+	public final fun getScopeName ()Ljava/lang/String;
+	public final fun getScopeNames ()Ljava/util/List;
+	public final fun getScopePath ()Ldev/textmate/grammar/tokenize/ScopeStack;
+	public final fun getTokenAttributes ()I
+	public fun hashCode ()I
+	public final fun pushAttributed (Ljava/lang/String;Ljava/lang/Object;)Ldev/textmate/grammar/tokenize/AttributedScopeStack;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/textmate/grammar/tokenize/AttributedScopeStack$Companion {
+	public final fun createRoot (Ljava/lang/String;I)Ldev/textmate/grammar/tokenize/AttributedScopeStack;
+	public final fun equals (Ldev/textmate/grammar/tokenize/AttributedScopeStack;Ldev/textmate/grammar/tokenize/AttributedScopeStack;)Z
+}
+
+public final class dev/textmate/grammar/tokenize/ScopeStack {
+	public static final field Companion Ldev/textmate/grammar/tokenize/ScopeStack$Companion;
+	public fun <init> (Ldev/textmate/grammar/tokenize/ScopeStack;Ljava/lang/String;)V
+	public final fun extends (Ldev/textmate/grammar/tokenize/ScopeStack;)Z
+	public final fun getExtensionIfDefined (Ldev/textmate/grammar/tokenize/ScopeStack;)Ljava/util/List;
+	public final fun getParent ()Ldev/textmate/grammar/tokenize/ScopeStack;
+	public final fun getScopeName ()Ljava/lang/String;
+	public final fun getSegments ()Ljava/util/List;
+	public final fun push (Ljava/lang/String;)Ldev/textmate/grammar/tokenize/ScopeStack;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/textmate/grammar/tokenize/ScopeStack$Companion {
+	public final fun from ([Ljava/lang/String;)Ldev/textmate/grammar/tokenize/ScopeStack;
+	public final fun push (Ldev/textmate/grammar/tokenize/ScopeStack;Ljava/util/List;)Ldev/textmate/grammar/tokenize/ScopeStack;
+}
+
+public abstract interface class dev/textmate/grammar/tokenize/StateStack {
+	public abstract fun clone ()Ldev/textmate/grammar/tokenize/StateStack;
+	public abstract fun getDepth ()I
+}
+
+public final class dev/textmate/grammar/tokenize/StateStackImpl : dev/textmate/grammar/tokenize/StateStack {
+	public static final field Companion Ldev/textmate/grammar/tokenize/StateStackImpl$Companion;
+	public synthetic fun <init> (Ldev/textmate/grammar/tokenize/StateStackImpl;IIIZLjava/lang/String;Ldev/textmate/grammar/tokenize/AttributedScopeStack;Ldev/textmate/grammar/tokenize/AttributedScopeStack;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun clone ()Ldev/textmate/grammar/tokenize/StateStack;
+	public fun clone ()Ldev/textmate/grammar/tokenize/StateStackImpl;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAnchorPos ()I
+	public final fun getBeginRuleCapturedEOL ()Z
+	public final fun getContentNameScopesList ()Ldev/textmate/grammar/tokenize/AttributedScopeStack;
+	public fun getDepth ()I
+	public final fun getEndRule ()Ljava/lang/String;
+	public final fun getEnterPos ()I
+	public final fun getNameScopesList ()Ldev/textmate/grammar/tokenize/AttributedScopeStack;
+	public final fun getParent ()Ldev/textmate/grammar/tokenize/StateStackImpl;
+	public final fun getRule (Ldev/textmate/grammar/rule/IRuleRegistry;)Ldev/textmate/grammar/rule/Rule;
+	public final fun hasSameRuleAs (Ldev/textmate/grammar/tokenize/StateStackImpl;)Z
+	public fun hashCode ()I
+	public final fun pop ()Ldev/textmate/grammar/tokenize/StateStackImpl;
+	public final fun push-BKOnLMU (IIIZLjava/lang/String;Ldev/textmate/grammar/tokenize/AttributedScopeStack;Ldev/textmate/grammar/tokenize/AttributedScopeStack;)Ldev/textmate/grammar/tokenize/StateStackImpl;
+	public final fun reset ()V
+	public final fun safePop ()Ldev/textmate/grammar/tokenize/StateStackImpl;
+	public fun toString ()Ljava/lang/String;
+	public final fun withContentNameScopesList (Ldev/textmate/grammar/tokenize/AttributedScopeStack;)Ldev/textmate/grammar/tokenize/StateStackImpl;
+	public final fun withEndRule (Ljava/lang/String;)Ldev/textmate/grammar/tokenize/StateStackImpl;
+}
+
+public final class dev/textmate/grammar/tokenize/StateStackImpl$Companion {
+	public final fun getNULL ()Ldev/textmate/grammar/tokenize/StateStackImpl;
+}
+
+public final class dev/textmate/grammar/tokenize/StateStackKt {
+	public static final fun getINITIAL ()Ldev/textmate/grammar/tokenize/StateStack;
+}
+
+public final class dev/textmate/regex/CaptureIndex {
+	public fun <init> (III)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun copy (III)Ldev/textmate/regex/CaptureIndex;
+	public static synthetic fun copy$default (Ldev/textmate/regex/CaptureIndex;IIIILjava/lang/Object;)Ldev/textmate/regex/CaptureIndex;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnd ()I
+	public final fun getLength ()I
+	public final fun getStart ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class dev/textmate/regex/IOnigLib {
+	public abstract fun createOnigScanner (Ljava/util/List;)Ldev/textmate/regex/OnigScanner;
+	public abstract fun createOnigString (Ljava/lang/String;)Ldev/textmate/regex/OnigString;
+}
+
+public final class dev/textmate/regex/JoniOnigLib : dev/textmate/regex/IOnigLib {
+	public fun <init> ()V
+	public fun createOnigScanner (Ljava/util/List;)Ldev/textmate/regex/OnigScanner;
+	public fun createOnigString (Ljava/lang/String;)Ldev/textmate/regex/OnigString;
+}
+
+public final class dev/textmate/regex/MatchResult {
+	public fun <init> (ILjava/util/List;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (ILjava/util/List;)Ldev/textmate/regex/MatchResult;
+	public static synthetic fun copy$default (Ldev/textmate/regex/MatchResult;ILjava/util/List;ILjava/lang/Object;)Ldev/textmate/regex/MatchResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCaptureIndices ()Ljava/util/List;
+	public final fun getIndex ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class dev/textmate/regex/OnigScanner {
+	public abstract fun findNextMatchSync (Ldev/textmate/regex/OnigString;I)Ldev/textmate/regex/MatchResult;
+}
+
+public final class dev/textmate/regex/OnigString {
+	public static final field MAX_1_BYTE I
+	public static final field MAX_2_BYTES I
+	public static final field MAX_3_BYTES I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun byteToCharOffset (I)I
+	public final fun charToByteOffset (I)I
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getLength ()I
+	public final fun getUtf8Bytes ()[B
+}
+
+public abstract interface class dev/textmate/registry/GrammarSource {
+	public abstract fun loadRawGrammar (Ljava/lang/String;)Ldev/textmate/grammar/raw/RawGrammar;
+}
+
+public final class dev/textmate/registry/Registry {
+	public fun <init> (Ldev/textmate/registry/GrammarSource;Ldev/textmate/regex/IOnigLib;)V
+	public synthetic fun <init> (Ldev/textmate/registry/GrammarSource;Ldev/textmate/regex/IOnigLib;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun addGrammar (Ldev/textmate/grammar/raw/RawGrammar;)V
+	public final fun loadGrammar (Ljava/lang/String;)Ldev/textmate/grammar/Grammar;
+}
+
+public final class dev/textmate/theme/FontStyle : java/lang/Enum {
+	public static final field BOLD Ldev/textmate/theme/FontStyle;
+	public static final field ITALIC Ldev/textmate/theme/FontStyle;
+	public static final field STRIKETHROUGH Ldev/textmate/theme/FontStyle;
+	public static final field UNDERLINE Ldev/textmate/theme/FontStyle;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/textmate/theme/FontStyle;
+	public static fun values ()[Ldev/textmate/theme/FontStyle;
+}
+
+public final class dev/textmate/theme/ResolvedStyle {
+	public fun <init> (JJLjava/util/Set;)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun component3 ()Ljava/util/Set;
+	public final fun copy (JJLjava/util/Set;)Ldev/textmate/theme/ResolvedStyle;
+	public static synthetic fun copy$default (Ldev/textmate/theme/ResolvedStyle;JJLjava/util/Set;ILjava/lang/Object;)Ldev/textmate/theme/ResolvedStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBackground ()J
+	public final fun getFontStyle ()Ljava/util/Set;
+	public final fun getForeground ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/textmate/theme/Theme {
+	public final fun getDefaultStyle ()Ldev/textmate/theme/ResolvedStyle;
+	public final fun getName ()Ljava/lang/String;
+	public final fun match (Ljava/util/List;)Ldev/textmate/theme/ResolvedStyle;
+}
+
+public final class dev/textmate/theme/ThemeReader {
+	public static final field INSTANCE Ldev/textmate/theme/ThemeReader;
+	public final fun readTheme (Ljava/io/InputStream;)Ldev/textmate/theme/Theme;
+	public final fun readTheme ([Ljava/io/InputStream;)Ldev/textmate/theme/Theme;
+}
