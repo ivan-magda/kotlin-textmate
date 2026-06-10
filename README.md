@@ -113,7 +113,6 @@ Competitive with [vscode-textmate](https://github.com/microsoft/vscode-textmate)
 
 This is a proof-of-concept port. The following are not yet supported:
 
-- **No injection grammars.** `RawGrammar.injections` is parsed but never evaluated. Grammars that use injections for scope-specific overrides or embedded languages will miss those rules. The scope matcher (`matcher.ts`) is not ported.
 - **Joni regex limitation.** Backreferences inside lookbehind assertions (e.g., `(?<=_\1)`) cannot compile in Joni. Such patterns fall back to a never-matching sentinel `(?!)`. Tracked in [#9](https://github.com/ivan-magda/kotlin-textmate/issues/9).
 - **JVM/Android only.** The regex layer uses Joni (Java Oniguruma). iOS/Desktop would require a `expect`/`actual` abstraction with a native Oniguruma binding.
 - **No incremental tokenization.** There is no built-in line-level state cache for partial re-tokenization. The bundled `CodeHighlighter` retokenizes the entire file on every call. Consumers can implement their own caching on top of `Grammar.tokenizeLine()`'s `prevState` parameter.

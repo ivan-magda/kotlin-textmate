@@ -1,0 +1,34 @@
+public final class dev/textmate/compose/CodeBlockDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/textmate/compose/CodeBlockDefaults;
+	public final fun style (Landroidx/compose/ui/text/TextStyle;ZLandroidx/compose/foundation/layout/PaddingValues;)Ldev/textmate/compose/CodeBlockStyle;
+	public static synthetic fun style$default (Ldev/textmate/compose/CodeBlockDefaults;Landroidx/compose/ui/text/TextStyle;ZLandroidx/compose/foundation/layout/PaddingValues;ILjava/lang/Object;)Ldev/textmate/compose/CodeBlockStyle;
+}
+
+public final class dev/textmate/compose/CodeBlockKt {
+	public static final fun CodeBlock (Ljava/lang/String;Ldev/textmate/grammar/Grammar;Ldev/textmate/theme/Theme;Landroidx/compose/ui/Modifier;Ldev/textmate/compose/CodeBlockStyle;Landroidx/compose/runtime/Composer;II)V
+	public static final fun rememberHighlightedCode (Ljava/lang/String;Ldev/textmate/grammar/Grammar;Ldev/textmate/theme/Theme;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/text/AnnotatedString;
+}
+
+public final class dev/textmate/compose/CodeBlockStyle {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/ui/text/TextStyle;ZLandroidx/compose/foundation/layout/PaddingValues;)V
+	public final fun component1 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component2 ()Z
+	public final fun component3 ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun copy (Landroidx/compose/ui/text/TextStyle;ZLandroidx/compose/foundation/layout/PaddingValues;)Ldev/textmate/compose/CodeBlockStyle;
+	public static synthetic fun copy$default (Ldev/textmate/compose/CodeBlockStyle;Landroidx/compose/ui/text/TextStyle;ZLandroidx/compose/foundation/layout/PaddingValues;ILjava/lang/Object;)Ldev/textmate/compose/CodeBlockStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentPadding ()Landroidx/compose/foundation/layout/PaddingValues;
+	public final fun getSoftWrap ()Z
+	public final fun getTextStyle ()Landroidx/compose/ui/text/TextStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/textmate/compose/CodeHighlighter {
+	public static final field $stable I
+	public fun <init> (Ldev/textmate/grammar/Grammar;Ldev/textmate/theme/Theme;)V
+	public final fun highlight (Ljava/lang/String;)Landroidx/compose/ui/text/AnnotatedString;
+}
+

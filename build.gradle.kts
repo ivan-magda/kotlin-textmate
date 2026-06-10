@@ -14,6 +14,11 @@ plugins {
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.maven.publish) apply false
     alias(libs.plugins.dokka) apply false
+    alias(libs.plugins.binary.compatibility.validator)
+}
+
+apiValidation {
+    ignoredProjects.addAll(listOf("sample-app", "benchmark"))
 }
 
 val detektModules = listOf("core", "compose-ui")

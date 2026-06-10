@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Do NOT expand scope beyond what is explicitly requested. If the user asks to download one file, download that one file. Ask before adding extra corpus files, grammars, or other 'nice to have' additions.
 
+`docs/` review and plan documents (`architecture-review-*.md`, `plans/`) are internal — do not reference them in PR titles/descriptions or commit messages.
+
 ## Project Overview
 
 KotlinTextMate is a Kotlin port of [vscode-textmate](https://github.com/microsoft/vscode-textmate) (TypeScript). It provides a TextMate grammar tokenizer for syntax highlighting, targeting JVM/Android with a Compose UI layer. The implementation plan is in `docs/plans/plan-poc.md` (written in Russian).
@@ -39,4 +41,7 @@ Before making architectural changes, porting code from vscode-textmate, or under
 - **Gson** for JSON deserialization of grammar files
 - The `while` keyword in `RawRule` is mapped via `@SerializedName("while")` to `whilePattern`
 - Grammar and theme files live in `shared-assets/` at the project root (single source of truth). Both `core` (test resources via `srcDir`) and `sample-app` (Android assets via `assets.srcDir`) point there. No duplication.
-- Reference source for porting: `https://github.com/microsoft/vscode-textmate` `src/` directory
+- Reference source for porting: `https://github.com/microsoft/vscode-textmate` `src/` directory (baseline v9.3.2, recorded in `docs/UPSTREAM.md`)
+- New Gson-deserialized models (`Raw*`) need R8 keep rules in `core/src/main/resources/META-INF/proguard/`, mirrored in `compose-ui/consumer-rules.pro`, or minified consumers break
+- After changing public API of `core`/`compose-ui`, run `./gradlew apiDump` and commit the updated `*.api` dumps — CI `apiCheck` gates them (binary-compatibility-validator; `apiCheck` is read-only)
+- `TextMateGrammar.VERSION` is generated from `VERSION_NAME` by `core/build.gradle.kts` — there is no `TextMateGrammar.kt` under `src/`
