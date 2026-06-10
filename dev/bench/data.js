@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1781077946727,
+  "lastUpdate": 1781079057770,
   "repoUrl": "https://github.com/ivan-magda/kotlin-textmate",
   "entries": {
     "KotlinTextMate Benchmark": [
@@ -478,6 +478,54 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
             "value": 1461.6319348,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "imagda15@gmail.com",
+            "name": "Ivan Magda",
+            "username": "ivan-magda"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7672dabc228be015e50f8e5d6e15cb65d753c867",
+          "message": "Add tag-triggered Maven Central release workflow (#39)\n\nPushing a v* tag publishes the tagged commit to Maven Central via\npublishAndReleaseToMavenCentral and creates a GitHub release. The publish job\nruns in a protected maven-central environment (required reviewer) and verifies\nthe tag matches VERSION_NAME and is not a SNAPSHOT before publishing. RELEASING.md\ndocuments the secrets, the environment setup, and the release steps.",
+          "timestamp": "2026-06-10T11:08:47+03:00",
+          "tree_id": "e20c128aeab170cdf1b2fe443465a8dd821b2048",
+          "url": "https://github.com/ivan-magda/kotlin-textmate/commit/7672dabc228be015e50f8e5d6e15cb65d753c867"
+        },
+        "date": 1781079057266,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"kotlin\"} )",
+            "value": 32.03463551746032,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"json\"} )",
+            "value": 12.537051754386548,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"markdown\"} )",
+            "value": 426.0701066799999,
+            "unit": "ms/op",
+            "extra": "iterations: 5\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "dev.textmate.benchmark.TokenizerBenchmark.tokenizeFile ( {\"grammar\":\"javascript\"} )",
+            "value": 1525.7721737999998,
             "unit": "ms/op",
             "extra": "iterations: 5\nforks: 1\nthreads: 1"
           }
