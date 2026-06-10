@@ -58,7 +58,7 @@ KotlinTextMate/
 ### Core package layout (`dev.textmate.*`)
 
 - **regex/** — Joni-based Oniguruma wrapper. `IOnigLib`/`OnigScanner` interfaces abstract the regex engine. `OnigString` handles UTF-8 byte↔char offset conversion (critical because Joni operates on byte offsets while the API uses char offsets).
-- **grammar/** — Public API entry point: `Grammar` class (compiles raw grammars and exposes `tokenizeLine()`), `Token`/`TokenizeLineResult`, `TextMateGrammar` (version constant).
+- **grammar/** — Public API entry point: `Grammar` class (compiles raw grammars and exposes `tokenizeLine()`), `Token`/`TokenizeLineResult`, `TextMateGrammar` (version constant). Injection support lives here too: `InjectionSelectorParser` (port of `matcher.ts`) and `InjectionRule` (inline `injections` plus external `injectionSelector` grammars).
 - **grammar/raw/** — Data classes (`RawGrammar`, `RawRule`) and `GrammarReader` for parsing `.tmLanguage.json` files. Captures are `Map<String, RawRule>` (no separate `RawCapture` type — see [No separate RawCapture type](#no-separate-rawcapture-type)). `RawRule` is fully immutable (all `val` fields) and safe to share across `Grammar` instances.
 - **grammar/rule/** — Rule hierarchy and compilation: `sealed class Rule` (`CaptureRule`, `MatchRule`, `IncludeOnlyRule`, `BeginEndRule`, `BeginWhileRule`), `RuleFactory` (compiles `RawRule` → `Rule`), `RegExpSource`/`RegExpSourceList` (regex pattern management with anchor caching), `CompiledRule` (OnigScanner wrapper), `IRuleRegistry`/`IRuleFactoryHelper` interfaces. Implementation details are `internal`; `Rule` constructors are `internal` (only `RuleFactory` creates them). `IRuleRegistry.getRule()` returns nullable `Rule?` to handle circular references during compilation.
 - **grammar/tokenize/** — Tokenization engine and state: `Tokenizer.kt` (core `tokenizeString` loop), `LineTokens` (token accumulator), `StateStack`/`StateStackImpl` (parser state across lines), `ScopeStack`/`AttributedScopeStack` (scope name tracking).
@@ -79,7 +79,7 @@ KotlinTextMate/
 | `src/grammar/grammar.ts` (state) | `grammar/tokenize/StateStack.kt`, `AttributedScopeStack.kt`                                           | `StateStack` interface (public) + `StateStackImpl` (implementation) |
 | `src/grammar/tokenizeString.ts`  | `grammar/tokenize/Tokenizer.kt`                                                                       | Core `tokenizeString` loop, `matchRule`, `handleCaptures`           |
 | `src/theme.ts`                   | `theme/Theme.kt`, `ThemeReader.kt`, `RawTheme.kt`, `grammar/tokenize/ScopeStack.kt`                   | External resolution, not incremental. `ScopeStack` originates here  |
-| `src/matcher.ts`                 | Not ported                                                                                            | Scope selector matching (needed for injection grammars)             |
+| `src/matcher.ts`                 | `grammar/InjectionSelectorParser.kt`                                                                  | Scope selector matching; drives injection grammars (`InjectionRule.kt`) |
 | `src/registry.ts`                | `registry/Registry.kt`, `registry/GrammarSource.kt`                                                   | Simplified: no theme provider, grammar lookup via `GrammarSource`   |
 | `src/main.ts`                    | `grammar/TextMateGrammar.kt`                                                                          | Version constant only; public API lives on `Grammar`                |
 | `src/encodedTokenAttributes.ts`  | Not ported                                                                                            | Binary token encoding not needed                                    |
@@ -156,13 +156,13 @@ No part of the codebase uses synchronization. This is by design — vscode-textm
 
 **Faithful port with clean Kotlin idioms.** The codebase maps closely enough to vscode-textmate that cross-referencing is straightforward, but uses Kotlin idioms where they improve readability: sealed class hierarchy for rules, data classes for tokens, `internal` visibility for implementation details, `@SerializedName`/`@JsonAdapter` for Gson quirks.
 
-**Layered caching.** The three-level cache (per-rule `RegExpSourceList` → per-anchor-combination `CompiledRule` → Joni `Regex`) means regex compilation happens once during warmup and never again. This is the main reason tokenization is fast (79k–458k lines/sec).
+**Layered caching.** The three-level cache (per-rule `RegExpSourceList` → per-anchor-combination `CompiledRule` → Joni `Regex`) means regex compilation happens once during warmup and never again. This is the main reason tokenization is fast (~79k–458k lines/sec for Kotlin/JSON/Markdown; JavaScript is an outlier at ~10k — see [BENCHMARK.md](docs/BENCHMARK.md)).
 
 **Graceful degradation.** The sentinel pattern mechanism is well-designed: unsupported regex patterns silently become no-ops, indices stay stable, and the count is tracked for testing. Only 1 out of ~4500 patterns across 4 grammars degrades.
 
 **External theme resolution.** Separating tokenization from theming was the right call. The tokenizer is simpler, themes can be switched without retokenizing, and the compose-ui module stays thin (~60 lines in `CodeHighlighter`).
 
-**Test infrastructure.** Dual conformance testing (33 first-mate tests + 4 golden snapshot tests) against two independent reference implementations provides strong correctness guarantees. The sentinel regression test catches regex engine issues early.
+**Test infrastructure.** Dual conformance testing (64 first-mate tests + 4 golden snapshot tests) against two independent reference implementations provides strong correctness guarantees, plus dedicated injection/scope-selector tests (`InjectionSelectorParserTest`, `InjectionGrammarTest`). The sentinel regression test catches regex engine issues early.
 
 **Immutable `RawRule` with per-Grammar ID caching.** Rule IDs are cached in an `IdentityHashMap<RawRule, RuleId>` per `Grammar`, keeping `RawRule` fully immutable. Multiple `Grammar` instances safely share the same `RawGrammar` without cloning.
 
