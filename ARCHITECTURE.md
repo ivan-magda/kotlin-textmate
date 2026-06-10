@@ -2,6 +2,8 @@
 
 KotlinTextMate is a Kotlin/JVM port of [vscode-textmate](https://github.com/microsoft/vscode-textmate), the TextMate grammar tokenizer that powers syntax highlighting in VS Code. This document maps the architecture, explains key design decisions, and offers an honest retrospective.
 
+The port currently tracks upstream **vscode-textmate 9.3.2** — see [docs/UPSTREAM.md](docs/UPSTREAM.md) for the exact baseline commit.
+
 ## Data flow
 
 ```
