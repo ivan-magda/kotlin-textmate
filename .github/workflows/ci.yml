@@ -35,6 +35,9 @@ jobs:
       - name: Assemble Android modules
         run: ./gradlew :compose-ui:assembleDebug :sample-app:assembleDebug
 
+      - name: Assemble minified release (R8 regression guard)
+        run: ./gradlew :sample-app:assembleRelease
+
       - name: Compile benchmarks
         run: ./gradlew :benchmark:compileKotlin
 
