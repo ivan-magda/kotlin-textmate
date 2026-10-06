@@ -1,12 +1,15 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.dokka)
-    alias(libs.plugins.maven.publish)
+    id("textmate.jvm")
+    id("textmate.publishing")
+    id("textmate.detekt")
 }
 
 // Generate TextMateGrammar.VERSION from VERSION_NAME.
-val generatedVersionDir = layout.buildDirectory.dir("generated/version/kotlin")
 val generateVersionSource by tasks.registering {
+    group = "build setup"
+    description = "Writes TextMateGrammar.VERSION from VERSION_NAME."
+    // Define providers in this block to prevent a script reference in the task action.
+    val generatedVersionDir = layout.buildDirectory.dir("generated/version/kotlin")
     val version = providers.gradleProperty("VERSION_NAME")
     inputs.property("version", version)
     outputs.dir(generatedVersionDir)
@@ -28,7 +31,6 @@ val generateVersionSource by tasks.registering {
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jvmTarget.get().toInt())
     explicitApi()
     sourceSets.named("main") {
         kotlin.srcDir(generateVersionSource)
@@ -42,8 +44,11 @@ sourceSets {
 }
 
 mavenPublishing {
-    publishToMavenCentral()
-    signAllPublications()
+    coordinates(artifactId = "kotlin-textmate-core")
+    pom {
+        name.set("KotlinTextMate Core")
+        description.set("Kotlin port of vscode-textmate: TextMate grammar tokenizer for syntax highlighting on JVM/Android.")
+    }
 }
 
 dependencies {

@@ -1,14 +1,5 @@
 pluginManagement {
-    includeBuild("build-logic")
     repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
-        mavenCentral()
         gradlePluginPortal()
     }
 }
@@ -27,12 +18,13 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        gradlePluginPortal {
+            content { includeGroupByRegex("org\\.gradle\\.kotlin.*") }
+        }
+    }
+    versionCatalogs {
+        create("libs") { from(files("../gradle/libs.versions.toml")) }
     }
 }
 
-rootProject.name = "KotlinTextMate"
-
-include(":core")
-include(":compose-ui")
-include(":sample-app")
-include(":benchmark")
+rootProject.name = "build-logic"

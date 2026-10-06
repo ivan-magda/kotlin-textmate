@@ -39,6 +39,14 @@ junitAndroid = "1.3.0"
 espresso = "3.7.0"
 
 [libraries]
+# Use the same versions for build logic and the plugin aliases below.
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+compose-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+maven-publish-gradle-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "mavenPublish" }
+
 # Core module dependencies
 joni = { group = "org.jruby.joni", name = "joni", version.ref = "joni" }
 jcodings = { group = "org.jruby.jcodings", name = "jcodings", version.ref = "jcodings" }
