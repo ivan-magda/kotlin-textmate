@@ -32,8 +32,8 @@ jobs:
       - name: Run core tests
         run: ./gradlew :core:test
 
-      - name: Tests for build plugins
-        run: ./gradlew -p build-logic test
+      - name: Check build plugins
+        run: ./gradlew -p build-logic check
 
       - name: Assemble Android modules
         run: ./gradlew :compose-ui:assembleDebug :sample-app:assembleDebug
@@ -41,11 +41,21 @@ jobs:
       - name: Assemble minified release (R8 regression guard)
         run: ./gradlew :sample-app:assembleRelease
 
+      - name: Lint Android modules
+        run: ./gradlew lint lintRelease
+
       - name: Check public ABI
         run: ./gradlew apiCheck
 
       - name: Compile benchmarks
         run: ./gradlew :benchmark:compileKotlin
+
+      - name: Check publication artifacts
+        run: |
+          ./gradlew :core:publishToMavenLocal :compose-ui:publishToMavenLocal \
+            -PVERSION_NAME=0.0.0-ci-SNAPSHOT \
+            -Dmaven.repo.local="$RUNNER_TEMP/maven-local" \
+            --no-build-cache --no-configuration-cache
 
       - name: Upload test results
         uses: actions/upload-artifact@v4

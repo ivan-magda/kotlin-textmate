@@ -110,7 +110,7 @@ class GrammarReaderTest {
     @Test
     fun `captures are deserialized with string keys`() {
         val grammar = loadGrammar("grammars/JSON.tmLanguage.json")
-        val array = grammar.repository!!["array"]!!
+        val array = grammar.repository!!.getValue("array")
         val cap0 = array.beginCaptures!!["0"]
         assertNotNull(cap0)
         assertEquals("punctuation.definition.array.begin.json", cap0!!.name)
@@ -119,7 +119,7 @@ class GrammarReaderTest {
     @Test
     fun `nested patterns and repository structures are preserved`() {
         val grammar = loadGrammar("grammars/JSON.tmLanguage.json")
-        val obj = grammar.repository!!["object"]!!
+        val obj = grammar.repository!!.getValue("object")
         assertNotNull(obj.begin)
         assertNotNull(obj.end)
         assertNotNull(obj.patterns)
@@ -135,21 +135,21 @@ class GrammarReaderTest {
     @Test
     fun `begin end captures are deserialized correctly`() {
         val grammar = loadGrammar("grammars/JSON.tmLanguage.json")
-        val string = grammar.repository!!["string"]!!
+        val string = grammar.repository!!.getValue("string")
         assertEquals(
             "punctuation.definition.string.begin.json",
-            string.beginCaptures!!["0"]!!.name
+            string.beginCaptures!!.getValue("0").name
         )
         assertEquals(
             "punctuation.definition.string.end.json",
-            string.endCaptures!!["0"]!!.name
+            string.endCaptures!!.getValue("0").name
         )
     }
 
     @Test
     fun `contentName is deserialized`() {
         val grammar = loadGrammar("grammars/kotlin.tmLanguage.json")
-        val import = grammar.repository!!["import"]!!
+        val import = grammar.repository!!.getValue("import")
         assertEquals("entity.name.package.kotlin", import.contentName)
     }
 

@@ -116,10 +116,10 @@ internal fun tokenizeString(
             val beforePush = currentStack
 
             val scopeName = rule.getName(lineText.content, captureIndices)
-            val contentNameScopesList = checkNotNull(currentStack.contentNameScopesList) {
+            val parentContentScopesList = checkNotNull(currentStack.contentNameScopesList) {
                 "contentNameScopesList must not be null during tokenization"
             }
-            val nameScopesList = contentNameScopesList.pushAttributed(scopeName, grammar)
+            val nameScopesList = parentContentScopesList.pushAttributed(scopeName, grammar)
 
             currentStack = currentStack.push(
                 ruleId = matchedRuleId,
