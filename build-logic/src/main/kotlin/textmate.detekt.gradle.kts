@@ -13,7 +13,7 @@ detekt {
     parallel = true
     config.setFrom(rootProject.layout.projectDirectory.file("config/detekt/detekt.yml"))
     baseline = rootProject.layout.projectDirectory.file("config/detekt/baseline.xml").asFile
-    // Detekt 1.x exposes a Boolean setter; this is a tracked configuration input.
+    // Detekt 1.x needs a Boolean value here. Gradle records this configuration input.
     autoCorrect = providers.gradleProperty("detekt.auto-correct").isPresent
 }
 

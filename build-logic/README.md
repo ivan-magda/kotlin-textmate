@@ -1,32 +1,43 @@
-# Build conventions
+# Build plugins
 
-This included build shares the root version catalog and provides:
+The `build-logic` build contains plugins for common build settings.
+It uses the version catalog in the repository root.
 
-- `textmate.base`: reproducible archive timestamps and file ordering on Gradle 8.
-- `textmate.jvm`: Kotlin/JVM with the catalog's JDK toolchain.
-- `textmate.android-compose`: Kotlin/Compose, the same JDK toolchain, shared Android SDK settings and dependencies. Apply an Android application or library plugin in the module first.
-- `textmate.detekt`: shared configuration, baseline, formatting rules, and reports.
-- `textmate.publishing`: Dokka, Maven Central publishing, and signing.
+- `textmate.base` sets timestamps and file order for reproducible archives on Gradle 8.
+- `textmate.jvm` sets the JDK toolchain for Kotlin/JVM from the version catalog.
+- `textmate.android-compose` sets the JDK toolchain, Android SDK settings, and common dependencies for Kotlin and Compose.
+- `textmate.detekt` sets the Detekt configuration, baseline, formatting rules, and reports.
+- `textmate.publishing` sets the Dokka, Maven Central, and signing configuration.
 
-Module scripts retain their namespaces, application settings, source directories,
-and publication artifact IDs, names, and descriptions. Shared publication metadata
-and `VERSION_NAME` stay in the root `gradle.properties`.
+Before you apply `textmate.android-compose`, apply an Android application plugin or an Android library plugin to the module.
 
-Run the functional tests from the repository root:
+Keep the namespace, application settings, and source directories in the build script for each module.
+Set the publication artifact ID, name, and description in the `mavenPublishing` block for each module.
+Keep common publication metadata and `VERSION_NAME` in the root `gradle.properties` file.
+
+Use this command to do the functional tests from the repository root:
 
 ```sh
 ./gradlew -p build-logic test
 ```
 
-The archive test checks byte-for-byte stability after input timestamps change and
-configuration-cache reuse. The main project's build and API checks exercise the
-JVM and Android conventions together.
+The archive test compares files from two builds with different input timestamps.
+The files must have the same bytes.
+The test also makes sure that Gradle uses the configuration cache again.
 
-The `build-logic/gradle.properties` file belongs to this included build's root;
-application subprojects do not have their own properties files. Catalog
-`findVersion`/`findLibrary` calls return `Optional`, so their `get()` calls are not
-eager reads of Gradle providers. Detekt 1.x's `autoCorrect` Boolean setter requires
-reading its property during configuration; Gradle tracks that input.
+Use the build and API checks in the main project to do tests of the JVM and Android plugins together.
 
-Development and CI checks use build and configuration caches. The release workflow
-uses a fresh runner with cache restoration and build-output caching disabled.
+The `build-logic/gradle.properties` file sets properties for the included build.
+Do not add `gradle.properties` files to application subprojects.
+
+The catalog methods `findVersion` and `findLibrary` return an `Optional` value.
+Their `get()` methods return the value inside the `Optional`.
+They do not force Gradle to read a provider.
+
+Detekt 1.x needs a Boolean value for `autoCorrect`.
+Read this property during configuration.
+Gradle records the property as a configuration input.
+
+The development builds and CI checks use the build cache and configuration cache.
+The release workflow uses a new runner.
+It does not restore cached data or use cached build outputs.

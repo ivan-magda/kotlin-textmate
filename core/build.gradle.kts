@@ -7,8 +7,8 @@ plugins {
 // Generate TextMateGrammar.VERSION from VERSION_NAME.
 val generateVersionSource by tasks.registering {
     group = "build setup"
-    description = "Generates the library version constant from VERSION_NAME."
-    // Keep providers local so the action does not capture the Gradle script.
+    description = "Writes TextMateGrammar.VERSION from VERSION_NAME."
+    // Define providers in this block to prevent a script reference in the task action.
     val generatedVersionDir = layout.buildDirectory.dir("generated/version/kotlin")
     val version = providers.gradleProperty("VERSION_NAME")
     inputs.property("version", version)

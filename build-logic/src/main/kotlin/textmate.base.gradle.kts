@@ -2,7 +2,7 @@ plugins {
     base
 }
 
-// Gradle 8 needs these explicitly; Gradle 9 makes them the defaults.
+// Set these archive options for Gradle 8. Gradle 9 uses them as the defaults.
 tasks.withType<AbstractArchiveTask>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true

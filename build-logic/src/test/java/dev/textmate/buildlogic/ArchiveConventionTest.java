@@ -42,7 +42,7 @@ public class ArchiveConventionTest {
         String output = runner().build().getOutput();
 
         assertTrue(output, output.contains("Reusing configuration cache."));
-        assertArrayEquals("Source timestamps must not change published archive bytes",
+        assertArrayEquals("Changes to input timestamps must not change the archive bytes.",
                 first, Files.readAllBytes(archive));
     }
 

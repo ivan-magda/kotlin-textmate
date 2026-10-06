@@ -45,7 +45,7 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5
         with:
-          # Release artifacts must be built from this checkout on the fresh runner.
+          # Build release artifacts from this checkout on a new runner.
           cache-disabled: true
 
       - name: Publish and release to Maven Central

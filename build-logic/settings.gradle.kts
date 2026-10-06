@@ -4,7 +4,8 @@ pluginManagement {
     }
 }
 
-// Centralized repositories are incubating in Gradle 8; review on wrapper upgrades.
+// Gradle 8 marks these repository APIs as incubating.
+// Examine these APIs when you update the Gradle wrapper.
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)

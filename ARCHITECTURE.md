@@ -55,12 +55,12 @@ KotlinTextMate/
 │   └── dev.textmate.compose
 ├── benchmark/      JMH benchmarks
 ├── sample-app/     Android demo
-└── build-logic/    Included Gradle build for shared conventions
+└── build-logic/    Included Gradle build for common settings
 ```
 
-Shared JVM, Android/Compose, Detekt, publishing, and archive settings live in
-[build-logic](build-logic/README.md). Module build scripts keep module-specific
-configuration; both JVM and Android compilation use the catalog's JDK toolchain.
+[Build-logic](build-logic/README.md) contains the common settings for JVM, Android/Compose, Detekt, publication, and archives.
+The build script for each module contains the settings for that module.
+JVM and Android compilation use the JDK toolchain from the version catalog.
 
 ### Core package layout (`dev.textmate.*`)
 

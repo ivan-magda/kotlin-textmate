@@ -8,7 +8,7 @@ kotlin {
     }
 }
 
-// This build bootstraps the conventions, so it cannot apply its own base plugin.
+// This build compiles the plugins. It cannot apply its own base plugin.
 tasks.withType<AbstractArchiveTask>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true

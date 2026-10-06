@@ -10,7 +10,7 @@ val catalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 val jvmVersion = catalog.findVersion("jvmTarget").get().requiredVersion.toInt()
 
 kotlin {
-    // The toolchain also supplies Kotlin's default JVM target.
+    // The toolchain also sets the default JVM target for Kotlin.
     jvmToolchain(jvmVersion)
 }
 
