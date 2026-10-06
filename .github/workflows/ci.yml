@@ -32,6 +32,9 @@ jobs:
       - name: Run core tests
         run: ./gradlew :core:test
 
+      - name: Test build conventions
+        run: ./gradlew -p build-logic test
+
       - name: Assemble Android modules
         run: ./gradlew :compose-ui:assembleDebug :sample-app:assembleDebug
 

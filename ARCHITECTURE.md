@@ -54,8 +54,13 @@ KotlinTextMate/
 ├── compose-ui/     Android library (Compose)
 │   └── dev.textmate.compose
 ├── benchmark/      JMH benchmarks
-└── sample-app/     Android demo
+├── sample-app/     Android demo
+└── build-logic/    Included Gradle build for shared conventions
 ```
+
+Shared JVM, Android/Compose, Detekt, publishing, and archive settings live in
+[build-logic](build-logic/README.md). Module build scripts keep module-specific
+configuration; both JVM and Android compilation use the catalog's JDK toolchain.
 
 ### Core package layout (`dev.textmate.*`)
 

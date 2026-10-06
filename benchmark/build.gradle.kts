@@ -1,11 +1,7 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    id("textmate.jvm")
     alias(libs.plugins.kotlin.allopen)
     alias(libs.plugins.kotlinx.benchmark)
-}
-
-kotlin {
-    jvmToolchain(libs.versions.jvmTarget.get().toInt())
 }
 
 allOpen {
